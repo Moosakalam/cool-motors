@@ -72,70 +72,55 @@ exports.getVehiclesOfUser = catchAsyncError(async (req, res, next) => {
 });
 
 // exports.searchVehicles = catchAsyncError(async (req, res) => {
-//   // Destructure query parameters
-//   const {
-//     make,
-//     model,
-//     minYear,
-//     maxYear,
-//     minPrice,
-//     maxPrice,
-//     fuelType,
-//     transmission,
-//     minEngineDisplacement,
-//     maxEngineDisplacement,
-//     engineType,
-//     minOdometer,
-//     maxOdometer,
-//     ownership,
-//     location,
-//   } = req.query;
+//   const filters = {
+//     make: req.query.make ? req.query.make.split(",") : undefined,
+//     model: req.query.model ? req.query.model.split(",") : undefined,
+//     minYear: req.query.minYear,
+//     maxYear: req.query.maxYear,
+//     fuelType: req.query.fuelType ? req.query.fuelType.split(",") : undefined,
+//     transmission: req.query.transmission
+//       ? req.query.transmission.split(",")
+//       : undefined,
+//     minPrice: req.query.minPrice,
+//     maxPrice: req.query.maxPrice,
+//     minOdometer: req.query.minOdometer,
+//     maxOdometer: req.query.maxOdometer,
+//     location: req.query.location ? req.query.location.split(",") : undefined,
+//     sort: req.query.sort, // Sort query parameter
+//   };
 
-//   // Build search criteria based on the provided query parameters
 //   const searchCriteria = {};
 
-//   if (make) searchCriteria.make = make;
-//   if (model) searchCriteria.model = model;
-
-//   // Handle range queries for year
-//   if (minYear || maxYear) {
+//   if (filters.make) searchCriteria.make = { $in: filters.make };
+//   if (filters.model) searchCriteria.model = { $in: filters.model };
+//   if (filters.minYear || filters.maxYear) {
 //     searchCriteria.year = {};
-//     if (minYear) searchCriteria.year.$gte = Number(minYear);
-//     if (maxYear) searchCriteria.year.$lte = Number(maxYear);
+//     if (filters.minYear) searchCriteria.year.$gte = filters.minYear;
+//     if (filters.maxYear) searchCriteria.year.$lte = filters.maxYear;
 //   }
-
-//   // Handle range queries for price
-//   if (minPrice || maxPrice) {
+//   if (filters.fuelType) searchCriteria.fuelType = { $in: filters.fuelType };
+//   if (filters.transmission)
+//     searchCriteria.transmission = { $in: filters.transmission };
+//   if (filters.minPrice || filters.maxPrice) {
 //     searchCriteria.price = {};
-//     if (minPrice) searchCriteria.price.$gte = Number(minPrice);
-//     if (maxPrice) searchCriteria.price.$lte = Number(maxPrice);
+//     if (filters.minPrice) searchCriteria.price.$gte = filters.minPrice;
+//     if (filters.maxPrice) searchCriteria.price.$lte = filters.maxPrice;
 //   }
-
-//   // Handle range queries for engine displacement
-//   if (minEngineDisplacement || maxEngineDisplacement) {
-//     searchCriteria.engineDisplacement = {};
-//     if (minEngineDisplacement)
-//       searchCriteria.engineDisplacement.$gte = Number(minEngineDisplacement);
-//     if (maxEngineDisplacement)
-//       searchCriteria.engineDisplacement.$lte = Number(maxEngineDisplacement);
-//   }
-
-//   // Handle range queries for odometer
-//   if (minOdometer || maxOdometer) {
+//   if (filters.minOdometer || filters.maxOdometer) {
 //     searchCriteria.odometer = {};
-//     if (minOdometer) searchCriteria.odometer.$gte = Number(minOdometer);
-//     if (maxOdometer) searchCriteria.odometer.$lte = Number(maxOdometer);
+//     if (filters.minOdometer) searchCriteria.odometer.$gte = filters.minOdometer;
+//     if (filters.maxOdometer) searchCriteria.odometer.$lte = filters.maxOdometer;
 //   }
+//   if (filters.location) searchCriteria.location = { $in: filters.location };
 
-//   // Handle other filters
-//   if (fuelType) searchCriteria.fuelType = fuelType;
-//   if (transmission) searchCriteria.transmission = transmission;
-//   if (engineType) searchCriteria.engineType = engineType;
-//   if (ownership) searchCriteria.ownership = Number(ownership);
-//   if (location) searchCriteria.location = location;
+//   //Sorting logic
+//   let sortBy = {};
+//   if (filters.sort === "priceAsc") sortBy.price = 1;
+//   if (filters.sort === "priceDesc") sortBy.price = -1;
+//   if (filters.sort === "mileageAsc") sortBy.odometer = 1;
+//   if (filters.sort === "mileageDesc") sortBy.odometer = -1;
 
-//   // Perform the search
-//   const vehicles = await Vehicle.find(searchCriteria);
+//   const vehicles = await Vehicle.find(searchCriteria).sort(sortBy);
 
 //   res.status(200).json({
 //     status: "success",
@@ -149,7 +134,7 @@ exports.getVehiclesOfUser = catchAsyncError(async (req, res, next) => {
 exports.searchVehicles = catchAsyncError(async (req, res) => {
   const filters = {
     make: req.query.make ? req.query.make.split(",") : undefined,
-    // model: req.query.model ? req.query.model.split(",") : undefined,
+    model: req.query.model ? req.query.model.split(",") : undefined,
     minYear: req.query.minYear,
     maxYear: req.query.maxYear,
     fuelType: req.query.fuelType ? req.query.fuelType.split(",") : undefined,
@@ -166,16 +151,29 @@ exports.searchVehicles = catchAsyncError(async (req, res) => {
 
   const searchCriteria = {};
 
-  if (filters.make) searchCriteria.make = { $in: filters.make };
-  // if (filters.model) searchCriteria.model = { $in: filters.model };
+  if (filters.make)
+    searchCriteria.make = {
+      $in: filters.make.map((make) => new RegExp(make, "i")),
+    };
+  if (filters.model)
+    searchCriteria.model = {
+      $in: filters.model.map((model) => new RegExp(model, "i")),
+    };
   if (filters.minYear || filters.maxYear) {
     searchCriteria.year = {};
     if (filters.minYear) searchCriteria.year.$gte = filters.minYear;
     if (filters.maxYear) searchCriteria.year.$lte = filters.maxYear;
   }
-  if (filters.fuelType) searchCriteria.fuelType = { $in: filters.fuelType };
+  if (filters.fuelType)
+    searchCriteria.fuelType = {
+      $in: filters.fuelType.map((fuelType) => new RegExp(fuelType, "i")),
+    };
   if (filters.transmission)
-    searchCriteria.transmission = { $in: filters.transmission };
+    searchCriteria.transmission = {
+      $in: filters.transmission.map(
+        (transmission) => new RegExp(transmission, "i")
+      ),
+    };
   if (filters.minPrice || filters.maxPrice) {
     searchCriteria.price = {};
     if (filters.minPrice) searchCriteria.price.$gte = filters.minPrice;
@@ -186,9 +184,12 @@ exports.searchVehicles = catchAsyncError(async (req, res) => {
     if (filters.minOdometer) searchCriteria.odometer.$gte = filters.minOdometer;
     if (filters.maxOdometer) searchCriteria.odometer.$lte = filters.maxOdometer;
   }
-  if (filters.location) searchCriteria.location = { $in: filters.location };
+  if (filters.location)
+    searchCriteria.location = {
+      $in: filters.location.map((location) => new RegExp(location, "i")),
+    };
 
-  //Sorting logic
+  // Sorting logic
   let sortBy = {};
   if (filters.sort === "priceAsc") sortBy.price = 1;
   if (filters.sort === "priceDesc") sortBy.price = -1;

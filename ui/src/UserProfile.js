@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 
 function UserProfile() {
@@ -35,30 +35,57 @@ function UserProfile() {
   }, [userId]);
 
   return (
-    <div>
+    <div style={{ padding: "20px" }}>
       {userData ? (
         <>
           <h2>{userData.name}'s Profile</h2>
           {userVehicles.length > 0 ? (
-            <div>
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(4, 1fr)",
+                gap: "20px",
+                marginTop: "20px",
+              }}
+            >
               {userVehicles.map((vehicle) => (
-                <Link key={vehicle._id} to={`/vehicle/${vehicle._id}`}>
-                  <div
+                <div
+                  key={vehicle._id}
+                  onClick={() =>
+                    (window.location.href = `/vehicle/${vehicle._id}`)
+                  }
+                  style={{
+                    border: "1px solid #ccc",
+                    padding: "20px",
+                    cursor: "pointer",
+                    textAlign: "center",
+                    borderRadius: "10px",
+                    overflow: "hidden",
+                  }}
+                >
+                  <img
+                    src={vehicle.image || "placeholder.jpg"}
+                    alt={`${vehicle.make} ${vehicle.model}`}
                     style={{
-                      border: "1px solid #ccc",
-                      padding: "10px",
+                      width: "100%",
+                      height: "150px",
+                      objectFit: "cover",
                       marginBottom: "10px",
                     }}
+                  />
+                  <h2 style={{ margin: "0", fontSize: "18px" }}>
+                    {vehicle.year} {vehicle.make} {vehicle.model}
+                  </h2>
+                  <h1
+                    style={{
+                      margin: "10px 0",
+                      fontSize: "22px",
+                      color: "#333",
+                    }}
                   >
-                    <h3>
-                      {vehicle.make} {vehicle.model}
-                    </h3>
-                    <p>Year: {vehicle.year}</p>
-                    <p>Price: {vehicle.price}</p>
-                    <p>Fuel Type: {vehicle.fuelType}</p>
-                    {/* Add more vehicle details as needed */}
-                  </div>
-                </Link>
+                    ₹{vehicle.price}
+                  </h1>
+                </div>
               ))}
             </div>
           ) : (

@@ -8,14 +8,14 @@ import ListVehicle from "./ListVehicle";
 import VehicleDetails from "./VehicleDetails";
 import Signup from "./Signup";
 import Login from "./Login";
-import LogoutButton from "./LogoutButton";
+import Navbar from "./Navbar"; // Import the Navbar
+import SearchVehiclesPage from "./SearchVehiclesPage";
 
 function App() {
   return (
     <Router>
       <div className="App">
-        <LogoutButton />
-        <a href="/">HOME</a>
+        <Navbar /> {/* Navbar will be rendered on all pages */}
         <Routes>
           <Route path="/" element={<HomePage />} />
           {/* <Route path="/" element={<VehicleList />} /> */}
@@ -24,6 +24,7 @@ function App() {
           <Route path="/vehicle/:id" element={<VehicleDetails />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/search" element={<SearchVehiclesPage />} />
         </Routes>
       </div>
     </Router>

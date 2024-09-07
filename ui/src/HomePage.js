@@ -1,19 +1,17 @@
+// src/HomePage.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { getUserIdFromToken } from "./utils/jwtDeocde";
 
 const HomePage = () => {
   const [vehicles, setVehicles] = useState([]);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userId, setUserId] = useState("");
 
   useEffect(() => {
     // Fetch random vehicles
     const fetchRandomVehicles = async () => {
       try {
         const response = await axios.get(
-          "http://127.0.0.1:5000/api/v1/vehicles/random-vehicles?limit=5"
+          "http://127.0.0.1:5000/api/v1/vehicles/random-vehicles?limit=16"
         );
         setVehicles(response.data.data.vehicles);
       } catch (error) {
@@ -22,66 +20,46 @@ const HomePage = () => {
     };
 
     fetchRandomVehicles();
-
-    // Check if user is logged in (placeholder logic)
-    const token = localStorage.getItem("token");
-    if (token) {
-      setIsLoggedIn(true);
-      setUserId(getUserIdFromToken(token));
-    }
   }, []);
 
   return (
     <div style={{ padding: "20px" }}>
-      <header style={{ display: "flex", justifyContent: "space-between" }}>
-        {isLoggedIn && (
-          <Link to="/list" style={{ textDecoration: "none", padding: "10px" }}>
-            List Vehicle
-          </Link>
-        )}
-        <div>
-          {isLoggedIn ? (
-            <Link
-              to={`/user/${userId}`}
-              style={{ textDecoration: "none", padding: "10px" }}
-            >
-              My Profile
-            </Link>
-          ) : (
-            <Link
-              to="/login"
-              style={{ textDecoration: "none", padding: "10px" }}
-            >
-              Login
-            </Link>
-          )}
-        </div>
-      </header>
-
       <h1>Home Page</h1>
       {vehicles.length === 0 ? (
         <p>Loading vehicles...</p>
       ) : (
-        <div>
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: "repeat(4, 1fr)",
+            gap: "20px",
+          }}
+        >
           {vehicles.map((vehicle) => (
-            <Link to={`/vehicle/${vehicle._id}`}>
-              <div
-                key={vehicle._id}
-                style={{
-                  border: "1px solid #ccc",
-                  padding: "10px",
-                  marginBottom: "10px",
-                }}
-              >
-                <h3>
-                  {vehicle.make} {vehicle.model}
-                </h3>
-                <p>Year: {vehicle.year}</p>
-                <p>Price: {vehicle.price}</p>
-                <p>Fuel Type: {vehicle.fuelType}</p>
-                {/* Add more vehicle details as needed */}
-              </div>
-            </Link>
+            <div
+              key={vehicle._id}
+              onClick={() => (window.location.href = `/vehicle/${vehicle._id}`)}
+              style={{
+                border: "1px solid #ccc",
+                padding: "20px",
+                cursor: "pointer",
+                textAlign: "center",
+                borderRadius: "10px",
+                overflow: "hidden",
+              }}
+            >
+              <img
+                src={vehicle.image || "placeholder.jpg"}
+                alt={`${vehicle.make} ${vehicle.model}`}
+                style={{ width: "100%", height: "200px", objectFit: "cover" }}
+              />
+              <h2 style={{ margin: "15px 0 0 0", fontSize: "18px" }}>
+                {vehicle.year} {vehicle.make} {vehicle.model}
+              </h2>
+              <h1 style={{ margin: "10px 0", fontSize: "22px", color: "#333" }}>
+                ₹{vehicle.price}
+              </h1>
+            </div>
           ))}
         </div>
       )}
