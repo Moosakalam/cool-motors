@@ -2,6 +2,25 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+const fuelTypes = ["petrol", "diesel", "hybrid", "electric", "lpg", "cng"];
+const transmissions = ["automatic", "manual"];
+const engineTypes = [
+  "I3",
+  "I4",
+  "I5",
+  "I6",
+  "V6",
+  "V8",
+  "V10",
+  "V12",
+  "V16",
+  "W12",
+  "W16",
+  "H4",
+  "H6",
+  "rotary",
+];
+
 const SearchVehiclesPage = () => {
   const [filters, setFilters] = useState({
     make: "",
@@ -14,6 +33,7 @@ const SearchVehiclesPage = () => {
     maxPrice: "",
     minOdometer: "",
     maxOdometer: "",
+    engineType: "",
     location: "",
     sort: "",
   });
@@ -82,21 +102,33 @@ const SearchVehiclesPage = () => {
         </div>
         <div>
           <label>Fuel Type:</label>
-          <input
-            type="text"
+          <select
             name="fuelType"
             value={filters.fuelType}
             onChange={handleInputChange}
-          />
+          >
+            <option value="">Select...</option>
+            {fuelTypes.map((type) => (
+              <option key={type} value={type}>
+                {type.charAt(0).toUpperCase() + type.slice(1)}
+              </option>
+            ))}
+          </select>
         </div>
         <div>
           <label>Transmission:</label>
-          <input
-            type="text"
+          <select
             name="transmission"
             value={filters.transmission}
             onChange={handleInputChange}
-          />
+          >
+            <option value="">Select...</option>
+            {transmissions.map((type) => (
+              <option key={type} value={type}>
+                {type.charAt(0).toUpperCase() + type.slice(1)}
+              </option>
+            ))}
+          </select>
         </div>
         <div>
           <label>Min Price:</label>
@@ -134,6 +166,22 @@ const SearchVehiclesPage = () => {
             onChange={handleInputChange}
           />
         </div>
+        <div>
+          <label>Engine Type:</label>
+          <select
+            name="engineType"
+            value={filters.engineType}
+            onChange={handleInputChange}
+          >
+            <option value="">Select...</option>
+            {engineTypes.map((type) => (
+              <option key={type} value={type}>
+                {type}
+              </option>
+            ))}
+          </select>
+        </div>
+
         <div>
           <label>Location:</label>
           <input

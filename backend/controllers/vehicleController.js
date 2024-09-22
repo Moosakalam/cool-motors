@@ -168,6 +168,9 @@ exports.searchVehicles = catchAsyncError(async (req, res) => {
     maxPrice: req.query.maxPrice,
     minOdometer: req.query.minOdometer,
     maxOdometer: req.query.maxOdometer,
+    engineType: req.query.engineType
+      ? req.query.engineType.split(",")
+      : undefined,
     location: req.query.location ? req.query.location.split(",") : undefined,
     sort: req.query.sort, // Sort query parameter
   };
@@ -207,6 +210,10 @@ exports.searchVehicles = catchAsyncError(async (req, res) => {
     if (filters.minOdometer) searchCriteria.odometer.$gte = filters.minOdometer;
     if (filters.maxOdometer) searchCriteria.odometer.$lte = filters.maxOdometer;
   }
+  if (filters.engineType)
+    searchCriteria.engineType = {
+      $in: filters.engineType.map((engineType) => new RegExp(engineType, "i")),
+    };
   if (filters.location)
     searchCriteria.location = {
       $in: filters.location.map((location) => new RegExp(location, "i")),
