@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -21,6 +21,7 @@ function Login() {
       localStorage.setItem("token", response.data.token);
       console.log("Token stored after login");
       navigate("/"); // Redirect to home page after login
+      window.location.reload(); // Refresh the page after login
     } catch (err) {
       setError(err.response.data.message || "Login failed");
     }
@@ -49,6 +50,11 @@ function Login() {
         <button type="submit">Login</button>
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}
+      <div style={{ marginTop: "20px" }}>
+        <p>
+          Don't have an account? <Link to="/signup">Create Account</Link>
+        </p>
+      </div>
     </div>
   );
 }

@@ -11,6 +11,9 @@ router.post("/login", authController.login);
 //returns vehicles listed by "userId"
 router.get("/:userId/vehicles", vehicleController.getVehiclesOfUser);
 
+//returns vehicles liked by "userId"
+router.get("/:userId/liked-vehicles", vehicleController.getLikedVehiclesOfUser);
+
 //like vehicle
 router.post(
   "/like/:vehicleId",

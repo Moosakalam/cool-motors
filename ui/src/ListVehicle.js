@@ -19,6 +19,74 @@ function ListVehicle() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  const carMakes = [
+    "Toyota",
+    "Honda",
+    "Ford",
+    "Chevrolet",
+    "BMW",
+    "Mercedes-Benz",
+    "Audi",
+    "Volkswagen",
+    "Nissan",
+    "Hyundai",
+    "Kia",
+    "Mazda",
+    "Subaru",
+    "Lexus",
+    "Jaguar",
+    "Land Rover",
+    "Volvo",
+    "Tesla",
+    "Porsche",
+    "Ferrari",
+    "Lamborghini",
+  ];
+
+  const years = Array.from(
+    { length: new Date().getFullYear() - 1900 + 1 },
+    (_, i) => 1900 + i
+  );
+
+  const fuelTypes = ["Petrol", "Diesel", "Electric", "Hybrid", "CNG", "LPG"];
+
+  const transmissions = ["Manual", "Automatic"];
+
+  const engineTypes = [
+    "I3",
+    "I4",
+    "I5",
+    "I6",
+    "V6",
+    "V8",
+    "V10",
+    "V12",
+    "V16",
+    "W12",
+    "W16",
+    "H4",
+    "H6",
+    "Rotary",
+  ];
+
+  const ownerships = Array.from({ length: 10 }, (_, i) => i + 1);
+
+  const locations = [
+    "Mumbai",
+    "Delhi",
+    "Bangalore",
+    "Hyderabad",
+    "Chennai",
+    "Kolkata",
+    "Pune",
+    "Ahmedabad",
+    "Jaipur",
+    "Surat",
+    "Lucknow",
+    "Kanpur",
+    "Nagpur",
+  ];
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
@@ -56,16 +124,24 @@ function ListVehicle() {
 
   return (
     <div>
-      <h2>Add Vehicle</h2>
+      <h2>List Vehicle</h2>
       <form onSubmit={handleSubmit}>
+        {/* Make Input with Datalist */}
         <input
           type="text"
           name="make"
+          list="carMakes"
           value={formData.make}
           onChange={handleChange}
           placeholder="Make"
           required
         />
+        <datalist id="carMakes">
+          {carMakes.map((make) => (
+            <option key={make} value={make} />
+          ))}
+        </datalist>
+
         <input
           type="text"
           name="model"
@@ -74,14 +150,23 @@ function ListVehicle() {
           placeholder="Model"
           required
         />
+
+        {/* Year Input with Datalist */}
         <input
-          type="number"
+          type="text"
           name="year"
+          list="years"
           value={formData.year}
           onChange={handleChange}
           placeholder="Year"
           required
         />
+        <datalist id="years">
+          {years.map((year) => (
+            <option key={year} value={year} />
+          ))}
+        </datalist>
+
         <input
           type="number"
           name="price"
@@ -90,22 +175,37 @@ function ListVehicle() {
           placeholder="Price"
           required
         />
-        <input
-          type="text"
+
+        {/* Fuel Type Dropdown */}
+        <select
           name="fuelType"
           value={formData.fuelType}
           onChange={handleChange}
-          placeholder="Fuel Type"
           required
-        />
-        <input
-          type="text"
+        >
+          <option value="">Select Fuel Type</option>
+          {fuelTypes.map((fuel) => (
+            <option key={fuel} value={fuel}>
+              {fuel}
+            </option>
+          ))}
+        </select>
+
+        {/* Transmission Dropdown */}
+        <select
           name="transmission"
           value={formData.transmission}
           onChange={handleChange}
-          placeholder="Transmission"
           required
-        />
+        >
+          <option value="">Select Transmission</option>
+          {transmissions.map((transmission) => (
+            <option key={transmission} value={transmission}>
+              {transmission}
+            </option>
+          ))}
+        </select>
+
         <input
           type="number"
           step="0.1"
@@ -114,13 +214,21 @@ function ListVehicle() {
           onChange={handleChange}
           placeholder="Engine Displacement"
         />
-        <input
-          type="text"
+
+        {/* Engine Type Dropdown */}
+        <select
           name="engineType"
           value={formData.engineType}
           onChange={handleChange}
-          placeholder="Engine Type"
-        />
+        >
+          <option value="">Select Engine Type</option>
+          {engineTypes.map((engine) => (
+            <option key={engine} value={engine}>
+              {engine}
+            </option>
+          ))}
+        </select>
+
         <input
           type="number"
           name="odometer"
@@ -129,22 +237,39 @@ function ListVehicle() {
           placeholder="Odometer"
           required
         />
+
+        {/* Ownership Input with Datalist */}
         <input
-          type="number"
+          type="text"
           name="ownership"
+          list="ownerships"
           value={formData.ownership}
           onChange={handleChange}
           placeholder="Ownership"
           required
         />
+        <datalist id="ownerships">
+          {ownerships.map((num) => (
+            <option key={num} value={num} />
+          ))}
+        </datalist>
+
+        {/* Location Input with Datalist */}
         <input
           type="text"
           name="location"
+          list="locations"
           value={formData.location}
           onChange={handleChange}
           placeholder="Location"
           required
         />
+        <datalist id="locations">
+          {locations.map((city) => (
+            <option key={city} value={city} />
+          ))}
+        </datalist>
+
         <button type="submit">Add Vehicle</button>
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}

@@ -71,6 +71,29 @@ exports.getVehiclesOfUser = catchAsyncError(async (req, res, next) => {
   });
 });
 
+exports.getLikedVehiclesOfUser = catchAsyncError(async (req, res, next) => {
+  const userId = req.params.userId;
+
+  // Check if user exists
+  const user = await User.findById(userId);
+  if (!user) {
+    return next(new AppError("No user found with that ID", 404));
+  }
+
+  // Fetch the vehicles liked by the user
+  const likedVehicles = await Vehicle.find({
+    _id: { $in: user.likedVehicles },
+  });
+
+  res.status(200).json({
+    status: "success",
+    results: likedVehicles.length,
+    data: {
+      likedVehicles,
+    },
+  });
+});
+
 // exports.searchVehicles = catchAsyncError(async (req, res) => {
 //   const filters = {
 //     make: req.query.make ? req.query.make.split(",") : undefined,

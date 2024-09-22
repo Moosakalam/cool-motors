@@ -1,6 +1,7 @@
 // src/Signup.js
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate, Link } from "react-router-dom";
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -9,6 +10,7 @@ function Signup() {
     password: "",
     passwordConfirm: "",
   });
+  const navigate = useNavigate();
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -36,6 +38,8 @@ function Signup() {
         passwordConfirm: "",
       });
       setError("");
+      navigate("/"); // Redirect to home page after login
+      window.location.reload(); // Refresh the page after login
     } catch (err) {
       setError(err.response.data.message || "Signup failed");
       setSuccess("");
@@ -82,6 +86,11 @@ function Signup() {
       </form>
       {error && <p style={{ color: "red" }}>{error}</p>}
       {success && <p style={{ color: "green" }}>{success}</p>}
+      <div style={{ marginTop: "20px" }}>
+        <p>
+          Already have an account? <Link to="/login">Login</Link>
+        </p>
+      </div>
     </div>
   );
 }
