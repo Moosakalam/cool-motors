@@ -1,10 +1,19 @@
 const express = require("express");
 const vehicleController = require("../controllers/vehicleController");
 const authController = require("../controllers/authController");
+const multer = require("multer");
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 
 const router = express.Router();
 
-router.post("/list", authController.protect, vehicleController.listVehicle);
+router.post(
+  "/list",
+  upload.single("image"),
+  authController.protect,
+  vehicleController.listVehicle
+);
 
 //search
 router.get("/search", vehicleController.searchVehicles);

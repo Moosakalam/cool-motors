@@ -16,9 +16,6 @@ function ListVehicle() {
     location: "",
   });
 
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-
   const carMakes = [
     "Toyota",
     "Honda",
@@ -48,9 +45,9 @@ function ListVehicle() {
     (_, i) => 1900 + i
   );
 
-  const fuelTypes = ["Petrol", "Diesel", "Electric", "Hybrid", "CNG", "LPG"];
+  const fuelTypes = ["petrol", "diesel", "electric", "hybrid", "CNG", "LPG"];
 
-  const transmissions = ["Manual", "Automatic"];
+  const transmissions = ["manual", "automatic"];
 
   const engineTypes = [
     "I3",
@@ -87,37 +84,49 @@ function ListVehicle() {
     "Nagpur",
   ];
 
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
+      // Create FormData object to hold the form data and file
+      const formDataWithFile = new FormData();
+      Object.keys(formData).forEach((key) => {
+        formDataWithFile.append(key, formData[key]);
+      });
+
+      if (selectedFile) {
+        formDataWithFile.append("image", selectedFile); // Add the selected file
+      }
+
       const token = localStorage.getItem("token");
-      await axios.post("http://127.0.0.1:5000/api/v1/vehicles/list", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axios.post(
+        "http://127.0.0.1:5000/api/v1/vehicles/list",
+        formDataWithFile,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
       setSuccess("Vehicle added successfully!");
-      setFormData({
-        make: "",
-        model: "",
-        year: "",
-        price: "",
-        fuelType: "",
-        transmission: "",
-        engineDisplacement: "",
-        engineType: "",
-        odometer: "",
-        ownership: "",
-        location: "",
-      });
       setError("");
     } catch (err) {
-      setError(err.response.data.message || "Failed to add vehicle");
+      setError(err.response?.data?.message || "Failed to add vehicle");
       setSuccess("");
     }
   };
@@ -126,7 +135,6 @@ function ListVehicle() {
     <div>
       <h2>List Vehicle</h2>
       <form onSubmit={handleSubmit}>
-        {/* Make Input with Datalist */}
         <input
           type="text"
           name="make"
@@ -151,7 +159,6 @@ function ListVehicle() {
           required
         />
 
-        {/* Year Input with Datalist */}
         <input
           type="text"
           name="year"
@@ -176,7 +183,6 @@ function ListVehicle() {
           required
         />
 
-        {/* Fuel Type Dropdown */}
         <select
           name="fuelType"
           value={formData.fuelType}
@@ -191,7 +197,6 @@ function ListVehicle() {
           ))}
         </select>
 
-        {/* Transmission Dropdown */}
         <select
           name="transmission"
           value={formData.transmission}
@@ -215,7 +220,6 @@ function ListVehicle() {
           placeholder="Engine Displacement"
         />
 
-        {/* Engine Type Dropdown */}
         <select
           name="engineType"
           value={formData.engineType}
@@ -238,7 +242,6 @@ function ListVehicle() {
           required
         />
 
-        {/* Ownership Input with Datalist */}
         <input
           type="text"
           name="ownership"
@@ -254,7 +257,6 @@ function ListVehicle() {
           ))}
         </datalist>
 
-        {/* Location Input with Datalist */}
         <input
           type="text"
           name="location"
@@ -269,6 +271,8 @@ function ListVehicle() {
             <option key={city} value={city} />
           ))}
         </datalist>
+
+        <input type="file" onChange={handleFileChange} required />
 
         <button type="submit">Add Vehicle</button>
       </form>

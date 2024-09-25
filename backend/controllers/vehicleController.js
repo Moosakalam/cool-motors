@@ -3,7 +3,49 @@ const User = require("../models/userModel");
 const catchAsyncError = require("../utils/catchAsyncError");
 const AppError = require("../utils/appError");
 
+const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const crypto = require("crypto");
+
+const bucketName = process.env.AWS_BUCKET_NAME;
+const region = process.env.AWS_BUCKET_REGION;
+const accessKeyId = process.env.AWS_ACCESS_KEY;
+const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+
+const s3Client = new S3Client({
+  region,
+  credentials: {
+    accessKeyId,
+    secretAccessKey,
+  },
+});
+
+const generateFileName = (bytes = 32) =>
+  crypto.randomBytes(bytes).toString("hex");
+
 exports.listVehicle = catchAsyncError(async (req, res, next) => {
+  const file = req.file;
+
+  // const fileBuffer = await sharp(file.buffer)
+  //   .resize({ height: 1920, width: 1080, fit: "contain" })
+  //   .toBuffer();
+
+  // Configure the upload details to send to S3
+  const fileName = generateFileName();
+  const uploadParams = {
+    Bucket: bucketName,
+    Body: file.buffer,
+    Key: fileName,
+    ContentType: file.mimetype,
+  };
+
+  // Send the upload to S3
+  const s3_reponse = await s3Client.send(new PutObjectCommand(uploadParams));
+  // console.log(s3_reponse);
+
+  //image url:
+  const imageUrl = `https://images-cool-motors.s3.eu-north-1.amazonaws.com/${fileName}`;
+
+  // Send the upload to S3
   const newVehicle = await Vehicle.create({
     make: req.body.make,
     model: req.body.model,
@@ -17,6 +59,7 @@ exports.listVehicle = catchAsyncError(async (req, res, next) => {
     ownership: req.body.ownership,
     location: req.body.location,
     listedBy: req.user._id,
+    image: imageUrl,
   });
 
   //add vehicle to Owner's User document

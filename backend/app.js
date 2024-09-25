@@ -2,9 +2,12 @@ const express = require("express");
 const morgan = require("morgan");
 const vehicleRoutes = require("./routes/vehicleRoutes");
 const userRouter = require("./routes/userRoutes");
+const adminRouter = require("./routes/adminRoutes");
 const AppError = require("./utils/appError");
 const errorHandler = require("./controllers/errorController");
 const cors = require("cors");
+const multer = require("multer");
+const { S3Client } = require("@aws-sdk/client-s3");
 
 const app = express();
 
@@ -22,6 +25,7 @@ app.use((req, res, next) => {
 
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/vehicles", vehicleRoutes);
+app.use("/api/v1/", adminRouter);
 
 //for undefined url:
 //'all' means (get, post, patch, delete, ..)

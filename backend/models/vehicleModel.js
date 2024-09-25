@@ -94,6 +94,10 @@ const vehicleSchema = mongoose.Schema({
     ref: "User",
     required: [true, "please provide user"],
   },
+  image: {
+    type: String, // Store the URL of the image
+    // required: [true, "Please upload an image of your vehicle"],
+  },
 });
 
 const Vehicle = mongoose.model("Vehicle", vehicleSchema);
