@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { getUserIdFromToken } from "./utils/jwtDecode";
+import { getUserIdFromToken } from "../utils/jwtDecode";
 
 function VehicleDetails() {
   const { id } = useParams(); // Vehicle ID from URL

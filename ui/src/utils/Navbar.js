@@ -1,7 +1,7 @@
 import "./Navbar.css";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { getUserIdFromToken } from "./utils/jwtDecode";
+import { getUserIdFromToken } from "./jwtDecode";
 
 const Navbar = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);

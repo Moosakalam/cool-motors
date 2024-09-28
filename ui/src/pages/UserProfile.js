@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom"; // Add useNavigate for redirect
 import axios from "axios";
-import { getUserIdFromToken } from "./utils/jwtDecode";
-import VehicleCard from "./utils/VehicleCard";
+import { getUserIdFromToken } from "../utils/jwtDecode";
+import VehicleCard from "../utils/VehicleCard";
 
 function UserProfile() {
   const { userId } = useParams();

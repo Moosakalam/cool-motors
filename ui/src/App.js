@@ -1,16 +1,16 @@
 // src/App.js
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import HomePage from "./HomePage"; // Import the HomePage component
+import HomePage from "./pages/HomePage"; // Import the HomePage component
 // import VehicleList from "./VehicleList";
-import UserProfile from "./UserProfile";
-import MyProfile from "./MyProfile";
-import ListVehicle from "./ListVehicle";
-import VehicleDetails from "./VehicleDetails";
-import Signup from "./Signup";
-import Login from "./Login";
-import Navbar from "./Navbar"; // Import the Navbar
-import SearchVehiclesPage from "./SearchVehiclesPage";
+import UserProfile from "./pages/UserProfile";
+import MyProfile from "./pages/MyProfile";
+import ListVehicle from "./pages/ListVehicle";
+import VehicleDetails from "./pages/VehicleDetails";
+import Signup from "./pages/Signup";
+import Login from "./pages/Login";
+import Navbar from "./utils/Navbar"; // Import the Navbar
+import SearchVehiclesPage from "./pages/SearchVehiclesPage";
 
 function App() {
   return (

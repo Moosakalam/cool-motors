@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom"; // Import Link for navigation
 import axios from "axios";
-import { getUserIdFromToken } from "./utils/jwtDecode";
-import VehicleCard from "./utils/VehicleCard";
+import { getUserIdFromToken } from "../utils/jwtDecode";
+import VehicleCard from "../utils/VehicleCard";
 
 function MyProfile() {
   const [listedVehicles, setListedVehicles] = useState([]);

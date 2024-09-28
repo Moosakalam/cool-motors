@@ -1,7 +1,7 @@
 // src/HomePage.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import VehicleCard from "./utils/VehicleCard";
+import VehicleCard from "../utils/VehicleCard";
 
 const HomePage = () => {
   const [vehicles, setVehicles] = useState([]);

@@ -2,7 +2,7 @@
 import "./SearchVehicles.css";
 import React, { useState } from "react";
 import axios from "axios";
-import VehicleCard from "./utils/VehicleCard";
+import VehicleCard from "../utils/VehicleCard";
 
 const fuelTypes = ["petrol", "diesel", "hybrid", "electric", "lpg", "cng"];
 const transmissions = ["automatic", "manual"];
