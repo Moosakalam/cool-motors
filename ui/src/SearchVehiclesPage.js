@@ -2,6 +2,7 @@
 import "./SearchVehicles.css";
 import React, { useState } from "react";
 import axios from "axios";
+import VehicleCard from "./utils/VehicleCard";
 
 const fuelTypes = ["petrol", "diesel", "hybrid", "electric", "lpg", "cng"];
 const transmissions = ["automatic", "manual"];
@@ -119,24 +120,7 @@ const SearchVehiclesPage = () => {
             }}
           >
             {vehicles.map((vehicle) => (
-              <div
-                key={vehicle._id}
-                onClick={() =>
-                  (window.location.href = `/vehicle/${vehicle._id}`)
-                }
-                className="vehicle-card"
-              >
-                <div>
-                  <img
-                    src={vehicle.image || "placeholder.jpg"}
-                    alt={`${vehicle.make} ${vehicle.model}`}
-                  />
-                </div>
-                <h2>
-                  {vehicle.year} {vehicle.make} {vehicle.model}
-                </h2>
-                <h1>₹{vehicle.price}</h1>
-              </div>
+              <VehicleCard key={vehicle._id} vehicle={vehicle} />
             ))}
           </div>
         )}

@@ -1,6 +1,7 @@
 // src/HomePage.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import VehicleCard from "./utils/VehicleCard";
 
 const HomePage = () => {
   const [vehicles, setVehicles] = useState([]);
@@ -35,33 +36,7 @@ const HomePage = () => {
           }}
         >
           {vehicles.map((vehicle) => (
-            <div
-              key={vehicle._id}
-              onClick={() => (window.location.href = `/vehicle/${vehicle._id}`)}
-              style={{
-                border: "1px solid #ccc",
-                cursor: "pointer",
-                textAlign: "center",
-                borderRadius: "10px",
-                overflow: "hidden",
-              }}
-            >
-              <div
-                style={{ width: "100%", height: "200px", overflow: "hidden" }}
-              >
-                <img
-                  src={vehicle.image || "placeholder.jpg"}
-                  alt={`${vehicle.make} ${vehicle.model}`}
-                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
-                />
-              </div>
-              <h2 style={{ margin: "15px 0 0 0", fontSize: "18px" }}>
-                {vehicle.year} {vehicle.make} {vehicle.model}
-              </h2>
-              <h1 style={{ margin: "10px 0", fontSize: "22px", color: "#333" }}>
-                ₹{vehicle.price}
-              </h1>
-            </div>
+            <VehicleCard key={vehicle._id} vehicle={vehicle} />
           ))}
         </div>
       )}

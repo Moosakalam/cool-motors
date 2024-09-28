@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import HomePage from "./HomePage"; // Import the HomePage component
 // import VehicleList from "./VehicleList";
 import UserProfile from "./UserProfile";
+import MyProfile from "./MyProfile";
 import ListVehicle from "./ListVehicle";
 import VehicleDetails from "./VehicleDetails";
 import Signup from "./Signup";
@@ -20,6 +21,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           {/* <Route path="/" element={<VehicleList />} /> */}
           <Route path="/user/:userId" element={<UserProfile />} />
+          <Route path="/my-profile" element={<MyProfile />} />
           <Route path="/list" element={<ListVehicle />} />
           <Route path="/vehicle/:id" element={<VehicleDetails />} />
           <Route path="/login" element={<Login />} />
