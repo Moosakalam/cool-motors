@@ -1,7 +1,6 @@
 // src/HomePage.js
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
 
 const HomePage = () => {
   const [vehicles, setVehicles] = useState([]);
@@ -41,18 +40,21 @@ const HomePage = () => {
               onClick={() => (window.location.href = `/vehicle/${vehicle._id}`)}
               style={{
                 border: "1px solid #ccc",
-                padding: "20px",
                 cursor: "pointer",
                 textAlign: "center",
                 borderRadius: "10px",
                 overflow: "hidden",
               }}
             >
-              <img
-                src={vehicle.image || "placeholder.jpg"}
-                alt={`${vehicle.make} ${vehicle.model}`}
-                style={{ width: "100%", height: "200px", objectFit: "cover" }}
-              />
+              <div
+                style={{ width: "100%", height: "200px", overflow: "hidden" }}
+              >
+                <img
+                  src={vehicle.image || "placeholder.jpg"}
+                  alt={`${vehicle.make} ${vehicle.model}`}
+                  style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                />
+              </div>
               <h2 style={{ margin: "15px 0 0 0", fontSize: "18px" }}>
                 {vehicle.year} {vehicle.make} {vehicle.model}
               </h2>

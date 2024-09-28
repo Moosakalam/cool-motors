@@ -1,0 +1,64 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px; /* Increased padding for better spacing */
+  background-color: #f8f8f8; /* Light background color */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+}
+
+.nav-link {
+  text-decoration: none;
+  padding: 10px 15px;
+  color: #333; /* Dark text color */
+  transition: background-color 0.3s; /* Transition for hover effect */
+}
+
+.nav-link:hover {
+  background-color: #007bff; /* Button hover color */
+  color: white; /* Text color on hover */
+  border-radius: 4px; /* Rounded corners on hover */
+}
+
+.user-menu {
+  position: relative;
+  cursor: pointer;
+}
+
+.user-menu-title {
+  padding: 10px;
+  color: #333; /* Dark text color */
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  background-color: #fff; /* Dropdown background color */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Dropdown shadow */
+  padding: 10px;
+  border-radius: 4px; /* Rounded corners */
+  z-index: 1;
+}
+
+.dropdown-link {
+  display: block;
+  text-decoration: none;
+  margin-bottom: 10px;
+  color: #007bff; /* Link color */
+  transition: color 0.3s; /* Transition for hover effect */
+}
+
+.dropdown-link:hover {
+  color: #0056b3; /* Darker link color on hover */
+}
+
+.logout {
+  cursor: pointer;
+  color: #d9534f; /* Logout color */
+}

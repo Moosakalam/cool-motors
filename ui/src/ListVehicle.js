@@ -1,3 +1,4 @@
+import "./ListVehicle.css";
 import React, { useState } from "react";
 import axios from "axios";
 
@@ -132,152 +133,183 @@ function ListVehicle() {
   };
 
   return (
-    <div>
-      <h2>List Vehicle</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          name="make"
-          list="carMakes"
-          value={formData.make}
-          onChange={handleChange}
-          placeholder="Make"
-          required
-        />
-        <datalist id="carMakes">
-          {carMakes.map((make) => (
-            <option key={make} value={make} />
-          ))}
-        </datalist>
+    <div className="vehicle-list-container">
+      <h2 className="form-title">List Vehicle</h2>
+      <form className="vehicle-form" onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label htmlFor="make">Make</label>
+          <input
+            type="text"
+            name="make"
+            list="carMakes"
+            value={formData.make}
+            onChange={handleChange}
+            required
+          />
+          <datalist id="carMakes">
+            {carMakes.map((make) => (
+              <option key={make} value={make} />
+            ))}
+          </datalist>
+        </div>
 
-        <input
-          type="text"
-          name="model"
-          value={formData.model}
-          onChange={handleChange}
-          placeholder="Model"
-          required
-        />
+        <div className="form-group">
+          <label htmlFor="model">Model</label>
+          <input
+            type="text"
+            name="model"
+            value={formData.model}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-        <input
-          type="text"
-          name="year"
-          list="years"
-          value={formData.year}
-          onChange={handleChange}
-          placeholder="Year"
-          required
-        />
-        <datalist id="years">
-          {years.map((year) => (
-            <option key={year} value={year} />
-          ))}
-        </datalist>
+        <div className="form-group">
+          <label htmlFor="year">Year</label>
+          <input
+            type="text"
+            name="year"
+            list="years"
+            value={formData.year}
+            onChange={handleChange}
+            required
+          />
+          <datalist id="years">
+            {years.map((year) => (
+              <option key={year} value={year} />
+            ))}
+          </datalist>
+        </div>
 
-        <input
-          type="number"
-          name="price"
-          value={formData.price}
-          onChange={handleChange}
-          placeholder="Price"
-          required
-        />
+        <div className="form-group">
+          <label htmlFor="price">Price</label>
+          <input
+            type="number"
+            name="price"
+            value={formData.price}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-        <select
-          name="fuelType"
-          value={formData.fuelType}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Select Fuel Type</option>
-          {fuelTypes.map((fuel) => (
-            <option key={fuel} value={fuel}>
-              {fuel}
-            </option>
-          ))}
-        </select>
+        <div className="form-group">
+          <label htmlFor="fuelType">Fuel Type</label>
+          <select
+            name="fuelType"
+            value={formData.fuelType}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Fuel Type</option>
+            {fuelTypes.map((fuel) => (
+              <option key={fuel} value={fuel}>
+                {fuel}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        <select
-          name="transmission"
-          value={formData.transmission}
-          onChange={handleChange}
-          required
-        >
-          <option value="">Select Transmission</option>
-          {transmissions.map((transmission) => (
-            <option key={transmission} value={transmission}>
-              {transmission}
-            </option>
-          ))}
-        </select>
+        <div className="form-group">
+          <label htmlFor="transmission">Transmission</label>
+          <select
+            name="transmission"
+            value={formData.transmission}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select Transmission</option>
+            {transmissions.map((transmission) => (
+              <option key={transmission} value={transmission}>
+                {transmission}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        <input
-          type="number"
-          step="0.1"
-          name="engineDisplacement"
-          value={formData.engineDisplacement}
-          onChange={handleChange}
-          placeholder="Engine Displacement"
-        />
+        <div className="form-group">
+          <label htmlFor="engineDisplacement">Engine Displacement</label>
+          <input
+            type="number"
+            step="0.1"
+            name="engineDisplacement"
+            value={formData.engineDisplacement}
+            onChange={handleChange}
+          />
+        </div>
 
-        <select
-          name="engineType"
-          value={formData.engineType}
-          onChange={handleChange}
-        >
-          <option value="">Select Engine Type</option>
-          {engineTypes.map((engine) => (
-            <option key={engine} value={engine}>
-              {engine}
-            </option>
-          ))}
-        </select>
+        <div className="form-group">
+          <label htmlFor="engineType">Engine Type</label>
+          <select
+            name="engineType"
+            value={formData.engineType}
+            onChange={handleChange}
+          >
+            <option value="">Select Engine Type</option>
+            {engineTypes.map((engine) => (
+              <option key={engine} value={engine}>
+                {engine}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        <input
-          type="number"
-          name="odometer"
-          value={formData.odometer}
-          onChange={handleChange}
-          placeholder="Odometer"
-          required
-        />
+        <div className="form-group">
+          <label htmlFor="odometer">Odometer</label>
+          <input
+            type="number"
+            name="odometer"
+            value={formData.odometer}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-        <input
-          type="text"
-          name="ownership"
-          list="ownerships"
-          value={formData.ownership}
-          onChange={handleChange}
-          placeholder="Ownership"
-          required
-        />
-        <datalist id="ownerships">
-          {ownerships.map((num) => (
-            <option key={num} value={num} />
-          ))}
-        </datalist>
+        <div className="form-group">
+          <label htmlFor="ownership">Ownership</label>
+          <input
+            type="text"
+            name="ownership"
+            list="ownerships"
+            value={formData.ownership}
+            onChange={handleChange}
+            required
+          />
+          <datalist id="ownerships">
+            {ownerships.map((num) => (
+              <option key={num} value={num} />
+            ))}
+          </datalist>
+        </div>
 
-        <input
-          type="text"
-          name="location"
-          list="locations"
-          value={formData.location}
-          onChange={handleChange}
-          placeholder="Location"
-          required
-        />
-        <datalist id="locations">
-          {locations.map((city) => (
-            <option key={city} value={city} />
-          ))}
-        </datalist>
+        <div className="form-group">
+          <label htmlFor="location">Location</label>
+          <input
+            type="text"
+            name="location"
+            list="locations"
+            value={formData.location}
+            onChange={handleChange}
+            required
+          />
+          <datalist id="locations">
+            {locations.map((city) => (
+              <option key={city} value={city} />
+            ))}
+          </datalist>
+        </div>
 
-        <input type="file" onChange={handleFileChange} required />
+        <div className="form-group">
+          <label htmlFor="file">Upload Image</label>
+          <input type="file" onChange={handleFileChange} required />
+        </div>
 
-        <button type="submit">Add Vehicle</button>
+        <button type="submit" className="submit-button">
+          Add Vehicle
+        </button>
       </form>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && <p style={{ color: "green" }}>{success}</p>}
+
+      {error && <p className="error-message">{error}</p>}
+      {success && <p className="success-message">{success}</p>}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { getUserIdFromToken } from "./utils/jwtDecode";
 
@@ -10,6 +10,7 @@ function VehicleDetails() {
   const [liked, setLiked] = useState(false); // State for like status
   const [userId, setUserId] = useState("");
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchVehicleDetails = async () => {
@@ -73,7 +74,7 @@ function VehicleDetails() {
   const handleLikeToggle = async () => {
     try {
       const token = localStorage.getItem("token");
-      if (!token) return; // Exit if no token is available
+      if (!token) return navigate("/login"); // Exit if no token is available
 
       if (liked) {
         // Unlike the vehicle
@@ -106,11 +107,41 @@ function VehicleDetails() {
   }
 
   return (
-    <div>
-      <h2>
+    <div style={{ maxWidth: "800px", margin: "0 auto", textAlign: "left" }}>
+      <div style={{ position: "relative" }}>
+        <img
+          src={vehicle.image}
+          alt={`${vehicle.make} ${vehicle.model}`}
+          style={{
+            width: "100%",
+            height: "400px",
+            objectFit: "cover",
+            borderRadius: "10px",
+          }}
+        />
+        <button
+          onClick={handleLikeToggle}
+          style={{
+            position: "absolute",
+            bottom: "10px",
+            right: "10px",
+            background: liked ? "#ff4d4d" : "#4CAF50",
+            color: "#fff",
+            padding: "10px 20px",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+        >
+          {liked ? "Unlike" : "Like"}
+        </button>
+      </div>
+      <h2 style={{ fontSize: "32px", marginTop: "20px" }}>
         {vehicle.year} {vehicle.make} {vehicle.model}
       </h2>
-      <p>Price: ${vehicle.price}</p>
+      <h1 style={{ fontSize: "36px", color: "#333", margin: "10px 0" }}>
+        ₹{vehicle.price}
+      </h1>
       <p>Fuel Type: {vehicle.fuelType}</p>
       <p>Transmission: {vehicle.transmission}</p>
       <p>Engine Displacement: {vehicle.engineDisplacement}L</p>
@@ -126,10 +157,6 @@ function VehicleDetails() {
           "Loading seller details..."
         )}
       </p>
-      {/* Like/Unlike Button */}
-      <button onClick={handleLikeToggle}>
-        {liked ? "Unlike" : "Like"} Vehicle
-      </button>
     </div>
   );
 }

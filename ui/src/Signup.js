@@ -1,4 +1,5 @@
 // src/Signup.js
+import "./Signup.css";
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
@@ -47,8 +48,9 @@ function Signup() {
   };
 
   return (
-    <div>
+    <div className="container">
       <h2>Signup</h2>
+      <br></br>
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -84,8 +86,8 @@ function Signup() {
         />
         <button type="submit">Signup</button>
       </form>
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && <p style={{ color: "green" }}>{success}</p>}
+      {error && <p className="error">{error}</p>}
+      {success && <p className="success">{success}</p>}
       <div style={{ marginTop: "20px" }}>
         <p>
           Already have an account? <Link to="/login">Login</Link>

@@ -1,3 +1,4 @@
+import "./Navbar.css";
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { getUserIdFromToken } from "./utils/jwtDecode";
@@ -26,70 +27,38 @@ const Navbar = () => {
   };
 
   return (
-    <header
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        padding: "10px",
-        position: "relative",
-      }}
-    >
-      <div style={{ display: "flex", alignItems: "center" }}>
-        <Link to="/" style={{ textDecoration: "none", padding: "10px" }}>
+    <header className="header">
+      <div className="nav-links">
+        <Link to="/" className="nav-link">
           HOME
         </Link>
-        <Link to="/search" style={{ textDecoration: "none", padding: "10px" }}>
+        <Link to="/search" className="nav-link">
           Search
         </Link>
       </div>
       {isLoggedIn ? (
         <div
-          style={{ position: "relative" }}
+          className="user-menu"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          <div style={{ cursor: "pointer" }}>User Menu</div>
+          <div className="user-menu-title">User Menu</div>
           {isHovered && (
-            <div
-              style={{
-                position: "absolute",
-                top: "100%",
-                right: 0,
-                backgroundColor: "#fff",
-                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-                padding: "10px",
-                borderRadius: "4px",
-                zIndex: 1,
-              }}
-            >
-              <Link
-                to={`/user/${userId}`}
-                style={{
-                  display: "block",
-                  textDecoration: "none",
-                  marginBottom: "10px",
-                }}
-              >
+            <div className="dropdown-menu">
+              <Link to={`/user/${userId}`} className="dropdown-link">
                 My Profile
               </Link>
-              <Link
-                to="/list"
-                style={{
-                  display: "block",
-                  textDecoration: "none",
-                  marginBottom: "10px",
-                }}
-              >
+              <Link to="/list" className="dropdown-link">
                 List Vehicle
               </Link>
-              <div onClick={handleLogout} style={{ cursor: "pointer" }}>
+              <div onClick={handleLogout} className="dropdown-link logout">
                 Logout
               </div>
             </div>
           )}
         </div>
       ) : (
-        <Link to="/login" style={{ textDecoration: "none", padding: "10px" }}>
+        <Link to="/login" className="nav-link">
           Login
         </Link>
       )}

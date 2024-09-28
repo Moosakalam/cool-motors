@@ -1,0 +1,55 @@
+.container {
+  max-width: 400px; /* Limit the width of the form */
+  margin: auto; /* Center the form */
+  padding: 20px; /* Add padding around the form */
+  border: 1px solid #ddd; /* Light border */
+  border-radius: 8px; /* Rounded corners */
+  background-color: #f9f9f9; /* Light background color */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+.container h2 {
+  text-align: center; /* Center the title */
+  margin-bottom: 20px; /* Space below the title */
+}
+
+.container input {
+  width: 100%; /* Full width inputs */
+  padding: 12px; /* More padding for comfort */
+  margin: 10px 0; /* Space above and below inputs */
+  border: 1px solid #ccc; /* Light border */
+  border-radius: 4px; /* Rounded corners */
+  box-sizing: border-box; /* Include padding and border in width */
+  font-size: 16px; /* Larger font size for readability */
+}
+
+.container button {
+  width: 100%; /* Full width button */
+  padding: 12px; /* More padding */
+  background-color: #007bff; /* Bootstrap primary color */
+  color: white; /* White text color */
+  border: none; /* Remove border */
+  border-radius: 4px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor on hover */
+  font-weight: bold; /* Bold text */
+  font-size: 16px; /* Consistent font size */
+  transition: background-color 0.3s; /* Smooth transition on hover */
+}
+
+.container button:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+}
+
+.container p {
+  text-align: center; /* Center align text */
+}
+
+.error {
+  color: red; /* Red color for error messages */
+  text-align: center; /* Center align error messages */
+}
+
+.success {
+  color: green; /* Green color for success messages */
+  text-align: center; /* Center align success messages */
+}

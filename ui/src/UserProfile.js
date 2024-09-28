@@ -134,24 +134,30 @@ function UserProfile() {
                     }
                     style={{
                       border: "1px solid #ccc",
-                      padding: "20px",
                       cursor: "pointer",
                       textAlign: "center",
                       borderRadius: "10px",
                       overflow: "hidden",
                     }}
                   >
-                    <img
-                      src={vehicle.image || "placeholder.jpg"}
-                      alt={`${vehicle.make} ${vehicle.model}`}
+                    <div
                       style={{
                         width: "100%",
-                        height: "150px",
-                        objectFit: "cover",
-                        marginBottom: "10px",
+                        height: "200px",
+                        overflow: "hidden",
                       }}
-                    />
-                    <h2 style={{ margin: "0", fontSize: "18px" }}>
+                    >
+                      <img
+                        src={vehicle.image || "placeholder.jpg"}
+                        alt={`${vehicle.make} ${vehicle.model}`}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </div>
+                    <h2 style={{ margin: "15px 0 0 0", fontSize: "18px" }}>
                       {vehicle.year} {vehicle.make} {vehicle.model}
                     </h2>
                     <h1
@@ -187,24 +193,30 @@ function UserProfile() {
                     }
                     style={{
                       border: "1px solid #ccc",
-                      padding: "20px",
                       cursor: "pointer",
                       textAlign: "center",
                       borderRadius: "10px",
                       overflow: "hidden",
                     }}
                   >
-                    <img
-                      src={vehicle.image || "placeholder.jpg"}
-                      alt={`${vehicle.make} ${vehicle.model}`}
+                    <div
                       style={{
                         width: "100%",
-                        height: "150px",
-                        objectFit: "cover",
-                        marginBottom: "10px",
+                        height: "200px",
+                        overflow: "hidden",
                       }}
-                    />
-                    <h2 style={{ margin: "0", fontSize: "18px" }}>
+                    >
+                      <img
+                        src={vehicle.image || "placeholder.jpg"}
+                        alt={`${vehicle.make} ${vehicle.model}`}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                        }}
+                      />
+                    </div>
+                    <h2 style={{ margin: "15px 0 0 0", fontSize: "18px" }}>
                       {vehicle.year} {vehicle.make} {vehicle.model}
                     </h2>
                     <h1
