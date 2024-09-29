@@ -3,7 +3,11 @@ const User = require("../models/userModel");
 const catchAsyncError = require("../utils/catchAsyncError");
 const AppError = require("../utils/appError");
 
-const { S3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} = require("@aws-sdk/client-s3");
 const crypto = require("crypto");
 
 const bucketName = process.env.AWS_BUCKET_NAME;
@@ -23,29 +27,34 @@ const generateFileName = (bytes = 32) =>
   crypto.randomBytes(bytes).toString("hex");
 
 exports.listVehicle = catchAsyncError(async (req, res, next) => {
-  const file = req.file;
+  const files = req.files; // Handling multiple files
 
-  // const fileBuffer = await sharp(file.buffer)
-  //   .resize({ height: 1920, width: 1080, fit: "contain" })
-  //   .toBuffer();
+  // Check if there are files to upload
+  if (!files || files.length === 0) {
+    return next(new Error("No images provided"));
+  }
 
-  // Configure the upload details to send to S3
-  const fileName = generateFileName();
-  const uploadParams = {
-    Bucket: bucketName,
-    Body: file.buffer,
-    Key: fileName,
-    ContentType: file.mimetype,
-  };
+  const imageUrls = [];
 
-  // Send the upload to S3
-  const s3_reponse = await s3Client.send(new PutObjectCommand(uploadParams));
-  // console.log(s3_reponse);
+  // Loop through the files and upload each one to S3
+  for (const file of files) {
+    const fileName = generateFileName();
+    const uploadParams = {
+      Bucket: bucketName,
+      Body: file.buffer,
+      Key: fileName,
+      ContentType: file.mimetype,
+    };
 
-  //image url:
-  const imageUrl = `https://images-cool-motors.s3.eu-north-1.amazonaws.com/${fileName}`;
+    // Send the upload to S3
+    await s3Client.send(new PutObjectCommand(uploadParams));
 
-  // Send the upload to S3
+    // Push the uploaded image URL to the array
+    const imageUrl = `https://images-cool-motors.s3.eu-north-1.amazonaws.com/${fileName}`;
+    imageUrls.push(imageUrl);
+  }
+
+  // Create the vehicle with the uploaded image URLs
   const newVehicle = await Vehicle.create({
     make: req.body.make,
     model: req.body.model,
@@ -59,10 +68,10 @@ exports.listVehicle = catchAsyncError(async (req, res, next) => {
     ownership: req.body.ownership,
     location: req.body.location,
     listedBy: req.user._id,
-    image: imageUrl,
+    images: imageUrls, // Storing the array of image URLs
   });
 
-  //add vehicle to Owner's User document
+  // Add the vehicle to the owner's User document
   await User.findByIdAndUpdate(req.user._id, {
     $push: { listedVehicles: newVehicle._id },
   });
@@ -136,66 +145,6 @@ exports.getLikedVehiclesOfUser = catchAsyncError(async (req, res, next) => {
     },
   });
 });
-
-// exports.searchVehicles = catchAsyncError(async (req, res) => {
-//   const filters = {
-//     make: req.query.make ? req.query.make.split(",") : undefined,
-//     model: req.query.model ? req.query.model.split(",") : undefined,
-//     minYear: req.query.minYear,
-//     maxYear: req.query.maxYear,
-//     fuelType: req.query.fuelType ? req.query.fuelType.split(",") : undefined,
-//     transmission: req.query.transmission
-//       ? req.query.transmission.split(",")
-//       : undefined,
-//     minPrice: req.query.minPrice,
-//     maxPrice: req.query.maxPrice,
-//     minOdometer: req.query.minOdometer,
-//     maxOdometer: req.query.maxOdometer,
-//     location: req.query.location ? req.query.location.split(",") : undefined,
-//     sort: req.query.sort, // Sort query parameter
-//   };
-
-//   const searchCriteria = {};
-
-//   if (filters.make) searchCriteria.make = { $in: filters.make };
-//   if (filters.model) searchCriteria.model = { $in: filters.model };
-//   if (filters.minYear || filters.maxYear) {
-//     searchCriteria.year = {};
-//     if (filters.minYear) searchCriteria.year.$gte = filters.minYear;
-//     if (filters.maxYear) searchCriteria.year.$lte = filters.maxYear;
-//   }
-//   if (filters.fuelType) searchCriteria.fuelType = { $in: filters.fuelType };
-//   if (filters.transmission)
-//     searchCriteria.transmission = { $in: filters.transmission };
-//   if (filters.minPrice || filters.maxPrice) {
-//     searchCriteria.price = {};
-//     if (filters.minPrice) searchCriteria.price.$gte = filters.minPrice;
-//     if (filters.maxPrice) searchCriteria.price.$lte = filters.maxPrice;
-//   }
-//   if (filters.minOdometer || filters.maxOdometer) {
-//     searchCriteria.odometer = {};
-//     if (filters.minOdometer) searchCriteria.odometer.$gte = filters.minOdometer;
-//     if (filters.maxOdometer) searchCriteria.odometer.$lte = filters.maxOdometer;
-//   }
-//   if (filters.location) searchCriteria.location = { $in: filters.location };
-
-//   //Sorting logic
-//   let sortBy = {};
-//   if (filters.sort === "priceAsc") sortBy.price = 1;
-//   if (filters.sort === "priceDesc") sortBy.price = -1;
-//   if (filters.sort === "mileageAsc") sortBy.odometer = 1;
-//   if (filters.sort === "mileageDesc") sortBy.odometer = -1;
-
-//   const vehicles = await Vehicle.find(searchCriteria).sort(sortBy);
-
-//   res.status(200).json({
-//     status: "success",
-//     results: vehicles.length,
-//     data: {
-//       vehicles,
-//     },
-//   });
-// });
 
 exports.searchVehicles = catchAsyncError(async (req, res) => {
   const filters = {
@@ -291,6 +240,16 @@ exports.deleteVehicle = catchAsyncError(async (req, res, next) => {
     return next(
       new AppError("You don't have permission to delete this vehicle", 403)
     );
+  }
+
+  //deleting the image of vehicle from s3
+  for (const image of vehicle.images) {
+    const key = image.split("amazonaws.com/")[1];
+    const deleteParams = {
+      Bucket: bucketName,
+      Key: key,
+    };
+    await s3Client.send(new DeleteObjectCommand(deleteParams));
   }
 
   // Delete the vehicle

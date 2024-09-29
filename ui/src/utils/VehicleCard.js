@@ -21,7 +21,11 @@ function VehicleCard({ vehicle }) {
     >
       <div style={{ width: "100%", height: "200px", overflow: "hidden" }}>
         <img
-          src={vehicle.image || "placeholder.jpg"}
+          src={
+            vehicle.images && vehicle.images.length > 0
+              ? vehicle.images[0]
+              : "placeholder.jpg"
+          }
           alt={`${vehicle.make} ${vehicle.model}`}
           style={{
             width: "100%",

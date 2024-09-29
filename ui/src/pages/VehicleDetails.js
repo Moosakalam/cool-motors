@@ -10,6 +10,7 @@ function VehicleDetails() {
   const [liked, setLiked] = useState(false); // State for like status
   const [userId, setUserId] = useState("");
   const [loading, setLoading] = useState(true);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0); // State for the current image index
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -98,6 +99,20 @@ function VehicleDetails() {
     }
   };
 
+  // Function to go to the next image
+  const nextImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === vehicle.images.length - 1 ? 0 : prevIndex + 1
+    );
+  };
+
+  // Function to go to the previous image
+  const prevImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === 0 ? vehicle.images.length - 1 : prevIndex - 1
+    );
+  };
+
   if (loading) {
     return <div>Loading...</div>;
   }
@@ -110,7 +125,11 @@ function VehicleDetails() {
     <div style={{ maxWidth: "800px", margin: "0 auto", textAlign: "left" }}>
       <div style={{ position: "relative" }}>
         <img
-          src={vehicle.image}
+          src={
+            vehicle.images && vehicle.images.length > 0
+              ? vehicle.images[currentImageIndex]
+              : "placeholder.jpg"
+          }
           alt={`${vehicle.make} ${vehicle.model}`}
           style={{
             width: "100%",
@@ -135,6 +154,44 @@ function VehicleDetails() {
         >
           {liked ? "Unlike" : "Like"}
         </button>
+        {/* Previous Button */}
+        {vehicle.images && vehicle.images.length > 1 && (
+          <button
+            onClick={prevImage}
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "10px",
+              background: "rgba(0, 0, 0, 0.5)",
+              color: "#fff",
+              padding: "10px",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            Prev
+          </button>
+        )}
+        {/* Next Button */}
+        {vehicle.images && vehicle.images.length > 1 && (
+          <button
+            onClick={nextImage}
+            style={{
+              position: "absolute",
+              top: "50%",
+              right: "10px",
+              background: "rgba(0, 0, 0, 0.5)",
+              color: "#fff",
+              padding: "10px",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+            }}
+          >
+            Next
+          </button>
+        )}
       </div>
       <h2 style={{ fontSize: "32px", marginTop: "20px" }}>
         {vehicle.year} {vehicle.make} {vehicle.model}

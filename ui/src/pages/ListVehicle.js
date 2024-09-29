@@ -17,6 +17,10 @@ function ListVehicle() {
     location: "",
   });
 
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
   const carMakes = [
     "Toyota",
     "Honda",
@@ -47,9 +51,7 @@ function ListVehicle() {
   );
 
   const fuelTypes = ["petrol", "diesel", "electric", "hybrid", "CNG", "LPG"];
-
   const transmissions = ["manual", "automatic"];
-
   const engineTypes = [
     "I3",
     "I4",
@@ -66,9 +68,7 @@ function ListVehicle() {
     "H6",
     "Rotary",
   ];
-
   const ownerships = Array.from({ length: 10 }, (_, i) => i + 1);
-
   const locations = [
     "Mumbai",
     "Delhi",
@@ -85,37 +85,36 @@ function ListVehicle() {
     "Nagpur",
   ];
 
-  const [selectedFile, setSelectedFile] = useState(null);
-  const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
   };
 
   const handleFileChange = (e) => {
-    setSelectedFile(e.target.files[0]);
+    // Store selected files in state
+    setSelectedFiles(Array.from(e.target.files));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      // Create FormData object to hold the form data and file
-      const formDataWithFile = new FormData();
+      const formDataWithFiles = new FormData();
       Object.keys(formData).forEach((key) => {
-        formDataWithFile.append(key, formData[key]);
+        formDataWithFiles.append(key, formData[key]);
       });
 
-      if (selectedFile) {
-        formDataWithFile.append("image", selectedFile); // Add the selected file
+      if (selectedFiles) {
+        // Append each selected file to the FormData
+        selectedFiles.forEach((file) => {
+          formDataWithFiles.append("images", file);
+        });
       }
 
       const token = localStorage.getItem("token");
       await axios.post(
         "http://127.0.0.1:5000/api/v1/vehicles/list",
-        formDataWithFile,
+        formDataWithFiles,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -297,12 +296,18 @@ function ListVehicle() {
             ))}
           </datalist>
         </div>
-
+        {/* IMAGES ------------------------------------------------- */}
         <div className="form-group">
-          <label htmlFor="file">Upload Image</label>
-          <input type="file" onChange={handleFileChange} required />
+          <label htmlFor="file">Upload Images (up to 20)</label>
+          <input
+            type="file"
+            multiple // Enable multiple file selection
+            onChange={handleFileChange}
+            required
+            accept="image/*" // Accept only image files
+          />
         </div>
-
+        {/*------------------------------------------------------------ */}
         <button type="submit" className="submit-button">
           Add Vehicle
         </button>
