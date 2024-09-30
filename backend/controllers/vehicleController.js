@@ -66,6 +66,7 @@ exports.listVehicle = catchAsyncError(async (req, res, next) => {
     engineType: req.body.engineType,
     odometer: req.body.odometer,
     ownership: req.body.ownership,
+    description: req.body.description,
     location: req.body.location,
     listedBy: req.user._id,
     images: imageUrls, // Storing the array of image URLs

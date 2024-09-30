@@ -281,6 +281,23 @@ function ListVehicle() {
         </div>
 
         <div className="form-group">
+          <label htmlFor="description">Description</label>
+          <textarea
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            rows="5" // You can adjust this value to make the text area taller or shorter
+            style={{ width: "100%" }}
+            required
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.stopPropagation(); // Prevents the form from submitting on Enter
+              }
+            }}
+          />
+        </div>
+
+        <div className="form-group">
           <label htmlFor="location">Location</label>
           <input
             type="text"

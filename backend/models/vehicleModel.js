@@ -102,6 +102,10 @@ const vehicleSchema = mongoose.Schema({
     type: [String], // Store the URLs of the images
     // required: [true, "Please upload an image of your vehicle"],
   },
+  description: {
+    type: String,
+    required: [true, "Please enter a description for your vehicle"],
+  },
 });
 
 const Vehicle = mongoose.model("Vehicle", vehicleSchema);

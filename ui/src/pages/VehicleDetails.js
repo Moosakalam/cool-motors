@@ -211,6 +211,18 @@ function VehicleDetails() {
       <p>Ownership: {vehicle.ownership}</p>
       <p>Location: {vehicle.location}</p>
       <p>
+        Description:
+        <br />
+        {vehicle.description
+          ? vehicle.description.split("\n").map((line, index) => (
+              <span key={index}>
+                {line}
+                <br />
+              </span>
+            ))
+          : "No description available"}
+      </p>
+      <p>
         Seller:{" "}
         {seller ? (
           <Link to={`/user/${seller._id}`}>{seller.name}</Link>
