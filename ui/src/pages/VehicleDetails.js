@@ -168,9 +168,11 @@ function VehicleDetails() {
               border: "none",
               borderRadius: "5px",
               cursor: "pointer",
+              fontFamily: "cursive",
+              fontSize: 25,
             }}
           >
-            Prev
+            {"<"}
           </button>
         )}
         {/* Next Button */}
@@ -187,9 +189,11 @@ function VehicleDetails() {
               border: "none",
               borderRadius: "5px",
               cursor: "pointer",
+              fontFamily: "cursive",
+              fontSize: 25,
             }}
           >
-            Next
+            {">"}
           </button>
         )}
       </div>
