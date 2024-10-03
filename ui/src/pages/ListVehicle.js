@@ -1,5 +1,6 @@
 import "./ListVehicle.css";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Use this for redirection
 import axios from "axios";
 
 function ListVehicle() {
@@ -20,6 +21,7 @@ function ListVehicle() {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const navigate = useNavigate(); // To redirect the user after form submission
 
   const carMakes = [
     "Toyota",
@@ -125,6 +127,12 @@ function ListVehicle() {
 
       setSuccess("Vehicle added successfully!");
       setError("");
+
+      // After 3 seconds, hide the modal and redirect
+      setTimeout(() => {
+        setSuccess(false);
+        navigate("/my-profile");
+      }, 3000); // 3 seconds delay
     } catch (err) {
       setError(err.response?.data?.message || "Failed to add vehicle");
       setSuccess("");
@@ -136,7 +144,7 @@ function ListVehicle() {
       <h2 className="form-title">List Vehicle</h2>
       <form className="vehicle-form" onSubmit={handleSubmit}>
         <div className="form-group">
-          <label htmlFor="make">Make</label>
+          <label htmlFor="make">Make*</label>
           <input
             type="text"
             name="make"
@@ -153,7 +161,7 @@ function ListVehicle() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="model">Model</label>
+          <label htmlFor="model">Model*</label>
           <input
             type="text"
             name="model"
@@ -164,7 +172,18 @@ function ListVehicle() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="year">Year</label>
+          <label htmlFor="variant">Variant</label>
+          <input
+            type="text"
+            name="variant"
+            value={formData.variant}
+            onChange={handleChange}
+            // required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="year">Year*</label>
           <input
             type="text"
             name="year"
@@ -181,7 +200,7 @@ function ListVehicle() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="price">Price</label>
+          <label htmlFor="price">Price*</label>
           <input
             type="number"
             name="price"
@@ -192,7 +211,7 @@ function ListVehicle() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="fuelType">Fuel Type</label>
+          <label htmlFor="fuelType">Fuel Type*</label>
           <select
             name="fuelType"
             value={formData.fuelType}
@@ -209,7 +228,7 @@ function ListVehicle() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="transmission">Transmission</label>
+          <label htmlFor="transmission">Transmission*</label>
           <select
             name="transmission"
             value={formData.transmission}
@@ -253,7 +272,7 @@ function ListVehicle() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="odometer">Odometer</label>
+          <label htmlFor="odometer">Odometer*</label>
           <input
             type="number"
             name="odometer"
@@ -264,7 +283,7 @@ function ListVehicle() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="ownership">Ownership</label>
+          <label htmlFor="ownership">Ownership*</label>
           <input
             type="text"
             name="ownership"
@@ -281,7 +300,7 @@ function ListVehicle() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="description">Description</label>
+          <label htmlFor="description">Description*</label>
           <textarea
             name="description"
             value={formData.description}
@@ -298,7 +317,7 @@ function ListVehicle() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="location">Location</label>
+          <label htmlFor="location">Location*</label>
           <input
             type="text"
             name="location"
@@ -315,7 +334,7 @@ function ListVehicle() {
         </div>
         {/* IMAGES ------------------------------------------------- */}
         <div className="form-group">
-          <label htmlFor="file">Upload Images (up to 20)</label>
+          <label htmlFor="file">Upload Images (up to 20)*</label>
           <input
             type="file"
             multiple // Enable multiple file selection
@@ -329,9 +348,12 @@ function ListVehicle() {
           Add Vehicle
         </button>
       </form>
-
       {error && <p className="error-message">{error}</p>}
-      {success && <p className="success-message">{success}</p>}
+      {success && (
+        <div className="success-modal">
+          <p>Vehicle added successfully! Redirecting...</p>
+        </div>
+      )}{" "}
     </div>
   );
 }

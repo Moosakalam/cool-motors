@@ -200,13 +200,17 @@ function VehicleDetails() {
       <h2 style={{ fontSize: "32px", marginTop: "20px" }}>
         {vehicle.year} {vehicle.make} {vehicle.model}
       </h2>
+      <p>{vehicle.variant ? vehicle.variant : ""}</p>
       <h1 style={{ fontSize: "36px", color: "#333", margin: "10px 0" }}>
         ₹{vehicle.price}
       </h1>
       <p>Fuel Type: {vehicle.fuelType}</p>
       <p>Transmission: {vehicle.transmission}</p>
-      <p>Engine Displacement: {vehicle.engineDisplacement}L</p>
-      <p>Engine Type: {vehicle.engineType}</p>
+      <p>
+        Engine Displacement:{" "}
+        {vehicle.engineDisplacement ? `${vehicle.engineDisplacement}L` : "N/A"}
+      </p>
+      <p>Engine Type: {vehicle.engineType ? vehicle.engineType : "N/A"}</p>
       <p>Odometer: {vehicle.odometer} km</p>
       <p>Ownership: {vehicle.ownership}</p>
       <p>Location: {vehicle.location}</p>
@@ -221,6 +225,14 @@ function VehicleDetails() {
               </span>
             ))
           : "No description available"}
+      </p>
+      <p>
+        Date Listed:{" "}
+        {new Date(vehicle.createdAt).toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        })}
       </p>
       <p>
         Seller:{" "}
