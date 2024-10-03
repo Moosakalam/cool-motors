@@ -84,6 +84,19 @@ function Signup() {
           placeholder="Confirm Password"
           required
         />
+        <div className="phone-number-container">
+          <span className="phone-code">+91</span> {/* Hardcoded +91 */}
+          <input
+            type="text"
+            name="phoneNumber"
+            value={formData.phoneNumber}
+            onChange={handleChange}
+            placeholder="Phone Number"
+            required
+            maxLength="10"
+            className="phone-input" // Add a class for styling
+          />
+        </div>
         <button type="submit">Signup</button>
       </form>
       {error && <p className="error">{error}</p>}

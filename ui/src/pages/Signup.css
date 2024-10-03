@@ -53,3 +53,17 @@
   color: green; /* Green color for success messages */
   text-align: center; /* Center align success messages */
 }
+
+.phone-number-container {
+  display: flex;
+  align-items: center;
+}
+
+.phone-code {
+  margin-right: 8px; /* Adjust spacing between +91 and the input */
+  font-weight: bold; /* Optional: make it bold for emphasis */
+}
+
+.phone-input {
+  flex: 1; /* Allow the input to take remaining space */
+}

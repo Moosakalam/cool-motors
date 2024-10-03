@@ -131,7 +131,7 @@ function MyProfile() {
       {activeTab === "liked" ? (
         <div>
           {likedVehicles.length === 0 ? (
-            <p>Loading vehicles...</p>
+            <p>No Liked Vehicles</p>
           ) : (
             <div
               style={{
@@ -149,7 +149,7 @@ function MyProfile() {
       ) : (
         <div>
           {listedVehicles.length === 0 ? (
-            <p>Loading vehicles...</p>
+            <p>No Listed Vehicles</p>
           ) : (
             <div
               style={{

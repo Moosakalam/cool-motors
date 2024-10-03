@@ -32,6 +32,17 @@ const userSchema = mongoose.Schema({
       message: "Passwords are not the same",
     },
   },
+  phoneNumber: {
+    type: String,
+    required: [true, "Please provide your phone number"],
+    validate: {
+      validator: function (value) {
+        // Ensure phone number has exactly 10 digits
+        return /^\d{10}$/.test(value);
+      },
+      message: "Please provide a valid 10-digit phone number",
+    },
+  },
   listedVehicles: [
     {
       type: mongoose.Schema.Types.ObjectId,

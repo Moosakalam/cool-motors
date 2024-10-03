@@ -204,18 +204,31 @@ function VehicleDetails() {
       <h1 style={{ fontSize: "36px", color: "#333", margin: "10px 0" }}>
         ₹{vehicle.price}
       </h1>
-      <p>Fuel Type: {vehicle.fuelType}</p>
-      <p>Transmission: {vehicle.transmission}</p>
       <p>
-        Engine Displacement:{" "}
+        <strong>Fuel Type:</strong> {vehicle.fuelType}
+      </p>
+      <p>
+        <strong>Transmission:</strong> {vehicle.transmission}
+      </p>
+      <p>
+        <strong>Engine Displacement:</strong>{" "}
         {vehicle.engineDisplacement ? `${vehicle.engineDisplacement}L` : "N/A"}
       </p>
-      <p>Engine Type: {vehicle.engineType ? vehicle.engineType : "N/A"}</p>
-      <p>Odometer: {vehicle.odometer} km</p>
-      <p>Ownership: {vehicle.ownership}</p>
-      <p>Location: {vehicle.location}</p>
       <p>
-        Description:
+        <strong>Engine Type:</strong>{" "}
+        {vehicle.engineType ? vehicle.engineType : "N/A"}
+      </p>
+      <p>
+        <strong>Odometer:</strong> {vehicle.odometer} km
+      </p>
+      <p>
+        <strong>Ownership:</strong> {vehicle.ownership}
+      </p>
+      <p>
+        <strong>Location:</strong> {vehicle.location}
+      </p>
+      <p>
+        <strong>Description:</strong>
         <br />
         {vehicle.description
           ? vehicle.description.split("\n").map((line, index) => (
@@ -227,7 +240,7 @@ function VehicleDetails() {
           : "No description available"}
       </p>
       <p>
-        Date Listed:{" "}
+        <strong>Date Listed:</strong>{" "}
         {new Date(vehicle.createdAt).toLocaleDateString("en-GB", {
           day: "numeric",
           month: "long",
@@ -235,7 +248,11 @@ function VehicleDetails() {
         })}
       </p>
       <p>
-        Seller:{" "}
+        <strong>Sellers's Phone Number:</strong>{" "}
+        {seller.phoneNumber ? `+91 ${seller.phoneNumber}` : "N/A"}
+      </p>
+      <p>
+        <strong>Seller:</strong>{" "}
         {seller ? (
           <Link to={`/user/${seller._id}`}>{seller.name}</Link>
         ) : (
