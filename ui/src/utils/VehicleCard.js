@@ -40,7 +40,7 @@ function VehicleCard({ vehicle }) {
         {vehicle.year} {vehicle.make} {vehicle.model}
       </h2>
       <h1 style={{ margin: "10px 0", fontSize: "22px", color: "#333" }}>
-        ₹{vehicle.price}
+        ₹{vehicle.price.toLocaleString("en-IN")}
       </h1>
     </div>
   );

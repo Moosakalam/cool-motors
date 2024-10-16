@@ -1,0 +1,34 @@
+/* Blur effect for background when modal is open */
+.blur-background {
+  filter: blur(5px);
+  pointer-events: none; /* Prevents interaction with background */
+}
+
+/* Modal Styles */
+.modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9); /* Dark background */
+}
+
+.modal-content {
+  max-width: 90%;
+  max-height: 90%;
+}
+
+.close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  color: white;
+  font-size: 40px;
+  font-weight: bold;
+  cursor: pointer;
+}
