@@ -16,6 +16,13 @@ router.post(
   vehicleController.listVehicle
 );
 
+//edit vehicle
+router.patch(
+  "/update/:id", // Use PATCH method and add :id param to specify which vehicle to update
+  authController.protect, // Ensure the user is authenticated
+  vehicleController.updateVehicle // The update vehicle controller function you created
+);
+
 //search
 router.get("/search", vehicleController.searchVehicles);
 

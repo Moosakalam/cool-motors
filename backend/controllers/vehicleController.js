@@ -31,7 +31,7 @@ exports.listVehicle = catchAsyncError(async (req, res, next) => {
 
   // Check if there are files to upload
   if (!files || files.length === 0) {
-    return next(new Error("No images provided"));
+    return next(new AppError("No images provided", 422));
   }
 
   const imageUrls = [];
@@ -82,6 +82,58 @@ exports.listVehicle = catchAsyncError(async (req, res, next) => {
     status: "success",
     data: {
       newVehicle,
+    },
+  });
+});
+
+exports.updateVehicle = catchAsyncError(async (req, res, next) => {
+  const vehicleId = req.params.id;
+
+  // Find the existing vehicle by ID
+  const vehicle = await Vehicle.findById(vehicleId);
+  if (!vehicle) {
+    return next(new AppError("Vehicle not found", 404));
+  }
+
+  // Check if the logged-in user is the one who listed the vehicle
+  if (vehicle.listedBy.toString() !== req.user._id.toString()) {
+    return next(
+      new AppError("You are not authorized to update this vehicle", 401)
+    );
+  }
+
+  // Update the vehicle with the provided fields
+  const updatedVehicleData = {
+    make: req.body.make || vehicle.make,
+    model: req.body.model || vehicle.model,
+    variant: req.body.variant || vehicle.variant,
+    year: req.body.year || vehicle.year,
+    price: req.body.price || vehicle.price,
+    fuelType: req.body.fuelType || vehicle.fuelType,
+    transmission: req.body.transmission || vehicle.transmission,
+    engineDisplacement:
+      req.body.engineDisplacement || vehicle.engineDisplacement,
+    engineType: req.body.engineType || vehicle.engineType,
+    odometer: req.body.odometer || vehicle.odometer,
+    ownership: req.body.ownership || vehicle.ownership,
+    description: req.body.description || vehicle.description,
+    location: req.body.location || vehicle.location,
+  };
+
+  // Update the vehicle in the database
+  const updatedVehicle = await Vehicle.findByIdAndUpdate(
+    vehicleId,
+    updatedVehicleData,
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      updatedVehicle,
     },
   });
 });

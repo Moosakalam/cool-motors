@@ -1,374 +1,266 @@
-// import "./ListVehicle.css";
-// import React, { useState } from "react";
-// import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { getUserIdFromToken } from "../utils/jwtDecode";
 
-// function ListVehicle() {
-//   const [formData, setFormData] = useState({
-//     make: "",
-//     model: "",
-//     year: "",
-//     price: "",
-//     fuelType: "",
-//     transmission: "",
-//     engineDisplacement: "",
-//     engineType: "",
-//     odometer: "",
-//     ownership: "",
-//     location: "",
-//   });
+function VehicleDetails() {
+  const { id } = useParams(); // Vehicle ID from URL
+  const [vehicle, setVehicle] = useState(null);
+  const [seller, setSeller] = useState(null);
+  const [liked, setLiked] = useState(false); // State for like status
+  const [userId, setUserId] = useState("");
+  const [loading, setLoading] = useState(true);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0); // State for the current image index
+  const navigate = useNavigate();
 
-//   const [selectedFiles, setSelectedFiles] = useState([]);
-//   const [error, setError] = useState("");
-//   const [success, setSuccess] = useState("");
+  useEffect(() => {
+    const fetchVehicleDetails = async () => {
+      try {
+        // Fetch vehicle details
+        const vehicleResponse = await axios.get(
+          `http://127.0.0.1:5000/api/v1/vehicles/${id}`
+        );
+        const fetchedVehicle = vehicleResponse.data.data.vehicle;
+        setVehicle(fetchedVehicle);
 
-//   const carMakes = [
-//     "Toyota",
-//     "Honda",
-//     "Ford",
-//     "Chevrolet",
-//     "BMW",
-//     "Mercedes-Benz",
-//     "Audi",
-//     "Volkswagen",
-//     "Nissan",
-//     "Hyundai",
-//     "Kia",
-//     "Mazda",
-//     "Subaru",
-//     "Lexus",
-//     "Jaguar",
-//     "Land Rover",
-//     "Volvo",
-//     "Tesla",
-//     "Porsche",
-//     "Ferrari",
-//     "Lamborghini",
-//   ];
+        // Fetch seller details if available
+        if (fetchedVehicle.listedBy) {
+          const sellerResponse = await axios.get(
+            `http://127.0.0.1:5000/api/v1/users/${fetchedVehicle.listedBy}`
+          );
+          setSeller(sellerResponse.data.data.user);
+        }
 
-//   const years = Array.from(
-//     { length: new Date().getFullYear() - 1900 + 1 },
-//     (_, i) => 1900 + i
-//   );
+        const token = localStorage.getItem("token");
+        // Decode the token to get the user ID
+        const decodedUserId = getUserIdFromToken(token);
+        setUserId(decodedUserId);
+      } catch (error) {
+        console.error("Error fetching vehicle or seller details:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-//   const fuelTypes = ["petrol", "diesel", "electric", "hybrid", "CNG", "LPG"];
-//   const transmissions = ["manual", "automatic"];
-//   const engineTypes = [
-//     "I3",
-//     "I4",
-//     "I5",
-//     "I6",
-//     "V6",
-//     "V8",
-//     "V10",
-//     "V12",
-//     "V16",
-//     "W12",
-//     "W16",
-//     "H4",
-//     "H6",
-//     "Rotary",
-//   ];
-//   const ownerships = Array.from({ length: 10 }, (_, i) => i + 1);
-//   const locations = [
-//     "Mumbai",
-//     "Delhi",
-//     "Bangalore",
-//     "Hyderabad",
-//     "Chennai",
-//     "Kolkata",
-//     "Pune",
-//     "Ahmedabad",
-//     "Jaipur",
-//     "Surat",
-//     "Lucknow",
-//     "Kanpur",
-//     "Nagpur",
-//   ];
+    fetchVehicleDetails();
+  }, [id]);
 
-//   const handleChange = (e) => {
-//     const { name, value } = e.target;
-//     setFormData({ ...formData, [name]: value });
-//   };
+  useEffect(() => {
+    const fetchUserDetails = async () => {
+      if (!userId) return; // Exit if no userId is available
 
-//   const handleFileChange = (e) => {
-//     // Store selected files in state
-//     setSelectedFiles(Array.from(e.target.files));
-//   };
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) return; // Exit if no token is available
 
-//   const handleSubmit = async (e) => {
-//     e.preventDefault();
+        // Fetch current user details using the decoded user ID
+        const userResponse = await axios.get(
+          `http://127.0.0.1:3000/api/v1/users/${userId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        const currentUser = userResponse.data.data.user;
 
-//     try {
-//       const formDataWithFiles = new FormData();
-//       Object.keys(formData).forEach((key) => {
-//         formDataWithFiles.append(key, formData[key]);
-//       });
+        // Check if the vehicle is liked by the user
+        const isLiked = currentUser.likedVehicles.includes(vehicle._id);
+        setLiked(isLiked);
+      } catch (error) {
+        console.error("Error fetching user details:", error);
+      }
+    };
 
-//       if (selectedFiles) {
-//         // Append each selected file to the FormData
-//         selectedFiles.forEach((file) => {
-//           formDataWithFiles.append("images", file);
-//         });
-//       }
+    fetchUserDetails();
+  }, [userId, vehicle]);
 
-//       const token = localStorage.getItem("token");
-//       await axios.post(
-//         "http://127.0.0.1:5000/api/v1/vehicles/list",
-//         formDataWithFiles,
-//         {
-//           headers: {
-//             Authorization: `Bearer ${token}`,
-//             "Content-Type": "multipart/form-data",
-//           },
-//         }
-//       );
+  // Function to handle like/unlike
+  const handleLikeToggle = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) return navigate("/login"); // Exit if no token is available
 
-//       setSuccess("Vehicle added successfully!");
-//       setError("");
-//     } catch (err) {
-//       setError(err.response?.data?.message || "Failed to add vehicle");
-//       setSuccess("");
-//     }
-//   };
+      if (liked) {
+        // Unlike the vehicle
+        await axios.patch(
+          `http://127.0.0.1:5000/api/v1/users/unlike/${id}`,
+          {},
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      } else {
+        // Like the vehicle
+        await axios.post(
+          `http://127.0.0.1:5000/api/v1/users/like/${id}`,
+          {},
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+      }
+      // Toggle the liked state
+      setLiked(!liked);
+    } catch (error) {
+      console.error("Error updating like status:", error);
+    }
+  };
 
-//   return (
-//     <div className="vehicle-list-container">
-//       <h2 className="form-title">List Vehicle</h2>
-//       <form className="vehicle-form" onSubmit={handleSubmit}>
-//         <div className="form-group">
-//           <label htmlFor="make">Make</label>
-//           <input
-//             type="text"
-//             name="make"
-//             list="carMakes"
-//             value={formData.make}
-//             onChange={handleChange}
-//             required
-//           />
-//           <datalist id="carMakes">
-//             {carMakes.map((make) => (
-//               <option key={make} value={make} />
-//             ))}
-//           </datalist>
-//         </div>
+  // Function to go to the next image
+  const nextImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === vehicle.images.length - 1 ? 0 : prevIndex + 1
+    );
+  };
 
-//         <div className="form-group">
-//           <label htmlFor="model">Model</label>
-//           <input
-//             type="text"
-//             name="model"
-//             value={formData.model}
-//             onChange={handleChange}
-//             required
-//           />
-//         </div>
+  // Function to go to the previous image
+  const prevImage = () => {
+    setCurrentImageIndex((prevIndex) =>
+      prevIndex === 0 ? vehicle.images.length - 1 : prevIndex - 1
+    );
+  };
 
-//         <div className="form-group">
-//           <label htmlFor="year">Year</label>
-//           <input
-//             type="text"
-//             name="year"
-//             list="years"
-//             value={formData.year}
-//             onChange={handleChange}
-//             required
-//           />
-//           <datalist id="years">
-//             {years.map((year) => (
-//               <option key={year} value={year} />
-//             ))}
-//           </datalist>
-//         </div>
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
-//         <div className="form-group">
-//           <label htmlFor="price">Price</label>
-//           <input
-//             type="number"
-//             name="price"
-//             value={formData.price}
-//             onChange={handleChange}
-//             required
-//           />
-//         </div>
+  if (!vehicle) {
+    return <div>Vehicle not found</div>;
+  }
 
-//         <div className="form-group">
-//           <label htmlFor="fuelType">Fuel Type</label>
-//           <select
-//             name="fuelType"
-//             value={formData.fuelType}
-//             onChange={handleChange}
-//             required
-//           >
-//             <option value="">Select Fuel Type</option>
-//             {fuelTypes.map((fuel) => (
-//               <option key={fuel} value={fuel}>
-//                 {fuel}
-//               </option>
-//             ))}
-//           </select>
-//         </div>
+  return (
+    <div style={{ maxWidth: "800px", margin: "0 auto", textAlign: "left" }}>
+      <div style={{ position: "relative" }}>
+        <img
+          src={
+            vehicle.images && vehicle.images.length > 0
+              ? vehicle.images[currentImageIndex]
+              : "placeholder.jpg"
+          }
+          alt={`${vehicle.make} ${vehicle.model}`}
+          style={{
+            width: "100%",
+            height: "400px",
+            objectFit: "cover",
+            borderRadius: "10px",
+          }}
+        />
+        <button
+          onClick={handleLikeToggle}
+          style={{
+            position: "absolute",
+            bottom: "10px",
+            right: "10px",
+            background: liked ? "#ff4d4d" : "#4CAF50",
+            color: "#fff",
+            padding: "10px 20px",
+            border: "none",
+            borderRadius: "5px",
+            cursor: "pointer",
+          }}
+        >
+          {liked ? "Unlike" : "Like"}
+        </button>
+        {/* Previous Button */}
+        {vehicle.images && vehicle.images.length > 1 && (
+          <button
+            onClick={prevImage}
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "10px",
+              background: "rgba(0, 0, 0, 0.5)",
+              color: "#fff",
+              padding: "10px",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+              fontFamily: "cursive",
+              fontSize: 25,
+            }}
+          >
+            {"<"}
+          </button>
+        )}
+        {/* Next Button */}
+        {vehicle.images && vehicle.images.length > 1 && (
+          <button
+            onClick={nextImage}
+            style={{
+              position: "absolute",
+              top: "50%",
+              right: "10px",
+              background: "rgba(0, 0, 0, 0.5)",
+              color: "#fff",
+              padding: "10px",
+              border: "none",
+              borderRadius: "5px",
+              cursor: "pointer",
+              fontFamily: "cursive",
+              fontSize: 25,
+            }}
+          >
+            {">"}
+          </button>
+        )}
+      </div>
+      <h2 style={{ fontSize: "32px", marginTop: "20px" }}>
+        {vehicle.year} {vehicle.make} {vehicle.model}
+      </h2>
+      <p>{vehicle.variant ? vehicle.variant : ""}</p>
+      <h1 style={{ fontSize: "36px", color: "#333", margin: "10px 0" }}>
+        ₹{vehicle.price.toLocaleString("en-IN")}
+      </h1>
+      <p>
+        <strong>Fuel Type:</strong> {vehicle.fuelType}
+      </p>
+      <p>
+        <strong>Transmission:</strong> {vehicle.transmission}
+      </p>
+      <p>
+        <strong>Odometer:</strong> {vehicle.odometer} km
+      </p>
+      <p>
+        <strong>No. of Owners:</strong> {vehicle.ownership}
+      </p>
+      <p>
+        <strong>Location:</strong> {vehicle.location}
+      </p>
+      <p>
+        <strong>Description:</strong>
+        <br />
+        {vehicle.description
+          ? vehicle.description.split("\n").map((line, index) => (
+              <span key={index}>
+                {line}
+                <br />
+              </span>
+            ))
+          : "--"}
+      </p>
+      <p>
+        <strong>Date Listed:</strong>{" "}
+        {new Date(vehicle.createdAt).toLocaleDateString("en-GB", {
+          day: "numeric",
+          month: "long",
+          year: "numeric",
+        })}
+      </p>
+      <p>
+        <strong>Engine:</strong>{" "}
+        {!vehicle.engineDisplacement && !vehicle.engineType ? "--" : ""}
+        {vehicle.engineDisplacement
+          ? `${vehicle.engineDisplacement}L`
+          : ""}{" "}
+        {vehicle.engineType ? vehicle.engineType : ""}
+      </p>
+      <p>
+        <strong>Sellers's Phone Number:</strong>{" "}
+        {seller.phoneNumber ? `+91 ${seller.phoneNumber}` : "--"}
+      </p>
+      <p>
+        <strong>Seller:</strong>{" "}
+        {seller ? (
+          <Link to={`/user/${seller._id}`}>{seller.name}</Link>
+        ) : (
+          "Loading seller details..."
+        )}
+      </p>
+    </div>
+  );
+}
 
-//         <div className="form-group">
-//           <label htmlFor="transmission">Transmission</label>
-//           <select
-//             name="transmission"
-//             value={formData.transmission}
-//             onChange={handleChange}
-//             required
-//           >
-//             <option value="">Select Transmission</option>
-//             {transmissions.map((transmission) => (
-//               <option key={transmission} value={transmission}>
-//                 {transmission}
-//               </option>
-//             ))}
-//           </select>
-//         </div>
-
-//         <div className="form-group">
-//           <label htmlFor="engineDisplacement">Engine Displacement</label>
-//           <input
-//             type="number"
-//             step="0.1"
-//             name="engineDisplacement"
-//             value={formData.engineDisplacement}
-//             onChange={handleChange}
-//           />
-//         </div>
-
-//         <div className="form-group">
-//           <label htmlFor="engineType">Engine Type</label>
-//           <select
-//             name="engineType"
-//             value={formData.engineType}
-//             onChange={handleChange}
-//           >
-//             <option value="">Select Engine Type</option>
-//             {engineTypes.map((engine) => (
-//               <option key={engine} value={engine}>
-//                 {engine}
-//               </option>
-//             ))}
-//           </select>
-//         </div>
-
-//         <div className="form-group">
-//           <label htmlFor="odometer">Odometer</label>
-//           <input
-//             type="number"
-//             name="odometer"
-//             value={formData.odometer}
-//             onChange={handleChange}
-//             required
-//           />
-//         </div>
-
-//         <div className="form-group">
-//           <label htmlFor="ownership">Ownership</label>
-//           <input
-//             type="text"
-//             name="ownership"
-//             list="ownerships"
-//             value={formData.ownership}
-//             onChange={handleChange}
-//             required
-//           />
-//           <datalist id="ownerships">
-//             {ownerships.map((num) => (
-//               <option key={num} value={num} />
-//             ))}
-//           </datalist>
-//         </div>
-
-//         <div className="form-group">
-//           <label htmlFor="location">Location</label>
-//           <input
-//             type="text"
-//             name="location"
-//             list="locations"
-//             value={formData.location}
-//             onChange={handleChange}
-//             required
-//           />
-//           <datalist id="locations">
-//             {locations.map((city) => (
-//               <option key={city} value={city} />
-//             ))}
-//           </datalist>
-//         </div>
-//         {/* IMAGES ------------------------------------------------- */}
-//         <div className="form-group">
-//           <label htmlFor="file">Upload Images (up to 20)</label>
-//           <input
-//             type="file"
-//             multiple // Enable multiple file selection
-//             onChange={handleFileChange}
-//             required
-//             accept="image/*" // Accept only image files
-//           />
-//         </div>
-//         {/*------------------------------------------------------------ */}
-//         <button type="submit" className="submit-button">
-//           Add Vehicle
-//         </button>
-//       </form>
-
-//       {error && <p className="error-message">{error}</p>}
-//       {success && <p className="success-message">{success}</p>}
-//     </div>
-//   );
-// }
-
-// export default ListVehicle;
-
-// exports.listVehicle = catchAsyncError(async (req, res, next) => {
-//   const file = req.file;
-
-//   // const fileBuffer = await sharp(file.buffer)
-//   //   .resize({ height: 1920, width: 1080, fit: "contain" })
-//   //   .toBuffer();
-
-//   // Configure the upload details to send to S3
-//   const fileName = generateFileName();
-//   const uploadParams = {
-//     Bucket: bucketName,
-//     Body: file.buffer,
-//     Key: fileName,
-//     ContentType: file.mimetype,
-//   };
-
-//   // Send the upload to S3
-//   await s3Client.send(new PutObjectCommand(uploadParams));
-
-//   //image url:
-//   const imageUrl = `https://images-cool-motors.s3.eu-north-1.amazonaws.com/${fileName}`;
-
-//   // Send the upload to S3
-//   const newVehicle = await Vehicle.create({
-//     make: req.body.make,
-//     model: req.body.model,
-//     year: req.body.year,
-//     price: req.body.price,
-//     fuelType: req.body.fuelType,
-//     transmission: req.body.transmission,
-//     engineDisplacement: req.body.engineDisplacement,
-//     engineType: req.body.engineType,
-//     odometer: req.body.odometer,
-//     ownership: req.body.ownership,
-//     location: req.body.location,
-//     listedBy: req.user._id,
-//     image: imageUrl,
-//   });
-
-//   //add vehicle to Owner's User document
-//   await User.findByIdAndUpdate(req.user._id, {
-//     $push: { listedVehicles: newVehicle._id },
-//   });
-
-//   res.status(201).json({
-//     status: "success",
-//     data: {
-//       newVehicle,
-//     },
-//   });
-// });
+export default VehicleDetails;
