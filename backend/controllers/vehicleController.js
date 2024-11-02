@@ -314,6 +314,12 @@ exports.deleteVehicle = catchAsyncError(async (req, res, next) => {
     $pull: { listedVehicles: req.params.vehicleId },
   });
 
+  // Remove vehicle reference from likedVehicles of all users who liked it
+  await User.updateMany(
+    { likedVehicles: req.params.vehicleId },
+    { $pull: { likedVehicles: req.params.vehicleId } }
+  );
+
   res.status(204).json({
     status: "success",
     data: null,
