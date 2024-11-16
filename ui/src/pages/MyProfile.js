@@ -5,6 +5,7 @@ import { getUserIdFromToken } from "../utils/jwtDecode";
 import VehicleCard from "../utils/VehicleCard";
 
 function MyProfile() {
+  const [username, setUsername] = useState("");
   const [listedVehicles, setListedVehicles] = useState([]);
   const [likedVehicles, setLikedVehicles] = useState([]);
   const [activeTab, setActiveTab] = useState("listed");
@@ -15,6 +16,20 @@ function MyProfile() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     const userId = token ? getUserIdFromToken(token) : null;
+
+    const fetchUserData = async () => {
+      try {
+        const response = await axios.get(
+          `http://127.0.0.1:5000/api/v1/users/${userId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+        setUsername(response.data.data.user.name); // Set the username
+      } catch (error) {
+        console.error("Error fetching user's data:", error);
+      }
+    };
 
     const fetchListedVehicles = async () => {
       try {
@@ -49,6 +64,7 @@ function MyProfile() {
     };
 
     if (userId) {
+      fetchUserData();
       fetchListedVehicles();
       fetchLikedVehicles();
     } else {
@@ -97,7 +113,7 @@ function MyProfile() {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h2>My Profile</h2>
+      <h2>{username ? `${username}'s Profile(You)` : "My Profile"}</h2>
       <div style={{ marginBottom: "20px", display: "flex", gap: "10px" }}>
         <button
           onClick={() => setActiveTab("listed")}
