@@ -61,10 +61,15 @@ function Login() {
 
       {error && <p className="error-message">{error}</p>}
 
-      <div className="signup-prompt">
-        <p>
-          Don't have an account? <Link to="/signup">Create Account</Link>
+      <div className="login-footer">
+        <p className="forgot-password">
+          <Link to="/forgot-password">Forgot Password?</Link>
         </p>
+        <div className="signup-prompt">
+          <p>
+            Don't have an account? <Link to="/signup">Create Account</Link>
+          </p>
+        </div>
       </div>
     </div>
   );

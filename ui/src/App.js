@@ -11,6 +11,8 @@ import Signup from "./pages/Signup";
 import Login from "./pages/Login";
 import Navbar from "./utils/Navbar"; // Import the Navbar
 import SearchVehiclesPage from "./pages/SearchVehiclesPage";
+import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 function App() {
   return (
@@ -27,6 +29,11 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/search" element={<SearchVehiclesPage />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route
+            path="/reset-password/:resetToken"
+            element={<ResetPassword />}
+          />
         </Routes>
       </div>
     </Router>
