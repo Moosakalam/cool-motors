@@ -37,11 +37,8 @@ router.get(
   vehicleController.getLikedVehicles
 );
 
-// router.post("/forgotPassword", authController.forgotPassword);
-// router.patch("/resetPassword/:token" , authController.resetPassword);
-
-//to check if protect is working:(not an actual api route)
-// router.get("/accessProtected", authController.protect);
+router.post("/forgotPassword", authController.forgotPassword);
+router.patch("/resetPassword/:token", authController.resetPassword);
 
 // router.patch(
 //   "/updatePassword",

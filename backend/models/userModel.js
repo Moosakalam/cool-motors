@@ -1,4 +1,4 @@
-// const crypto = require("crypto");
+const crypto = require("crypto");
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
@@ -43,6 +43,11 @@ const userSchema = mongoose.Schema({
       message: "Please provide a valid 10-digit phone number",
     },
   },
+  role: {
+    type: String,
+    enum: ["user", "admin"],
+    default: "user",
+  },
   listedVehicles: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -55,11 +60,11 @@ const userSchema = mongoose.Schema({
       ref: "Vehicle",
     },
   ],
-  //   passwordChangedAt: {
-  //     type: Date,
-  //   },
-  //   passwordResetToken: String,
-  //   passwordResetExpires: Date,
+  passwordChangedAt: {
+    type: Date,
+  },
+  passwordResetToken: String,
+  passwordResetExpires: Date,
 });
 
 //ENCRYPT PASSWORD:
@@ -75,14 +80,14 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-// //UPDATING PASSWORD CHANGED AT FIELD
-// userSchema.pre("save", function (next) {
-//   // do not perform any actions if the password is not changed in this save or the user is new
-//   if (!this.isModified("password") || this.isnew) return next();
+//UPDATING PASSWORD CHANGED AT FIELD
+userSchema.pre("save", function (next) {
+  // do not perform any actions if the password is not changed in this save or the user is new
+  if (!this.isModified("password") || this.isnew) return next();
 
-//   this.passwordChangedAt = Date.now() - 1000;
-//   next();
-// });
+  this.passwordChangedAt = Date.now() - 1000;
+  next();
+});
 
 //the following is an instance methods that is available to all the user documents
 userSchema.methods.correctPassword = async function (
@@ -92,37 +97,38 @@ userSchema.methods.correctPassword = async function (
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
-// userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
-//   // console.log(this.passwordChangedAt);
-//   if (this.passwordChangedAt) {
-//     const changedTimestamp = parseInt(
-//       this.passwordChangedAt.getTime() / 1000,
-//       10
-//     );
+userSchema.methods.changedPasswordAfter = function (JWTTimestamp) {
+  // console.log(this.passwordChangedAt);
+  if (this.passwordChangedAt) {
+    const changedTimestamp = parseInt(
+      this.passwordChangedAt.getTime() / 1000,
+      10
+    );
 
-//     return JWTTimestamp < changedTimestamp;
-//   }
+    return JWTTimestamp < changedTimestamp;
+  }
 
-//   //false means password is not changed
-//   return false;
-// };
+  //false means password is not changed
+  return false;
+};
 
-// userSchema.methods.createPasswordResetToken = function () {
-//   //Genral token(not encrypted)
-//   const resetToken = crypto.randomBytes(32).toString("hex");
+userSchema.methods.createPasswordResetToken = function () {
+  //Genral token(not encrypted)
+  const resetToken = crypto.randomBytes(32).toString("hex");
 
-//   //Encrypted token to be saved in the database
-//   this.passwordResetToken = crypto
-//     .createHash("sha256")
-//     .update(resetToken)
-//     .digest("hex");
+  //Encrypted token to be saved in the database
+  this.passwordResetToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
 
-//   console.log({ resetToken }, this.passwordResetToken);
+  console.log({ resetToken }, this.passwordResetToken);
 
-//   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+  //password reset token expires in 10 mins
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
 
-//   return resetToken;
-// };
+  return resetToken;
+};
 
 const User = mongoose.model("User", userSchema);
 
