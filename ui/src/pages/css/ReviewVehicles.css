@@ -1,0 +1,89 @@
+/* ReviewVehicles.css */
+
+.admin-slideshow {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background-color: #f4f4f9;
+  min-height: 100vh; /* Ensure it covers the full height of the viewport */
+}
+
+.vehicle-slide {
+  width: 100%;
+  max-width: 1000px; /* Maximum width for the vehicle card */
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  height: auto;
+}
+
+h2 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 15px;
+  font-weight: 600;
+}
+
+.vehicle-image {
+  width: 100%; /* Allow image to take up the full width */
+  height: auto; /* Maintain aspect ratio */
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.vehicle-info {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 20px;
+  text-align: left;
+  width: 100%; /* Ensure text aligns properly with image width */
+}
+
+.vehicle-info p {
+  margin: 8px 0;
+}
+
+.vehicle-info strong {
+  color: #4caf50;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: space-around;
+  width: 100%; /* Ensure buttons span across the width */
+  margin-top: 20px;
+}
+
+button {
+  padding: 12px 25px;
+  font-size: 1.1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  border: none;
+}
+
+.approve-btn {
+  background-color: #4caf50;
+  color: white;
+}
+
+.approve-btn:hover {
+  background-color: #45a049;
+}
+
+.disapprove-btn {
+  background-color: #f44336;
+  color: white;
+}
+
+.disapprove-btn:hover {
+  background-color: #e53935;
+}

@@ -1,5 +1,4 @@
 const express = require("express");
-const vehicleController = require("../controllers/vehicleController");
 const pendingVehicleController = require("../controllers/pendingVehicleController");
 const authController = require("../controllers/authController");
 const multer = require("multer");
@@ -9,6 +8,13 @@ const upload = multer({ storage }); // Accept up to 20 images
 // const upload = multer({ dest: "uploads/" });
 
 const router = express.Router();
+
+router.get(
+  "/random-vehicle",
+  authController.protect,
+  authController.restrictTo("admin"),
+  pendingVehicleController.getRandomVehicle
+);
 
 router.post(
   "/list",

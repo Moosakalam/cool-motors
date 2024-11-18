@@ -136,3 +136,21 @@ exports.disapproveVehicle = catchAsyncError(async (req, res, next) => {
     message: "Vehicle disapproved and removed from pending list.",
   });
 });
+
+exports.getRandomVehicle = catchAsyncError(async (req, res, next) => {
+  const vehicle = await PendingVehicle.aggregate([{ $sample: { size: 1 } }]); // Get one random vehicle
+
+  // if (!vehicle || vehicle.length === 0) {
+  //   return res.status(404).json({
+  //     status: "fail",
+  //     message: "No vehicles found",
+  //   });
+  // }
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      vehicle: vehicle[0], // Return the single vehicle
+    },
+  });
+});
