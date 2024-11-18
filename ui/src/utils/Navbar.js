@@ -19,12 +19,12 @@ const Navbar = () => {
     }
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    setIsLoggedIn(false);
-    navigate("/");
-    window.location.reload();
-  };
+  // const handleLogout = () => {
+  //   localStorage.removeItem("token");
+  //   setIsLoggedIn(false);
+  //   navigate("/");
+  //   window.location.reload();
+  // };
 
   return (
     <header className="header">
@@ -51,9 +51,12 @@ const Navbar = () => {
               <Link to="/list" className="dropdown-link">
                 List Vehicle
               </Link>
-              <div onClick={handleLogout} className="dropdown-link logout">
+              {/* <div onClick={handleLogout} className="dropdown-link logout">
                 Logout
-              </div>
+              </div> */}
+              <Link to="/settings" className="dropdown-link">
+                Settings
+              </Link>
             </div>
           )}
         </div>

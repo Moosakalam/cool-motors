@@ -57,13 +57,15 @@ function VehicleDetails() {
 
         // Fetch current user details using the decoded user ID
         const userResponse = await axios.get(
-          `http://127.0.0.1:3000/api/v1/users/${userId}`,
+          `http://127.0.0.1:5000/api/v1/users/${userId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         const currentUser = userResponse.data.data.user;
 
         // Check if the vehicle is liked by the user
         const isLiked = currentUser.likedVehicles.includes(vehicle._id);
+        // console.log("hi");
+
         setLiked(isLiked);
       } catch (error) {
         console.error("Error fetching user details:", error);

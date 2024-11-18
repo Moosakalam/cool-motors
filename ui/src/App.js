@@ -13,6 +13,9 @@ import Navbar from "./utils/Navbar"; // Import the Navbar
 import SearchVehiclesPage from "./pages/SearchVehiclesPage";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import Settings from "./pages/Settings";
+import ChangePassword from "./pages/ChangePassword";
+import ReviewVehicles from "./pages/ReviewVehicles";
 
 function App() {
   return (
@@ -34,6 +37,9 @@ function App() {
             path="/reset-password/:resetToken"
             element={<ResetPassword />}
           />
+          <Route path="/settings" element={<Settings />} />
+          <Route path="/change-password" element={<ChangePassword />} />
+          <Route path="/admin/review-vehicles" element={<ReviewVehicles />} />
         </Routes>
       </div>
     </Router>
