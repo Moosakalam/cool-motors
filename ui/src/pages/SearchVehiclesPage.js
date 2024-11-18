@@ -1,5 +1,5 @@
 // src/SearchVehiclesPage.js
-import "./SearchVehicles.css";
+import "./css/SearchVehicles.css";
 import React, { useState } from "react";
 import axios from "axios";
 import VehicleCard from "../utils/VehicleCard";

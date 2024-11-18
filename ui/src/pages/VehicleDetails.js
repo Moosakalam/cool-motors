@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { getUserIdFromToken } from "../utils/jwtDecode";
-import "./VehicleDetails.css"; // Import the CSS for the modal and blur effect
+import "./css/VehicleDetails.css"; // Import the CSS for the modal and blur effect
 
 function VehicleDetails() {
   const { id } = useParams(); // Vehicle ID from URL

@@ -1,4 +1,4 @@
-import "./ListVehicle.css";
+import "./css/ListVehicle.css";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Use this for redirection
 import axios from "axios";

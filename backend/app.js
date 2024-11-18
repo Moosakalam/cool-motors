@@ -1,6 +1,7 @@
 const express = require("express");
 const morgan = require("morgan");
 const vehicleRoutes = require("./routes/vehicleRoutes");
+const pendingVehicleRoutes = require("./routes/pendingVehicleRoutes");
 const userRouter = require("./routes/userRoutes");
 const AppError = require("./utils/appError");
 const errorHandler = require("./controllers/errorController");
@@ -24,6 +25,7 @@ app.use((req, res, next) => {
 
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/vehicles", vehicleRoutes);
+app.use("/api/v1/pending-vehicles", pendingVehicleRoutes);
 
 //for undefined url:
 //'all' means (get, post, patch, delete, ..)

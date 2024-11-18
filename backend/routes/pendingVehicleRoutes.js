@@ -17,21 +17,18 @@ router.post(
   pendingVehicleController.listVehicle
 );
 
-//edit vehicle
-router.patch(
-  "/update/:id", // Use PATCH method and add :id param to specify which vehicle to update
-  authController.protect, // Ensure the user is authenticated
-  vehicleController.updateVehicle // The update vehicle controller function you created
+router.post(
+  "/approve/:id",
+  authController.protect,
+  authController.restrictTo("admin"),
+  pendingVehicleController.approveVehicle
 );
 
-//search
-router.get("/search", vehicleController.searchVehicles);
-
-router.get("/random-vehicles", vehicleController.getRandomVehicles);
-
-router
-  .route("/:vehicleId")
-  .get(vehicleController.getVehicle)
-  .delete(authController.protect, vehicleController.deleteVehicle);
+router.delete(
+  "/disapprove/:id",
+  authController.protect,
+  authController.restrictTo("admin"),
+  pendingVehicleController.disapproveVehicle
+);
 
 module.exports = router;
