@@ -113,7 +113,7 @@ function MyProfile() {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h2>{username ? `${username}'s Profile(You)` : "My Profile"}</h2>
+      <h2>{username ? `${username}'s Profile (You)` : "My Profile"}</h2>
       <div style={{ marginBottom: "20px", display: "flex", gap: "10px" }}>
         <button
           onClick={() => setActiveTab("listed")}
@@ -177,20 +177,38 @@ function MyProfile() {
               {listedVehicles.map((vehicle) => (
                 <div key={vehicle._id}>
                   <VehicleCard vehicle={vehicle} />
-                  <button
-                    onClick={() => openModal(vehicle._id)}
-                    style={{
-                      marginTop: "10px",
-                      backgroundColor: "red",
-                      color: "white",
-                      padding: "5px 10px",
-                      border: "none",
-                      borderRadius: "5px",
-                      cursor: "pointer",
-                    }}
+                  <div
+                    style={{ marginTop: "10px", display: "flex", gap: "10px" }}
                   >
-                    Delete
-                  </button>
+                    <button
+                      onClick={() => openModal(vehicle._id)}
+                      style={{
+                        backgroundColor: "red",
+                        color: "white",
+                        padding: "5px 10px",
+                        border: "none",
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Delete
+                    </button>
+                    <button
+                      onClick={() =>
+                        (window.location.href = `/edit/${vehicle._id}`)
+                      }
+                      style={{
+                        backgroundColor: "#007bff",
+                        color: "white",
+                        padding: "5px 10px",
+                        border: "none",
+                        borderRadius: "5px",
+                        cursor: "pointer",
+                      }}
+                    >
+                      Edit
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -221,7 +239,7 @@ function MyProfile() {
               textAlign: "center",
             }}
           >
-            <h3>Are you sure you?</h3>
+            <h3>Are you sure?</h3>
             <div style={{ marginTop: "20px", display: "flex", gap: "10px" }}>
               <button
                 onClick={() => handleDelete(vehicleToDelete)}

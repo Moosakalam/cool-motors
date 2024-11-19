@@ -16,6 +16,7 @@ import ResetPassword from "./pages/ResetPassword";
 import Settings from "./pages/Settings";
 import ChangePassword from "./pages/ChangePassword";
 import ReviewVehicles from "./pages/ReviewVehicles";
+import EditVehicle from "./pages/EditVehicle";
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function App() {
           <Route path="/settings" element={<Settings />} />
           <Route path="/change-password" element={<ChangePassword />} />
           <Route path="/admin/review-vehicles" element={<ReviewVehicles />} />
+          <Route path="/edit/:vehicleId" element={<EditVehicle />} />
         </Routes>
       </div>
     </Router>
