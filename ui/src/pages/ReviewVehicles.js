@@ -116,6 +116,9 @@ const ReviewVehicles = () => {
             <strong>Ownership:</strong> {vehicle.ownership} Owners
           </p>
           <p>
+            <strong>State:</strong> {vehicle.state}
+          </p>
+          <p>
             <strong>Location:</strong> {vehicle.location}
           </p>
           <p>

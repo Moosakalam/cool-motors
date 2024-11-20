@@ -217,6 +217,7 @@ exports.searchVehicles = catchAsyncError(async (req, res) => {
     engineType: req.query.engineType
       ? req.query.engineType.split(",")
       : undefined,
+    state: req.query.state ? req.query.state.split(",") : undefined,
     location: req.query.location ? req.query.location.split(",") : undefined,
     sort: req.query.sort, // Sort query parameter
   };
@@ -259,6 +260,10 @@ exports.searchVehicles = catchAsyncError(async (req, res) => {
   if (filters.engineType)
     searchCriteria.engineType = {
       $in: filters.engineType.map((engineType) => new RegExp(engineType, "i")),
+    };
+  if (filters.state)
+    searchCriteria.state = {
+      $in: filters.state.map((state) => new RegExp(state, "i")),
     };
   if (filters.location)
     searchCriteria.location = {

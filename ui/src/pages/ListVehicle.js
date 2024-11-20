@@ -16,6 +16,7 @@ function ListVehicle() {
     odometer: "",
     ownership: "",
     location: "",
+    state: "",
   });
 
   const [selectedFiles, setSelectedFiles] = useState([]);
@@ -71,6 +72,48 @@ function ListVehicle() {
     "Rotary",
   ];
   const ownerships = Array.from({ length: 10 }, (_, i) => i + 1);
+  const states = [
+    // States
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chhattisgarh",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal",
+
+    // Union Territories
+    "Andaman and Nicobar Islands",
+    "Chandigarh",
+    "Dadra and Nagar Haveli and Daman and Diu",
+    "Delhi",
+    "Jammu and Kashmir",
+    "Ladakh",
+    "Lakshadweep",
+    "Puducherry",
+  ];
+
   const locations = [
     "Mumbai",
     "Delhi",
@@ -314,6 +357,23 @@ function ListVehicle() {
               }
             }}
           />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="state">State*</label>
+          <input
+            type="text"
+            name="state"
+            list="states"
+            value={formData.state}
+            onChange={handleChange}
+            required
+          />
+          <datalist id="states">
+            {states.map((num) => (
+              <option key={num} value={num} />
+            ))}
+          </datalist>
         </div>
 
         <div className="form-group">

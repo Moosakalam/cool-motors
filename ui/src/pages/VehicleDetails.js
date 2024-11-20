@@ -260,6 +260,9 @@ function VehicleDetails() {
           <strong>No. of Owners:</strong> {vehicle.ownership}
         </p>
         <p>
+          <strong>State:</strong> {vehicle.state ? vehicle.state : "--"}
+        </p>
+        <p>
           <strong>Location:</strong> {vehicle.location}
         </p>
         <p>

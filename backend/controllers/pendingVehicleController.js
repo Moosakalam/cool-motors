@@ -69,6 +69,7 @@ exports.listVehicle = catchAsyncError(async (req, res, next) => {
     odometer: req.body.odometer,
     ownership: req.body.ownership,
     description: req.body.description,
+    state: req.body.state,
     location: req.body.location,
     listedBy: req.user._id,
     images: imageUrls, // Storing the array of image URLs
@@ -78,6 +79,8 @@ exports.listVehicle = catchAsyncError(async (req, res, next) => {
   //   await User.findByIdAndUpdate(req.user._id, {
   //     $push: { listedVehicles: newVehicle._id },
   //   });
+
+  console.log("ikh");
 
   res.status(201).json({
     status: "success",

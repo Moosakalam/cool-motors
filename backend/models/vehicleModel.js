@@ -89,6 +89,10 @@ const vehicleSchema = mongoose.Schema(
       required: [true, "Please enter the ownership of your vehicle"],
       min: [1, "Ownership number must be at least 1"],
     },
+    state: {
+      type: String,
+      required: [true, "Please enter the state(location) of your vehicle"],
+    },
     location: {
       type: String,
       required: [true, "Please enter the location of your vehicle"],

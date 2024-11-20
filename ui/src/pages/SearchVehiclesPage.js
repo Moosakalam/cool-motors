@@ -22,6 +22,48 @@ const engineTypes = [
   "H6",
   "rotary",
 ];
+const states = [
+  // States
+  "Andhra Pradesh",
+  "Arunachal Pradesh",
+  "Assam",
+  "Bihar",
+  "Chhattisgarh",
+  "Goa",
+  "Gujarat",
+  "Haryana",
+  "Himachal Pradesh",
+  "Jharkhand",
+  "Karnataka",
+  "Kerala",
+  "Madhya Pradesh",
+  "Maharashtra",
+  "Manipur",
+  "Meghalaya",
+  "Mizoram",
+  "Nagaland",
+  "Odisha",
+  "Punjab",
+  "Rajasthan",
+  "Sikkim",
+  "Tamil Nadu",
+  "Telangana",
+  "Tripura",
+  "Uttar Pradesh",
+  "Uttarakhand",
+  "West Bengal",
+
+  // Union Territories
+  "Andaman and Nicobar Islands",
+  "Chandigarh",
+  "Dadra and Nagar Haveli and Daman and Diu",
+  "Delhi",
+  "Jammu and Kashmir",
+  "Ladakh",
+  "Lakshadweep",
+  "Puducherry",
+];
+const sorts = ["priceAsc", "priceDesc", "mileageAsc", "mileageDesc"];
 
 const SearchVehiclesPage = () => {
   const [filters, setFilters] = useState({
@@ -37,6 +79,7 @@ const SearchVehiclesPage = () => {
     maxOdometer: "",
     engineType: "",
     location: "",
+    state: "",
     sort: "",
   });
 
@@ -73,26 +116,41 @@ const SearchVehiclesPage = () => {
                 key.slice(1).replace(/([A-Z])/g, " $1")}
               :{" "}
             </label>
-            {key.includes("Type") || key.includes("sort") ? (
+            {[
+              "fuelType",
+              "transmission",
+              "engineType",
+              "state",
+              "sort",
+            ].includes(key) ? (
               <select name={key} value={value} onChange={handleInputChange}>
                 <option value="">Select...</option>
-                {(key.includes("fuelType")
+                {(key === "fuelType"
                   ? fuelTypes
-                  : key.includes("transmission")
+                  : key === "transmission"
                   ? transmissions
+                  : key === "state"
+                  ? states
+                  : key === "sort"
+                  ? sorts
                   : engineTypes
-                ).map((type) => (
-                  <option key={type} value={type}>
-                    {type.charAt(0).toUpperCase() + type.slice(1)}
+                ).map((option) => (
+                  <option key={option} value={option}>
+                    {option.charAt(0).toUpperCase() + option.slice(1)}
                   </option>
                 ))}
               </select>
             ) : (
               <input
                 type={
-                  key.includes("Year") ||
-                  key.includes("Price") ||
-                  key.includes("Odometer")
+                  [
+                    "minYear",
+                    "maxYear",
+                    "minPrice",
+                    "maxPrice",
+                    "minOdometer",
+                    "maxOdometer",
+                  ].includes(key)
                     ? "number"
                     : "text"
                 }
@@ -103,6 +161,7 @@ const SearchVehiclesPage = () => {
             )}
           </div>
         ))}
+
         <button onClick={handleApplyFilters}>Apply Filters</button>
       </div>
 
