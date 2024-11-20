@@ -207,15 +207,15 @@ const EditVehicle = () => {
                   list="carMakes" // Ensure the list is correctly linked
                   required
                 />
-                {/* <datalist id="carMakes">
+                <datalist id="carMakes">
                   {carMakes.map((make) => (
                     <option key={make} value={make} />
                   ))}
-                </datalist> */}
-                <datalist id="carMakes">
+                </datalist>
+                {/* <datalist id="carMakes">
                   <option value="Toyota" />
                   <option value="Honda" />
-                </datalist>
+                </datalist> */}
               </>
             ) : key === "year" ? (
               <>

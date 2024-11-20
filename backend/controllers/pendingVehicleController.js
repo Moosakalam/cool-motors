@@ -3,6 +3,7 @@ const AppError = require("../utils/appError");
 const PendingVehicle = require("../models/pendingVehicleModel");
 const Vehicle = require("../models/vehicleModel");
 const User = require("../models/userModel");
+const sendEmail = require("../utils/email");
 
 const generateFileName = (bytes = 32) =>
   crypto.randomBytes(bytes).toString("hex");
@@ -36,6 +37,8 @@ exports.listVehicle = catchAsyncError(async (req, res, next) => {
   }
 
   const imageUrls = [];
+
+  // console.log("kiuvg");
 
   // Loop through the files and upload each one to S3
   for (const file of files) {
@@ -80,7 +83,7 @@ exports.listVehicle = catchAsyncError(async (req, res, next) => {
   //     $push: { listedVehicles: newVehicle._id },
   //   });
 
-  console.log("ikh");
+  // console.log("ikh");
 
   res.status(201).json({
     status: "success",
@@ -114,6 +117,26 @@ exports.approveVehicle = catchAsyncError(async (req, res, next) => {
   await PendingVehicle.findByIdAndDelete(id);
 
   //SEND APPROVED EMAIL TO USER
+  const listedBy = pendingVehicle.listedBy;
+  const user = await User.findById(listedBy);
+  const email = user.email;
+  const message = "Your vehicle is approved and posted.";
+
+  try {
+    await sendEmail({
+      email: email,
+      //or user.email
+      subject: "Vehilce approved",
+      message,
+    });
+  } catch (err) {
+    return next(
+      new AppError(
+        "There was an error sending the email. Please try again later",
+        500
+      )
+    );
+  }
 
   res.status(201).json({
     status: "success",
@@ -133,6 +156,26 @@ exports.disapproveVehicle = catchAsyncError(async (req, res, next) => {
   }
 
   //SEND DISAPPROVED EMAIL TO USER
+  const listedBy = pendingVehicle.listedBy;
+  const user = await User.findById(listedBy);
+  const email = user.email;
+  const message = "Your vehicle is disapproved.";
+
+  try {
+    await sendEmail({
+      email: email,
+      //or user.email
+      subject: "Vehilce disapproved",
+      message,
+    });
+  } catch (err) {
+    return next(
+      new AppError(
+        "There was an error sending the email. Please try again later",
+        500
+      )
+    );
+  }
 
   res.status(200).json({
     status: "success",
