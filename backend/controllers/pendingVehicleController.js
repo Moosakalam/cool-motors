@@ -148,12 +148,24 @@ exports.approveVehicle = catchAsyncError(async (req, res, next) => {
 
 exports.disapproveVehicle = catchAsyncError(async (req, res, next) => {
   const { id } = req.params;
+  const pendingVehicle = await PendingVehicle.findById(id);
 
-  // Find and remove the pending vehicle by ID
-  const pendingVehicle = await PendingVehicle.findByIdAndDelete(id);
   if (!pendingVehicle) {
     return next(new AppError("Vehicle not found in pending list.", 404));
   }
+
+  //deleting the image of vehicle from s3
+  for (const image of pendingVehicle.images) {
+    const key = image.split("amazonaws.com/")[1];
+    const deleteParams = {
+      Bucket: bucketName,
+      Key: key,
+    };
+    await s3Client.send(new DeleteObjectCommand(deleteParams));
+  }
+
+  // Find and remove the pending vehicle by ID
+  await PendingVehicle.findByIdAndDelete(id);
 
   //SEND DISAPPROVED EMAIL TO USER
   const listedBy = pendingVehicle.listedBy;
