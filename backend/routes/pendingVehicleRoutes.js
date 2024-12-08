@@ -15,6 +15,12 @@ router.get(
   authController.restrictTo("admin"),
   pendingVehicleController.getRandomVehicle
 );
+router.get(
+  "/oldest-pending-vehicle",
+  authController.protect,
+  authController.restrictTo("admin"),
+  pendingVehicleController.getOldestPendingVehicle
+);
 
 router.post(
   "/list",

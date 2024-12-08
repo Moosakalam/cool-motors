@@ -16,7 +16,7 @@ const ReviewVehicles = () => {
       setLoading(true);
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "http://127.0.0.1:5000/api/v1/pending-vehicles/random-vehicle",
+        "http://127.0.0.1:5000/api/v1/pending-vehicles/oldest-pending-vehicle",
         {
           headers: {
             Authorization: `Bearer ${token}`, // Add the token to the request header
@@ -24,7 +24,7 @@ const ReviewVehicles = () => {
         }
       );
       if (!response.data.data.vehicle) {
-        setError("No more vehicles");
+        setError("No pending vehicles");
         setLoading(false);
         return;
       }
@@ -74,7 +74,12 @@ const ReviewVehicles = () => {
   };
 
   if (loading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
+  if (error)
+    return (
+      <div>
+        <h2 align="center">{error}</h2>
+      </div>
+    );
 
   return (
     <div className="admin-slideshow">

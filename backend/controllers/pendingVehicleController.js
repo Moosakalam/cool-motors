@@ -212,3 +212,21 @@ exports.getRandomVehicle = catchAsyncError(async (req, res, next) => {
     },
   });
 });
+
+exports.getOldestPendingVehicle = catchAsyncError(async (req, res, next) => {
+  const vehicle = await PendingVehicle.findOne().sort({ createdAt: 1 }); // Get the oldest added vehicle
+
+  // if (!vehicle) {
+  //   return res.status(404).json({
+  //     status: "fail",
+  //     message: "No pending vehicles found",
+  //   });
+  // }
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      vehicle, // Return the oldest vehicle
+    },
+  });
+});
