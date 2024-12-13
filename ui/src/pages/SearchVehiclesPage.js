@@ -1,6 +1,6 @@
-// src/SearchVehiclesPage.js
 import "./css/SearchVehicles.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import VehicleCard from "../utils/VehicleCard";
 
@@ -23,7 +23,6 @@ const engineTypes = [
   "rotary",
 ];
 const states = [
-  // States
   "Andhra Pradesh",
   "Arunachal Pradesh",
   "Assam",
@@ -52,8 +51,6 @@ const states = [
   "Uttar Pradesh",
   "Uttarakhand",
   "West Bengal",
-
-  // Union Territories
   "Andaman and Nicobar Islands",
   "Chandigarh",
   "Dadra and Nagar Haveli and Daman and Diu",
@@ -66,6 +63,9 @@ const states = [
 const sorts = ["priceAsc", "priceDesc", "mileageAsc", "mileageDesc"];
 
 const SearchVehiclesPage = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const [filters, setFilters] = useState({
     make: "",
     model: "",
@@ -85,17 +85,48 @@ const SearchVehiclesPage = () => {
 
   const [vehicles, setVehicles] = useState([]);
 
+  // Parse query parameters from the URL on page load
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const newFilters = {};
+    for (const [key, value] of params.entries()) {
+      newFilters[key] = value;
+    }
+    setFilters((prev) => ({ ...prev, ...newFilters }));
+    fetchVehicles(newFilters);
+  }, [location.search]);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFilters({ ...filters, [name]: value });
   };
 
-  const handleApplyFilters = async () => {
+  const handleApplyFilters = () => {
+    // Only include filters that have values
+    const activeFilters = Object.entries(filters).reduce(
+      (acc, [key, value]) => {
+        if (value) acc[key] = value;
+        return acc;
+      },
+      {}
+    );
+
+    const queryParams = new URLSearchParams(activeFilters);
+    navigate(`/search?${queryParams.toString()}`);
+
+    // Scroll to the top of the page
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth", // Adds smooth scrolling
+    });
+  };
+
+  const fetchVehicles = async (activeFilters) => {
     try {
       const response = await axios.get(
         "http://127.0.0.1:5000/api/v1/vehicles/search",
         {
-          params: filters,
+          params: activeFilters,
         }
       );
       setVehicles(response.data.data.vehicles);
@@ -162,7 +193,9 @@ const SearchVehiclesPage = () => {
           </div>
         ))}
 
-        <button onClick={handleApplyFilters}>Apply Filters</button>
+        <button className="apply-filter-btn" onClick={handleApplyFilters}>
+          Apply Filters
+        </button>
       </div>
 
       {/* Results Section */}

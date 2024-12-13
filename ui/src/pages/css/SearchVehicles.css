@@ -81,3 +81,7 @@
   ); /* Adjust min width */
   gap: 20px;
 }
+
+.apply-filter-btn {
+  margin-top: 1rem;
+}
