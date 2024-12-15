@@ -40,6 +40,10 @@ const Settings = () => {
     navigate("/change-password"); // Redirect to the change password page
   };
 
+  const handleUpdatePassword = () => {
+    navigate("/update-password"); // Redirect to the change password page
+  };
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
@@ -71,6 +75,21 @@ const Settings = () => {
         }}
       >
         Change Password
+      </button>
+      <button
+        onClick={handleUpdatePassword}
+        style={{
+          display: "block",
+          margin: "10px 0",
+          padding: "10px 20px",
+          backgroundColor: "#007bff",
+          color: "#fff",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+        }}
+      >
+        Update Password
       </button>
 
       {isAdmin && (

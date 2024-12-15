@@ -40,11 +40,11 @@ router.get(
 router.post("/forgotPassword", authController.forgotPassword);
 router.patch("/resetPassword/:token", authController.resetPassword);
 
-// router.patch(
-//   "/updatePassword",
-//   authController.protect,
-//   authController.updatePassword
-// );
+router.patch(
+  "/updatePassword",
+  authController.protect,
+  authController.updatePassword
+);
 
 // router
 //   .route("/")

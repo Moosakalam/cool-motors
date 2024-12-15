@@ -14,7 +14,7 @@ import SearchVehiclesPage from "./pages/SearchVehiclesPage";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Settings from "./pages/Settings";
-import ChangePassword from "./pages/ChangePassword";
+import UpdatePassword from "./pages/UpdatePassword";
 import ReviewVehicles from "./pages/ReviewVehicles";
 import EditVehicle from "./pages/EditVehicle";
 
@@ -39,7 +39,7 @@ function App() {
             element={<ResetPassword />}
           />
           <Route path="/settings" element={<Settings />} />
-          <Route path="/change-password" element={<ChangePassword />} />
+          <Route path="/update-password" element={<UpdatePassword />} />
           <Route path="/admin/review-vehicles" element={<ReviewVehicles />} />
           <Route path="/edit/:vehicleId" element={<EditVehicle />} />
         </Routes>
