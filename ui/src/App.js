@@ -17,6 +17,7 @@ import Settings from "./pages/Settings";
 import UpdatePassword from "./pages/UpdatePassword";
 import ReviewVehicles from "./pages/ReviewVehicles";
 import EditVehicle from "./pages/EditVehicle";
+import UpdateMe from "./pages/UpdateMe";
 
 function App() {
   return (
@@ -42,6 +43,7 @@ function App() {
           <Route path="/update-password" element={<UpdatePassword />} />
           <Route path="/admin/review-vehicles" element={<ReviewVehicles />} />
           <Route path="/edit/:vehicleId" element={<EditVehicle />} />
+          <Route path="/update-me" element={<UpdateMe />} />
         </Routes>
       </div>
     </Router>
