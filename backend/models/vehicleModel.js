@@ -142,28 +142,32 @@ const vehicleSchema = mongoose.Schema(
 vehicleSchema.post("findOneAndDelete", async function (vehicle) {
   if (!vehicle) return;
 
-  // Delete images from S3
-  for (const image of vehicle.images) {
-    const key = image.split("amazonaws.com/")[1];
-    const deleteParams = {
-      Bucket: bucketName,
-      Key: key,
-    };
-    await s3Client.send(new DeleteObjectCommand(deleteParams));
+  try {
+    // Delete images from S3
+    for (const image of vehicle.images) {
+      const key = image.split("amazonaws.com/")[1];
+      const deleteParams = {
+        Bucket: bucketName,
+        Key: key,
+      };
+      await s3Client.send(new DeleteObjectCommand(deleteParams));
+    }
+
+    // Remove vehicle reference from the user's listedVehicles array
+    await mongoose.model("User").findByIdAndUpdate(vehicle.listedBy, {
+      $pull: { listedVehicles: vehicle._id },
+    });
+
+    // Remove vehicle reference from likedVehicles of all users who liked it
+    await mongoose
+      .model("User")
+      .updateMany(
+        { likedVehicles: vehicle._id },
+        { $pull: { likedVehicles: vehicle._id } }
+      );
+  } catch (error) {
+    console.error("Error during vehicle deletion:", error);
   }
-
-  // Remove vehicle reference from the user's listedVehicles array
-  await mongoose.model("User").findByIdAndUpdate(vehicle.listedBy, {
-    $pull: { listedVehicles: vehicle._id },
-  });
-
-  // Remove vehicle reference from likedVehicles of all users who liked it
-  await mongoose
-    .model("User")
-    .updateMany(
-      { likedVehicles: vehicle._id },
-      { $pull: { likedVehicles: vehicle._id } }
-    );
 });
 
 const Vehicle = mongoose.model("Vehicle", vehicleSchema);

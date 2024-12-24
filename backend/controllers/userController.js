@@ -1,4 +1,5 @@
 const Vehicle = require("../models/vehicleModel");
+const PendingVehicle = require("../models/pendingVehicleModel");
 const User = require("../models/userModel");
 const catchAsyncError = require("../utils/catchAsyncError");
 const AppError = require("../utils/appError");
@@ -81,6 +82,12 @@ exports.deleteMe = catchAsyncError(async (req, res, next) => {
     await Vehicle.findByIdAndDelete(vehicleId); // This will trigger the query middleware for cleanup
   }
 
+  // Check for any pending vehicles listed by the user and delete them
+  const pendingVehicles = await PendingVehicle.find({ listedBy: req.user._id });
+  for (const pendingVehicle of pendingVehicles) {
+    await PendingVehicle.findByIdAndDelete(pendingVehicle._id); // Delete pending vehicles listed by the user
+  }
+
   // Deactivate the user
   await User.findByIdAndUpdate(req.user._id, { active: false });
 
@@ -89,5 +96,3 @@ exports.deleteMe = catchAsyncError(async (req, res, next) => {
     data: null,
   });
 });
-
-
