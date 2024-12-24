@@ -1,51 +1,118 @@
-// src/App.js
-import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import HomePage from "./pages/HomePage"; // Import the HomePage component
-// import VehicleList from "./VehicleList";
-import UserProfile from "./pages/UserProfile";
-import MyProfile from "./pages/MyProfile";
-import ListVehicle from "./pages/ListVehicle";
-import VehicleDetails from "./pages/VehicleDetails";
-import Signup from "./pages/Signup";
-import Login from "./pages/Login";
-import Navbar from "./utils/Navbar"; // Import the Navbar
-import SearchVehiclesPage from "./pages/SearchVehiclesPage";
-import ForgotPassword from "./pages/ForgotPassword";
-import ResetPassword from "./pages/ResetPassword";
-import Settings from "./pages/Settings";
-import ChangePassword from "./pages/ChangePassword";
-import ReviewVehicles from "./pages/ReviewVehicles";
-import EditVehicle from "./pages/EditVehicle";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import "./css/UpdateMe.css"; // Import CSS file for styling
 
-function App() {
+const UpdateMe = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phoneNumber: "",
+  });
+  const [message, setMessage] = useState("");
+  const [success, setSuccess] = useState(false);
+  const navigate = useNavigate();
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const token = localStorage.getItem("token"); // Retrieve the token from local storage
+
+      // Filter out empty fields from the formData before sending
+      const updatedData = Object.entries(formData).reduce(
+        (acc, [key, value]) => {
+          if (value.trim() !== "") {
+            acc[key] = value;
+          }
+          return acc;
+        },
+        {}
+      );
+
+      if (Object.keys(updatedData).length === 0) {
+        setMessage("Please fill out at least one field to update.");
+        return;
+      }
+
+      await axios.patch(
+        "http://127.0.0.1:5000/api/v1/users/updateMe",
+        updatedData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      setMessage("Profile updated successfully!");
+      setSuccess(true);
+
+      // Redirect to my-profile after a short delay
+      setTimeout(() => {
+        navigate("/my-profile");
+      }, 2000);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      setMessage(
+        error.response?.data?.message || "An error occurred. Please try again."
+      );
+    }
+  };
+
   return (
-    <Router>
-      <div className="App">
-        <Navbar /> {/* Navbar will be rendered on all pages */}
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          {/* <Route path="/" element={<VehicleList />} /> */}
-          <Route path="/user/:userId" element={<UserProfile />} />
-          <Route path="/my-profile" element={<MyProfile />} />
-          <Route path="/list" element={<ListVehicle />} />
-          <Route path="/vehicle/:id" element={<VehicleDetails />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/search" element={<SearchVehiclesPage />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route
-            path="/reset-password/:resetToken"
-            element={<ResetPassword />}
+    <div className="update-container">
+      <h1>Update Profile</h1>
+      {message && (
+        <p className={`message ${success ? "success" : "error"}`}>{message}</p>
+      )}
+      <form onSubmit={handleSubmit} className="update-form">
+        <div className="form-group">
+          <label htmlFor="name">Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
           />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/change-password" element={<ChangePassword />} />
-          <Route path="/admin/review-vehicles" element={<ReviewVehicles />} />
-          <Route path="/edit/:vehicleId" element={<EditVehicle />} />
-        </Routes>
-      </div>
-    </Router>
-  );
-}
+        </div>
 
-export default App;
+        <div className="form-group">
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="phoneNumber">Phone Number</label>
+          <input
+            type="text"
+            id="phoneNumber"
+            name="phoneNumber"
+            value={formData.phoneNumber}
+            onChange={handleChange}
+          />
+        </div>
+
+        <button type="submit" className="submit-btn">
+          Update
+        </button>
+      </form>
+    </div>
+  );
+};
+
+export default UpdateMe;

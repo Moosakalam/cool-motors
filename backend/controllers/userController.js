@@ -32,6 +32,19 @@ exports.getUser = catchAsyncError(async (req, res, next) => {
   });
 });
 
+exports.getAllUsers = catchAsyncError(async (req, res) => {
+  const users = await User.find();
+
+  //SEND RESPONSE
+  res.status(200).json({
+    status: "success",
+    results: users.length,
+    data: {
+      users,
+    },
+  });
+});
+
 exports.updateMe = catchAsyncError(async (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm) {
     return next(
@@ -55,3 +68,26 @@ exports.updateMe = catchAsyncError(async (req, res, next) => {
     },
   });
 });
+
+exports.deleteMe = catchAsyncError(async (req, res, next) => {
+  const user = await User.findById(req.user._id);
+
+  if (!user) {
+    return next(new AppError("User not found", 404));
+  }
+
+  // Delete all vehicles listed by the user
+  for (const vehicleId of user.listedVehicles) {
+    await Vehicle.findByIdAndDelete(vehicleId); // This will trigger the query middleware for cleanup
+  }
+
+  // Deactivate the user
+  await User.findByIdAndUpdate(req.user._id, { active: false });
+
+  res.status(204).json({
+    status: "success",
+    data: null,
+  });
+});
+
+
