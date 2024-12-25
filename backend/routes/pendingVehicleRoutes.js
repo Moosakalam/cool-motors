@@ -24,7 +24,7 @@ router.get(
 
 router.post(
   "/list",
-  upload.array("images"),
+  upload.array("images", 20), //add an error for more than 20
   authController.protect,
   pendingVehicleController.listVehicle
 );

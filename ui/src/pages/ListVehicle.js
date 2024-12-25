@@ -142,6 +142,8 @@ function ListVehicle() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
+    setSuccess("");
 
     try {
       const formDataWithFiles = new FormData();

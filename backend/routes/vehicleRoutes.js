@@ -5,14 +5,14 @@ const authController = require("../controllers/authController");
 const multer = require("multer");
 
 const storage = multer.memoryStorage();
-const upload = multer({ storage }); // Accept up to 20 images
+const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } }); //add error for file size more than 5mb
 // const upload = multer({ dest: "uploads/" });
 
 const router = express.Router();
 
 router.post(
   "/list",
-  upload.array("images"),
+  upload.array("images", 20), //add an error for more than 20
   authController.protect,
   pendingVehicleController.listVehicle
 );

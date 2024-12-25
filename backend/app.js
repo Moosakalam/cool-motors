@@ -8,15 +8,35 @@ const errorHandler = require("./controllers/errorController");
 const cors = require("cors");
 const multer = require("multer");
 const { S3Client } = require("@aws-sdk/client-s3");
+const rateLimit = require("express-rate-limit");
+const helmet = require("helmet");
 
 const app = express();
 
 app.use(cors());
+
+//body parser. reading data from the body of the request into req.body
+// app.use(express.json({ limit: "10kb" }));
 app.use(express.json());
+
+//set security http headers:
+app.use(helmet());
+
 app.use(express.static(`${__dirname}/public`));
+
+//development logging
 if (process.env.NODE_ENV === "development") {
   app.use(morgan("dev"));
 }
+
+const limiter = rateLimit({
+  max: 100,
+  windowMs: 60 * 60 * 1000,
+  message:
+    "Too many requests from this IP address. Please try again in one hour.",
+});
+app.use("/api", limiter);
+
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString();
   // console.log(req.headers);
