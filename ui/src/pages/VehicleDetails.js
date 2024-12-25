@@ -298,6 +298,19 @@ function VehicleDetails() {
           {seller.phoneNumber ? `+91 ${seller.phoneNumber}` : "--"}
         </p>
         <p>
+          {seller.phoneNumber ? (
+            <a
+              href={`https://wa.me/+918885498289?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              WhatsApp Chat
+            </a>
+          ) : (
+            ""
+          )}
+        </p>
+        <p>
           <strong>Seller:</strong>{" "}
           {seller ? (
             <Link to={`/user/${seller._id}`}>{seller.name}</Link>
