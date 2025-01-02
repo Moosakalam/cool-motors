@@ -10,6 +10,9 @@ const multer = require("multer");
 const { S3Client } = require("@aws-sdk/client-s3");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
+const mongoSanitize = require("express-mongo-sanitize");
+const xss = require("xss-clean");
+// const hpp = require("hpp");
 
 const app = express();
 
@@ -23,6 +26,15 @@ app.use(express.json());
 app.use(helmet());
 
 app.use(express.static(`${__dirname}/public`));
+
+//data sanitization against nosql queriy injection
+app.use(mongoSanitize());
+
+//data sanitization against xss
+app.use(xss());
+
+// //prevent parameter pollution
+// app.use(hpp());
 
 //development logging
 if (process.env.NODE_ENV === "development") {
