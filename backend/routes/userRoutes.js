@@ -1,6 +1,7 @@
 const express = require("express");
 const userController = require("../controllers/userController");
 const vehicleController = require("../controllers/vehicleController");
+const likeController = require("../controllers/likeController");
 const authController = require("../controllers/authController");
 
 const router = express.Router();
@@ -19,6 +20,7 @@ router.post(
   "/like/:vehicleId",
   authController.protect,
   vehicleController.likeVehicle
+  // likeController.likeVehicle
 );
 
 //unlike vehicle
@@ -26,6 +28,7 @@ router.patch(
   "/unlike/:vehicleId",
   authController.protect,
   vehicleController.unlikeVehicle
+  // likeController.unlikeVehicle
 );
 
 router.get("/:userId", userController.getUser);
