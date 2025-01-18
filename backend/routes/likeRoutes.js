@@ -22,7 +22,7 @@ router.post(
 );
 
 //unlike vehicle
-router.patch(
+router.delete(
   "/unlike/:vehicleId",
   authController.protect,
   // vehicleController.unlikeVehicle

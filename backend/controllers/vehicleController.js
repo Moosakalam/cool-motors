@@ -177,28 +177,28 @@ exports.getVehiclesOfUser = catchAsyncError(async (req, res, next) => {
   });
 });
 
-exports.getLikedVehiclesOfUser = catchAsyncError(async (req, res, next) => {
-  const userId = req.params.userId;
+// exports.getLikedVehiclesOfUser = catchAsyncError(async (req, res, next) => {
+//   const userId = req.params.userId;
 
-  // Check if user exists
-  const user = await User.findById(userId);
-  if (!user) {
-    return next(new AppError("No user found with that ID", 404));
-  }
+//   // Check if user exists
+//   const user = await User.findById(userId);
+//   if (!user) {
+//     return next(new AppError("No user found with that ID", 404));
+//   }
 
-  // Fetch the vehicles liked by the user
-  const likedVehicles = await Vehicle.find({
-    _id: { $in: user.likedVehicles },
-  });
+//   // Fetch the vehicles liked by the user
+//   const likedVehicles = await Vehicle.find({
+//     _id: { $in: user.likedVehicles },
+//   });
 
-  res.status(200).json({
-    status: "success",
-    results: likedVehicles.length,
-    data: {
-      likedVehicles,
-    },
-  });
-});
+//   res.status(200).json({
+//     status: "success",
+//     results: likedVehicles.length,
+//     data: {
+//       likedVehicles,
+//     },
+//   });
+// });
 
 exports.searchVehicles = catchAsyncError(async (req, res) => {
   const filters = {
@@ -331,48 +331,48 @@ exports.deleteVehicle = catchAsyncError(async (req, res, next) => {
   });
 });
 
-exports.likeVehicle = catchAsyncError(async (req, res, next) => {
-  const userId = req.user._id;
-  const vehicleId = req.params.vehicleId;
+// exports.likeVehicle = catchAsyncError(async (req, res, next) => {
+//   const userId = req.user._id;
+//   const vehicleId = req.params.vehicleId;
 
-  // Check if vehicle exists
-  const vehicle = await Vehicle.findById(vehicleId);
-  if (!vehicle) {
-    return next(new AppError("No vehicle found with that ID", 404));
-  }
+//   // Check if vehicle exists
+//   const vehicle = await Vehicle.findById(vehicleId);
+//   if (!vehicle) {
+//     return next(new AppError("No vehicle found with that ID", 404));
+//   }
 
-  // Add vehicle to likedVehicles array
-  const updatedUser = await User.findByIdAndUpdate(
-    userId,
-    { $addToSet: { likedVehicles: vehicleId } }, // $addToSet ensures no duplicates
-    { new: true, runValidators: true } // Return the updated document and run validators
-  );
+//   // Add vehicle to likedVehicles array
+//   const updatedUser = await User.findByIdAndUpdate(
+//     userId,
+//     { $addToSet: { likedVehicles: vehicleId } }, // $addToSet ensures no duplicates
+//     { new: true, runValidators: true } // Return the updated document and run validators
+//   );
 
-  res.status(200).json({
-    status: "success",
-    data: {
-      user: updatedUser,
-    },
-  });
-});
+//   res.status(200).json({
+//     status: "success",
+//     data: {
+//       user: updatedUser,
+//     },
+//   });
+// });
 
-exports.unlikeVehicle = catchAsyncError(async (req, res, next) => {
-  const userId = req.user._id;
-  const vehicleId = req.params.vehicleId;
+// exports.unlikeVehicle = catchAsyncError(async (req, res, next) => {
+//   const userId = req.user._id;
+//   const vehicleId = req.params.vehicleId;
 
-  const updatedUser = await User.findByIdAndUpdate(
-    userId,
-    { $pull: { likedVehicles: vehicleId } },
-    { new: true, runValidators: true }
-  );
+//   const updatedUser = await User.findByIdAndUpdate(
+//     userId,
+//     { $pull: { likedVehicles: vehicleId } },
+//     { new: true, runValidators: true }
+//   );
 
-  res.status(200).json({
-    status: "success",
-    data: {
-      user: updatedUser,
-    },
-  });
-});
+//   res.status(200).json({
+//     status: "success",
+//     data: {
+//       user: updatedUser,
+//     },
+//   });
+// });
 
 // exports.getLikedVehicles = catchAsyncError(async (req, res, next) => {
 //   console.log("khbgih");

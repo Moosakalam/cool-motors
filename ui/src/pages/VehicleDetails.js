@@ -100,11 +100,9 @@ function VehicleDetails() {
 
       if (liked) {
         // Unlike the vehicle
-        await axios.patch(
-          `http://127.0.0.1:5000/api/v1/likes/unlike/${id}`,
-          {},
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
+        await axios.delete(`http://127.0.0.1:5000/api/v1/likes/unlike/${id}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
       } else {
         // Like the vehicle
         await axios.post(

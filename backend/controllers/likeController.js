@@ -53,9 +53,9 @@ exports.unlikeVehicle = catchAsyncError(async (req, res, next) => {
     return next(new AppError("You have not liked this vehicle", 400));
   }
 
-  res.status(200).json({
+  res.status(204).json({
     status: "success",
-    message: "Vehicle successfully unliked",
+    data: null,
   });
 });
 
