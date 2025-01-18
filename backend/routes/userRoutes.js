@@ -13,33 +13,44 @@ router.post("/login", authController.login);
 router.get("/:userId/vehicles", vehicleController.getVehiclesOfUser);
 
 //returns vehicles liked by "userId"
-router.get("/:userId/liked-vehicles", vehicleController.getLikedVehiclesOfUser);
+router.get(
+  "/:userId/liked-vehicles",
+  // vehicleController.getLikedVehiclesOfUser
+  likeController.getLikedVehiclesOfUser
+);
 
 //like vehicle
 router.post(
   "/like/:vehicleId",
   authController.protect,
-  vehicleController.likeVehicle
-  // likeController.likeVehicle
+  // vehicleController.likeVehicle
+  likeController.likeVehicle
 );
 
 //unlike vehicle
 router.patch(
   "/unlike/:vehicleId",
   authController.protect,
-  vehicleController.unlikeVehicle
-  // likeController.unlikeVehicle
+  // vehicleController.unlikeVehicle
+  likeController.unlikeVehicle
+);
+
+//checks if the vehicle is liked by the current user
+router.get(
+  "/is-liked/:vehicleId",
+  authController.protect,
+  likeController.isVehicleLiked
 );
 
 router.get("/:userId", userController.getUser);
 router.get("/", userController.getAllUsers);
 
-//get liked vehicles
-router.get(
-  "/liked-vehicles",
-  authController.protect,
-  vehicleController.getLikedVehicles
-);
+// //get liked vehicles
+// router.get(
+//   "/liked-vehicles",
+//   authController.protect,
+//   vehicleController.getLikedVehicles
+// );
 
 router.post("/forgotPassword", authController.forgotPassword);
 router.patch("/resetPassword/:token", authController.resetPassword);

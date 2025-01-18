@@ -374,20 +374,22 @@ exports.unlikeVehicle = catchAsyncError(async (req, res, next) => {
   });
 });
 
-exports.getLikedVehicles = catchAsyncError(async (req, res, next) => {
-  const userId = req.user._id;
+// exports.getLikedVehicles = catchAsyncError(async (req, res, next) => {
+//   console.log("khbgih");
 
-  // Fetch user and populate likedVehicles
-  const user = await User.findById(userId).populate("likedVehicles");
+//   const userId = req.user._id;
 
-  res.status(200).json({
-    status: "success",
-    results: user.likedVehicles.length,
-    data: {
-      likedVehicles: user.likedVehicles,
-    },
-  });
-});
+//   // Fetch user and populate likedVehicles
+//   const user = await User.findById(userId).populate("likedVehicles");
+
+//   res.status(200).json({
+//     status: "success",
+//     results: user.likedVehicles.length,
+//     data: {
+//       likedVehicles: user.likedVehicles,
+//     },
+//   });
+// });
 
 exports.getRandomVehicles = catchAsyncError(async (req, res, next) => {
   const limit = req.query.limit ? parseInt(req.query.limit, 10) : 10; // Number of random vehicles to return, default to 10

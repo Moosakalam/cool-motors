@@ -13,6 +13,8 @@ const filterObj = (obj, ...allowedFields) => {
 };
 
 exports.getUser = catchAsyncError(async (req, res, next) => {
+  // console.log("iiihdi");
+
   const userId = req.params.userId;
 
   // Find the user to ensure they exist and to get their name

@@ -158,13 +158,16 @@ vehicleSchema.post("findOneAndDelete", async function (vehicle) {
       $pull: { listedVehicles: vehicle._id },
     });
 
-    // Remove vehicle reference from likedVehicles of all users who liked it
-    await mongoose
-      .model("User")
-      .updateMany(
-        { likedVehicles: vehicle._id },
-        { $pull: { likedVehicles: vehicle._id } }
-      );
+    // // Remove vehicle reference from likedVehicles of all users who liked it
+    // await mongoose
+    //   .model("User")
+    //   .updateMany(
+    //     { likedVehicles: vehicle._id },
+    //     { $pull: { likedVehicles: vehicle._id } }
+    //   );
+
+    // Remove all likes associated with the vehicle
+    await mongoose.model("Like").deleteMany({ vehicle: vehicle._id });
   } catch (error) {
     console.error("Error during vehicle deletion:", error);
   }

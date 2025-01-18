@@ -73,6 +73,7 @@ exports.login = catchAsyncError(async (req, res, next) => {
 });
 
 exports.protect = catchAsyncError(async (req, res, next) => {
+  console.log("helloooo");
   //Get token and check if it exits:
   let token;
   if (
@@ -104,6 +105,7 @@ exports.protect = catchAsyncError(async (req, res, next) => {
 
   //Grant access to the protected route
   req.user = currentUser;
+
   next();
   // res.status(200).json({
   //   status: "success",
