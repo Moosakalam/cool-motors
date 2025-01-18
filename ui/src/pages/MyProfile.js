@@ -50,7 +50,7 @@ function MyProfile() {
     const fetchLikedVehicles = async () => {
       try {
         const response = await axios.get(
-          `http://127.0.0.1:5000/api/v1/users/${userId}/liked-vehicles`,
+          `http://127.0.0.1:5000/api/v1/likes/${userId}/liked-vehicles`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Add Bearer token

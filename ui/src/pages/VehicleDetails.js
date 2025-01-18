@@ -31,11 +31,6 @@ function VehicleDetails() {
           );
           setSeller(sellerResponse.data.data.user);
         }
-
-        const token = localStorage.getItem("token");
-        // Decode the token to get the user ID
-        const decodedUserId = getUserIdFromToken(token);
-        setUserId(decodedUserId);
       } catch (error) {
         console.error("Error fetching vehicle or seller details:", error);
       } finally {
@@ -84,7 +79,7 @@ function VehicleDetails() {
 
         // Check if the vehicle is liked using the new API endpoint
         const response = await axios.get(
-          `http://127.0.0.1:5000/api/v1/users/is-liked/${vehicle._id}`,
+          `http://127.0.0.1:5000/api/v1/likes/is-liked/${vehicle._id}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
@@ -106,14 +101,14 @@ function VehicleDetails() {
       if (liked) {
         // Unlike the vehicle
         await axios.patch(
-          `http://127.0.0.1:5000/api/v1/users/unlike/${id}`,
+          `http://127.0.0.1:5000/api/v1/likes/unlike/${id}`,
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
       } else {
         // Like the vehicle
         await axios.post(
-          `http://127.0.0.1:5000/api/v1/users/like/${id}`,
+          `http://127.0.0.1:5000/api/v1/likes/like/${id}`,
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );

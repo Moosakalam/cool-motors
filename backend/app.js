@@ -1,8 +1,9 @@
 const express = require("express");
 const morgan = require("morgan");
-const vehicleRoutes = require("./routes/vehicleRoutes");
-const pendingVehicleRoutes = require("./routes/pendingVehicleRoutes");
+const vehicleRouter = require("./routes/vehicleRoutes");
+const pendingVehicleRouter = require("./routes/pendingVehicleRoutes");
 const userRouter = require("./routes/userRoutes");
+const likeRouter = require("./routes/likeRoutes");
 const AppError = require("./utils/appError");
 const errorHandler = require("./controllers/errorController");
 const cors = require("cors");
@@ -56,8 +57,9 @@ app.use((req, res, next) => {
 });
 
 app.use("/api/v1/users", userRouter);
-app.use("/api/v1/vehicles", vehicleRoutes);
-app.use("/api/v1/pending-vehicles", pendingVehicleRoutes);
+app.use("/api/v1/vehicles", vehicleRouter);
+app.use("/api/v1/pending-vehicles", pendingVehicleRouter);
+app.use("/api/v1/likes", likeRouter);
 
 //for undefined url:
 //'all' means (get, post, patch, delete, ..)

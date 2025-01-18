@@ -12,38 +12,38 @@ router.post("/login", authController.login);
 //returns vehicles listed by "userId"
 router.get("/:userId/vehicles", vehicleController.getVehiclesOfUser);
 
-//returns vehicles liked by "userId"
-router.get(
-  "/:userId/liked-vehicles",
-  // vehicleController.getLikedVehiclesOfUser
-  likeController.getLikedVehiclesOfUser
-);
-
-//like vehicle
-router.post(
-  "/like/:vehicleId",
-  authController.protect,
-  // vehicleController.likeVehicle
-  likeController.likeVehicle
-);
-
-//unlike vehicle
-router.patch(
-  "/unlike/:vehicleId",
-  authController.protect,
-  // vehicleController.unlikeVehicle
-  likeController.unlikeVehicle
-);
-
-//checks if the vehicle is liked by the current user
-router.get(
-  "/is-liked/:vehicleId",
-  authController.protect,
-  likeController.isVehicleLiked
-);
-
 router.get("/:userId", userController.getUser);
 router.get("/", userController.getAllUsers);
+
+// //returns vehicles liked by "userId"
+// router.get(
+//   "/:userId/liked-vehicles",
+//   // vehicleController.getLikedVehiclesOfUser
+//   likeController.getLikedVehiclesOfUser
+// );
+
+// //like vehicle
+// router.post(
+//   "/like/:vehicleId",
+//   authController.protect,
+//   // vehicleController.likeVehicle
+//   likeController.likeVehicle
+// );
+
+// //unlike vehicle
+// router.patch(
+//   "/unlike/:vehicleId",
+//   authController.protect,
+//   // vehicleController.unlikeVehicle
+//   likeController.unlikeVehicle
+// );
+
+// //checks if the vehicle is liked by the current user
+// router.get(
+//   "/is-liked/:vehicleId",
+//   authController.protect,
+//   likeController.isVehicleLiked
+// );
 
 // //get liked vehicles
 // router.get(
