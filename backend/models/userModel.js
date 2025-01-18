@@ -54,12 +54,6 @@ const userSchema = mongoose.Schema({
       ref: "Vehicle",
     },
   ],
-  likedVehicles: [
-    {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Vehicle",
-    },
-  ],
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
