@@ -68,12 +68,11 @@ exports.getLikedVehiclesOfUser = catchAsyncError(async (req, res, next) => {
     return next(new AppError("No user found with that ID", 404));
   }
 
-  // Fetch liked vehicle IDs from the Like collection
-  const likes = await Like.find({ user: userId }).select("vehicle"); // Only fetch vehicle field
-  const vehicleIds = likes.map((like) => like.vehicle);
+  // Fetch liked vehicles directly using populate
+  const likes = await Like.find({ user: userId }).populate("vehicle");
 
-  // Fetch the vehicles details
-  const likedVehicles = await Vehicle.find({ _id: { $in: vehicleIds } });
+  // Extract vehicle details from the populated likes
+  const likedVehicles = likes.map((like) => like.vehicle);
 
   res.status(200).json({
     status: "success",

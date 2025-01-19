@@ -1,6 +1,8 @@
 const express = require("express");
 const vehicleController = require("../controllers/vehicleController");
 const pendingVehicleController = require("../controllers/pendingVehicleController");
+const likeController = require("../controllers/likeController");
+const likeRouter = require("../routes/likeRoutes");
 const authController = require("../controllers/authController");
 const multer = require("multer");
 
@@ -9,6 +11,9 @@ const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } }); //add
 // const upload = multer({ dest: "uploads/" });
 
 const router = express.Router();
+
+//routes for likes(like POST /vehicles/:vehicleId/likes for liking a vehicle):
+router.use("/:vehicleId/likes", likeRouter);
 
 router.post(
   "/list",

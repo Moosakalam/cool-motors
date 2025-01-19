@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { getUserIdFromToken } from "../utils/jwtDecode";
 import "./css/VehicleDetails.css"; // Import the CSS for the modal and blur effect
 
 function VehicleDetails() {
@@ -100,13 +99,16 @@ function VehicleDetails() {
 
       if (liked) {
         // Unlike the vehicle
-        await axios.delete(`http://127.0.0.1:5000/api/v1/likes/unlike/${id}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        await axios.delete(
+          `http://127.0.0.1:5000/api/v1/vehicles/${id}/likes`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
       } else {
         // Like the vehicle
         await axios.post(
-          `http://127.0.0.1:5000/api/v1/likes/like/${id}`,
+          `http://127.0.0.1:5000/api/v1/vehicles/${id}/likes`,
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
