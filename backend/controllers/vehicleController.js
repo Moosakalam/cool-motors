@@ -88,7 +88,7 @@ exports.listVehicle = catchAsyncError(async (req, res, next) => {
 });
 
 exports.updateVehicle = catchAsyncError(async (req, res, next) => {
-  const vehicleId = req.params.id;
+  const vehicleId = req.params.vehicleId;
 
   // Find the existing vehicle by ID
   const vehicle = await Vehicle.findById(vehicleId);

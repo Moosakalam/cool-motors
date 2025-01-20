@@ -22,18 +22,10 @@ router.delete(
   likeController.unlikeVehicle
 );
 
-//returns vehicles liked by "userId"
-router.get(
-  "/:userId/liked-vehicles",
-  // vehicleController.getLikedVehiclesOfUser
-  likeController.getLikedVehiclesOfUser
-);
+//checks if the vehicle is liked by the current user(coming from vehicle router)
+router.get("/is-liked", authController.protect, likeController.isVehicleLiked);
 
-//checks if the vehicle is liked by the current user
-router.get(
-  "/is-liked/:vehicleId",
-  authController.protect,
-  likeController.isVehicleLiked
-);
+//get liked vehicles of users(coming from user router)
+router.get("/", likeController.getLikedVehiclesOfUser);
 
 module.exports = router;

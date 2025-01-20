@@ -8,15 +8,15 @@ const ReviewVehicles = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchRandomVehicle();
+    fetchVehicle();
   }, []);
 
-  const fetchRandomVehicle = async () => {
+  const fetchVehicle = async () => {
     try {
       setLoading(true);
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "http://127.0.0.1:5000/api/v1/pending-vehicles/oldest-pending-vehicle",
+        "http://127.0.0.1:5000/api/v1/pending-vehicles/oldest",
         {
           headers: {
             Authorization: `Bearer ${token}`, // Add the token to the request header
@@ -41,7 +41,7 @@ const ReviewVehicles = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `http://127.0.0.1:5000/api/v1/pending-vehicles/approve/${vehicle._id}`,
+        `http://127.0.0.1:5000/api/v1/pending-vehicles/${vehicle._id}/approve`,
         {},
         {
           headers: {
@@ -49,7 +49,7 @@ const ReviewVehicles = () => {
           },
         }
       );
-      fetchRandomVehicle(); // Fetch next vehicle after approval
+      fetchVehicle(); // Fetch next vehicle after approval
     } catch (err) {
       setError(err.response?.data?.message || "Failed to approve vehicle");
     }
@@ -60,14 +60,14 @@ const ReviewVehicles = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.delete(
-        `http://127.0.0.1:5000/api/v1/pending-vehicles/disapprove/${vehicle._id}`,
+        `http://127.0.0.1:5000/api/v1/pending-vehicles/${vehicle._id}/disapprove`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Add the token to the request header
           },
         }
       );
-      fetchRandomVehicle(); // Fetch next vehicle after disapproval
+      fetchVehicle(); // Fetch next vehicle after disapproval
     } catch (err) {
       setError("Failed to disapprove vehicle");
     }

@@ -10,14 +10,14 @@ const upload = multer({ storage }); // Accept up to 20 images
 const router = express.Router();
 
 router.get(
-  "/random-vehicle",
+  "/random",
   authController.protect,
   authController.restrictTo("admin"),
   pendingVehicleController.getRandomVehicle
 );
 
 router.get(
-  "/oldest-pending-vehicle",
+  "/oldest",
   authController.protect,
   authController.restrictTo("admin"),
   pendingVehicleController.getOldestPendingVehicle
@@ -31,14 +31,14 @@ router.post(
 );
 
 router.post(
-  "/approve/:id",
+  "/:id/approve",
   authController.protect,
   authController.restrictTo("admin"),
   pendingVehicleController.approveVehicle
 );
 
 router.delete(
-  "/disapprove/:id",
+  "/:id/disapprove",
   authController.protect,
   authController.restrictTo("admin"),
   pendingVehicleController.disapproveVehicle

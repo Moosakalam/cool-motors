@@ -15,16 +15,16 @@ const router = express.Router();
 //routes for likes(like POST /vehicles/:vehicleId/likes for liking a vehicle):
 router.use("/:vehicleId/likes", likeRouter);
 
-router.post(
-  "/list",
-  upload.array("images", 20), //add an error for more than 20
-  authController.protect,
-  pendingVehicleController.listVehicle
-);
+// router.post(
+//   "/list",
+//   upload.array("images", 20), //add an error for more than 20
+//   authController.protect,
+//   pendingVehicleController.listVehicle
+// );
 
 //edit vehicle
 router.patch(
-  "/update/:id", // Use PATCH method and add :id param to specify which vehicle to update
+  "/:vehicleId", // Use PATCH method and add :id param to specify which vehicle to update
   authController.protect, // Ensure the user is authenticated
   vehicleController.updateVehicle // The update vehicle controller function you created
 );
@@ -32,7 +32,7 @@ router.patch(
 //search
 router.get("/search", vehicleController.searchVehicles);
 
-router.get("/random-vehicles", vehicleController.getRandomVehicles);
+router.get("/random", vehicleController.getRandomVehicles);
 
 router
   .route("/:vehicleId")

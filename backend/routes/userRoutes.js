@@ -2,9 +2,13 @@ const express = require("express");
 const userController = require("../controllers/userController");
 const vehicleController = require("../controllers/vehicleController");
 const likeController = require("../controllers/likeController");
+const likeRouter = require("../routes/likeRoutes");
 const authController = require("../controllers/authController");
 
 const router = express.Router();
+
+//routes for likes(like POST /vehicles/:vehicleId/likes for liking a vehicle):
+router.use("/:userId/likes", likeRouter);
 
 router.post("/signup", authController.signup);
 router.post("/login", authController.login);
@@ -13,44 +17,12 @@ router.post("/login", authController.login);
 router.get("/:userId/vehicles", vehicleController.getVehiclesOfUser);
 
 router.get("/:userId", userController.getUser);
-router.get("/", userController.getAllUsers);
-
-// //returns vehicles liked by "userId"
-// router.get(
-//   "/:userId/liked-vehicles",
-//   // vehicleController.getLikedVehiclesOfUser
-//   likeController.getLikedVehiclesOfUser
-// );
-
-// //like vehicle
-// router.post(
-//   "/like/:vehicleId",
-//   authController.protect,
-//   // vehicleController.likeVehicle
-//   likeController.likeVehicle
-// );
-
-// //unlike vehicle
-// router.patch(
-//   "/unlike/:vehicleId",
-//   authController.protect,
-//   // vehicleController.unlikeVehicle
-//   likeController.unlikeVehicle
-// );
-
-// //checks if the vehicle is liked by the current user
-// router.get(
-//   "/is-liked/:vehicleId",
-//   authController.protect,
-//   likeController.isVehicleLiked
-// );
-
-// //get liked vehicles
-// router.get(
-//   "/liked-vehicles",
-//   authController.protect,
-//   vehicleController.getLikedVehicles
-// );
+router.get(
+  "/",
+  authController.protect,
+  authController.restrictTo("admin"),
+  userController.getAllUsers
+);
 
 router.post("/forgotPassword", authController.forgotPassword);
 router.patch("/resetPassword/:token", authController.resetPassword);
