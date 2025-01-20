@@ -27,7 +27,7 @@ exports.likeVehicle = catchAsyncError(async (req, res, next) => {
       // Duplicate key error (unique constraint violation)
       return next(new AppError("You have already liked this vehicle", 400));
     }
-    console.error("Error creating like:", err); // Optional: log unexpected errors
+    console.error("Error liking vehicle(creating like doc):", err); // Optional: log unexpected errors
     throw err; // Rethrow unexpected errors
   }
 });

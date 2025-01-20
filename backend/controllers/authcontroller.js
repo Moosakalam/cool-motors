@@ -73,7 +73,7 @@ exports.login = catchAsyncError(async (req, res, next) => {
 });
 
 exports.protect = catchAsyncError(async (req, res, next) => {
-  console.log("helloooo");
+  console.log("protecting");
   //Get token and check if it exits:
   let token;
   if (

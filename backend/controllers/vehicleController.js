@@ -3,6 +3,7 @@ const User = require("../models/userModel");
 const catchAsyncError = require("../utils/catchAsyncError");
 const AppError = require("../utils/appError");
 const crypto = require("crypto");
+const factory = require("./handlerFactory");
 
 const {
   S3Client,
@@ -157,6 +158,8 @@ exports.getVehicle = catchAsyncError(async (req, res, next) => {
   });
 });
 
+// exports.getVehicle = factory.getOne(Vehicle);
+
 exports.getVehiclesOfUser = catchAsyncError(async (req, res, next) => {
   const userId = req.params.userId;
 
@@ -277,6 +280,7 @@ exports.searchVehicles = catchAsyncError(async (req, res) => {
   if (filters.sort === "mileageAsc") sortBy.odometer = 1;
   if (filters.sort === "mileageDesc") sortBy.odometer = -1;
 
+  // const vehicles = await Vehicle.find(searchCriteria).sort(sortBy).explian();
   const vehicles = await Vehicle.find(searchCriteria).sort(sortBy);
 
   res.status(200).json({
@@ -301,29 +305,8 @@ exports.deleteVehicle = catchAsyncError(async (req, res, next) => {
     );
   }
 
-  // //deleting the image of vehicle from s3
-  // for (const image of vehicle.images) {
-  //   const key = image.split("amazonaws.com/")[1];
-  //   const deleteParams = {
-  //     Bucket: bucketName,
-  //     Key: key,
-  //   };
-  //   await s3Client.send(new DeleteObjectCommand(deleteParams));
-  // }
-
   // Delete the vehicle
   await Vehicle.findByIdAndDelete(req.params.vehicleId);
-
-  // // Remove vehicle reference from the user's listedVehicles array
-  // await User.findByIdAndUpdate(req.user._id, {
-  //   $pull: { listedVehicles: req.params.vehicleId },
-  // });
-
-  // // Remove vehicle reference from likedVehicles of all users who liked it
-  // await User.updateMany(
-  //   { likedVehicles: req.params.vehicleId },
-  //   { $pull: { likedVehicles: req.params.vehicleId } }
-  // );
 
   res.status(204).json({
     status: "success",

@@ -120,10 +120,6 @@ const vehicleSchema = mongoose.Schema(
       ref: "User",
       required: [true, "please provide user"],
     },
-    image: {
-      type: String, // Store the URL of the image
-      // required: [true, "Please upload an image of your vehicle"],
-    },
     images: {
       type: [String], // Store the URLs of the images
       // required: [true, "Please upload an image of your vehicle"],
@@ -132,11 +128,22 @@ const vehicleSchema = mongoose.Schema(
       type: String,
       required: [true, "Please enter a description for your vehicle"],
     },
+    numberOfLikes: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,
   }
 );
+
+// Add indexes
+vehicleSchema.index({ price: 1 }); // Ascending order for price
+vehicleSchema.index({ odometer: 1 }); // Ascending order for odometer
+vehicleSchema.index({ year: -1 }); // Descending order for year
+// vehicleSchema.index({ ownership: 1 }); // Ascending order for ownership
+vehicleSchema.index({ state: 1, location: 1 }); // Compound index for state and location
 
 // Middleware for deleting images from S3 and updating references
 vehicleSchema.post("findOneAndDelete", async function (vehicle) {
