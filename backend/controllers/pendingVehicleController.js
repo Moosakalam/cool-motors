@@ -29,6 +29,13 @@ const s3Client = new S3Client({
 });
 
 exports.listVehicle = catchAsyncError(async (req, res, next) => {
+  // //check if the user is listing more number of vehicles than the limit.
+  // const userId = req.user._id;
+  // const user = await User.findById(userId);
+  // if (user.listedVehicles.length >= 1) {
+  //   return next(new AppError("You can't list more than 1 vehicle at a time."));
+  // }
+
   const files = req.files; // Handling multiple files
 
   // Check if there are files to upload

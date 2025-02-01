@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const morgan = require("morgan");
 const vehicleRouter = require("./routes/vehicleRoutes");
 const pendingVehicleRouter = require("./routes/pendingVehicleRoutes");
@@ -26,7 +27,7 @@ app.use(express.json());
 //set security http headers:
 app.use(helmet());
 
-app.use(express.static(`${__dirname}/public`));
+app.use(express.static(path.join(__dirname, "public")));
 
 //data sanitization against nosql queriy injection
 app.use(mongoSanitize());

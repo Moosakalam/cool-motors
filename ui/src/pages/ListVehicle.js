@@ -160,7 +160,7 @@ function ListVehicle() {
 
       const token = localStorage.getItem("token");
       await axios.post(
-        "http://127.0.0.1:5000/api/v1/vehicles/list",
+        "http://127.0.0.1:5000/api/v1/pending-vehicles/list",
         formDataWithFiles,
         {
           headers: {
