@@ -152,6 +152,7 @@ vehicleSchema.post("findOneAndDelete", async function (vehicle) {
   try {
     // Delete images from S3
     for (const image of vehicle.images) {
+      // console.log(image);
       const key = image.split("amazonaws.com/")[1];
       const deleteParams = {
         Bucket: bucketName,
@@ -164,14 +165,6 @@ vehicleSchema.post("findOneAndDelete", async function (vehicle) {
     await mongoose.model("User").findByIdAndUpdate(vehicle.listedBy, {
       $pull: { listedVehicles: vehicle._id },
     });
-
-    // // Remove vehicle reference from likedVehicles of all users who liked it
-    // await mongoose
-    //   .model("User")
-    //   .updateMany(
-    //     { likedVehicles: vehicle._id },
-    //     { $pull: { likedVehicles: vehicle._id } }
-    //   );
 
     // Remove all likes associated with the vehicle
     await mongoose.model("Like").deleteMany({ vehicle: vehicle._id });

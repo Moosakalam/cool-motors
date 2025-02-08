@@ -138,24 +138,25 @@ const pendingVehicleSchema = mongoose.Schema(
   }
 );
 
-// Middleware for deleting images from S3 and updating references
-pendingVehicleSchema.post("findOneAndDelete", async function (vehicle) {
-  if (!vehicle) return;
+// // Middleware for deleting images from S3 and updating references
+// pendingVehicleSchema.post("findOneAndDelete", async function (vehicle) {
+//   if (!vehicle) return;
 
-  try {
-    // Delete images from S3
-    for (const image of vehicle.images) {
-      const key = image.split("amazonaws.com/")[1];
-      const deleteParams = {
-        Bucket: bucketName,
-        Key: key,
-      };
-      await s3Client.send(new DeleteObjectCommand(deleteParams));
-    }
-  } catch (error) {
-    console.error("Error deleting images from S3:", error);
-  }
-});
+//   try {
+//     // Delete images from S3
+//     for (const image of vehicle.images) {
+//       const key = image.split("amazonaws.com/")[1];
+//       const deleteParams = {
+//         Bucket: bucketName,
+//         Key: key,
+//       };
+//       await s3Client.send(new DeleteObjectCommand(deleteParams));
+//       console.log("deleted image from pending vehicle");
+//     }
+//   } catch (error) {
+//     console.error("Error deleting images from S3:", error);
+//   }
+// });
 
 const PendingVehicle = mongoose.model("PendingVehicle", pendingVehicleSchema);
 

@@ -78,7 +78,7 @@ function VehicleDetails() {
 
         // Check if the vehicle is liked using the new API endpoint
         const response = await axios.get(
-          `http://127.0.0.1:5000/api/v1/likes/is-liked/${vehicle._id}`,
+          `http://127.0.0.1:5000/api/v1/vehicles/${vehicle._id}/likes/is-liked`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
