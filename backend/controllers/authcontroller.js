@@ -18,11 +18,15 @@ const createAndSendToken = (user, statusCode, res) => {
     expires: new Date(
       Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
     ),
-    // secure: true,
     httpOnly: true,
   };
 
-  if (process.env.NODE_ENV === "production") cookieOptions.secure = ture;
+  // Set 'secure' only in production (so it works on localhost)
+  if (process.env.NODE_ENV === "production") {
+    cookieOptions.secure = true; // Cookies work only over HTTPS
+  } else {
+    cookieOptions.secure = false; // Allow HTTP for localhost development
+  }
   res.cookie("jwt", token, cookieOptions);
 
   user.password = undefined;
