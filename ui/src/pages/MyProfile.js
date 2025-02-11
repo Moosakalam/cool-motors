@@ -23,6 +23,7 @@ function MyProfile() {
           `http://127.0.0.1:5000/api/v1/users/${userId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
+            withCredentials: true,
           }
         );
         setUsername(response.data.data.user.name); // Set the username
@@ -38,6 +39,7 @@ function MyProfile() {
           {
             headers: {
               Authorization: `Bearer ${token}`, // Add Bearer token
+              withCredentials: true,
             },
           }
         );
@@ -54,6 +56,7 @@ function MyProfile() {
           {
             headers: {
               Authorization: `Bearer ${token}`, // Add Bearer token
+              withCredentials: true,
             },
           }
         );
@@ -78,6 +81,7 @@ function MyProfile() {
       await axios.delete(`http://127.0.0.1:5000/api/v1/vehicles/${vehicleId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
+          withCredentials: true,
         },
       });
       setListedVehicles((prevVehicles) =>
