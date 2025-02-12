@@ -11,7 +11,7 @@ const HomePage = () => {
     const fetchRandomVehicles = async () => {
       try {
         const response = await axios.get(
-          "http://127.0.0.1:5000/api/v1/vehicles/random?limit=16"
+          "http://127.0.0.1:5001/api/v1/vehicles/random?limit=16"
         );
         setVehicles(response.data.data.vehicles);
       } catch (error) {

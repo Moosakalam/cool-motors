@@ -19,7 +19,7 @@
 //       try {
 //         const userId = getUserIdFromToken(token);
 //         const response = await axios.get(
-//           `http://127.0.0.1:5000/api/v1/users/${userId}`,
+//           `http://127.0.0.1:5001/api/v1/users/${userId}`,
 //           {
 //             headers: {
 //               Authorization: `Bearer ${token}`,
@@ -171,7 +171,7 @@ const Settings = () => {
       try {
         const userId = getUserIdFromToken(token);
         const response = await axios.get(
-          `http://127.0.0.1:5000/api/v1/users/${userId}`,
+          `http://127.0.0.1:5001/api/v1/users/${userId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -218,7 +218,7 @@ const Settings = () => {
     if (confirmed) {
       try {
         const token = localStorage.getItem("token");
-        await axios.delete("http://127.0.0.1:5000/api/v1/users/deleteMe", {
+        await axios.delete("http://127.0.0.1:5001/api/v1/users/deleteMe", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

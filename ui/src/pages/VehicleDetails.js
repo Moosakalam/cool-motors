@@ -18,7 +18,7 @@ function VehicleDetails() {
       try {
         // Fetch vehicle details
         const vehicleResponse = await axios.get(
-          `http://127.0.0.1:5000/api/v1/vehicles/${id}`
+          `http://127.0.0.1:5001/api/v1/vehicles/${id}`
         );
         const fetchedVehicle = vehicleResponse.data.data.vehicle;
         setVehicle(fetchedVehicle);
@@ -26,7 +26,7 @@ function VehicleDetails() {
         // Fetch seller details if available
         if (fetchedVehicle.listedBy) {
           const sellerResponse = await axios.get(
-            `http://127.0.0.1:5000/api/v1/users/${fetchedVehicle.listedBy}`
+            `http://127.0.0.1:5001/api/v1/users/${fetchedVehicle.listedBy}`
           );
           setSeller(sellerResponse.data.data.user);
         }
@@ -50,7 +50,7 @@ function VehicleDetails() {
 
   //       // Fetch current user details using the decoded user ID
   //       const userResponse = await axios.get(
-  //         `http://127.0.0.1:5000/api/v1/users/${userId}`,
+  //         `http://127.0.0.1:5001/api/v1/users/${userId}`,
   //         { headers: { Authorization: `Bearer ${token}` } }
   //       );
   //       const currentUser = userResponse.data.data.user;
@@ -78,7 +78,7 @@ function VehicleDetails() {
 
         // Check if the vehicle is liked using the new API endpoint
         const response = await axios.get(
-          `http://127.0.0.1:5000/api/v1/vehicles/${vehicle._id}/likes/is-liked`,
+          `http://127.0.0.1:5001/api/v1/vehicles/${vehicle._id}/likes/is-liked`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
@@ -100,7 +100,7 @@ function VehicleDetails() {
       if (liked) {
         // Unlike the vehicle
         await axios.delete(
-          `http://127.0.0.1:5000/api/v1/vehicles/${id}/likes`,
+          `http://127.0.0.1:5001/api/v1/vehicles/${id}/likes`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -108,7 +108,7 @@ function VehicleDetails() {
       } else {
         // Like the vehicle
         await axios.post(
-          `http://127.0.0.1:5000/api/v1/vehicles/${id}/likes`,
+          `http://127.0.0.1:5001/api/v1/vehicles/${id}/likes`,
           {},
           { headers: { Authorization: `Bearer ${token}` } }
         );
