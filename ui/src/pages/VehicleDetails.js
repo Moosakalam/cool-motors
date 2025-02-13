@@ -78,7 +78,7 @@ function VehicleDetails() {
 
         // Check if the vehicle is liked using the new API endpoint
         const response = await axios.get(
-          `http://127.0.0.1:5001/api/v1/vehicles/${vehicle._id}/likes/is-liked`,
+          `http://localhost:5001/api/v1/vehicles/${vehicle._id}/likes/is-liked`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
@@ -181,7 +181,7 @@ function VehicleDetails() {
         className={`vehicle-details ${isModalOpen ? "blur-background" : ""}`}
         style={{ maxWidth: "800px", margin: "0 auto", textAlign: "left" }}
       >
-        <div style={{ position: "relative" }}>
+        <div style={{ position: "relative", marginTop: "20px" }}>
           <img
             src={
               vehicle.images && vehicle.images.length > 0
