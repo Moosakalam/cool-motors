@@ -18,7 +18,10 @@ function VehicleDetails() {
       try {
         // Fetch vehicle details
         const vehicleResponse = await axios.get(
-          `http://127.0.0.1:5001/api/v1/vehicles/${id}`
+          `http://localhost:5001/api/v1/vehicles/${id}`,
+          {
+            withCredentials: true,
+          }
         );
         const fetchedVehicle = vehicleResponse.data.data.vehicle;
         setVehicle(fetchedVehicle);
@@ -26,7 +29,10 @@ function VehicleDetails() {
         // Fetch seller details if available
         if (fetchedVehicle.listedBy) {
           const sellerResponse = await axios.get(
-            `http://127.0.0.1:5001/api/v1/users/${fetchedVehicle.listedBy}`
+            `http://127.0.0.1:5001/api/v1/users/${fetchedVehicle.listedBy}`,
+            {
+              withCredentials: true,
+            }
           );
           setSeller(sellerResponse.data.data.user);
         }
@@ -79,7 +85,10 @@ function VehicleDetails() {
         // Check if the vehicle is liked using the new API endpoint
         const response = await axios.get(
           `http://localhost:5001/api/v1/vehicles/${vehicle._id}/likes/is-liked`,
-          { headers: { Authorization: `Bearer ${token}` } }
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            withCredentials: true,
+          }
         );
 
         setLiked(response.data.data.isLiked);
@@ -103,6 +112,7 @@ function VehicleDetails() {
           `http://127.0.0.1:5001/api/v1/vehicles/${id}/likes`,
           {
             headers: { Authorization: `Bearer ${token}` },
+            withCredentials: true,
           }
         );
       } else {
@@ -110,7 +120,10 @@ function VehicleDetails() {
         await axios.post(
           `http://127.0.0.1:5001/api/v1/vehicles/${id}/likes`,
           {},
-          { headers: { Authorization: `Bearer ${token}` } }
+          {
+            headers: { Authorization: `Bearer ${token}` },
+            withCredentials: true,
+          }
         );
       }
       // Toggle the liked state
