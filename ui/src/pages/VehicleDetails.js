@@ -55,10 +55,10 @@ function VehicleDetails() {
   //       if (!token) return; // Exit if no token is available
 
   //       // Fetch current user details using the decoded user ID
-  //       const userResponse = await axios.get(
-  //         `http://localhost:5001/api/v1/users/${userId}`,
-  //         { headers: { Authorization: `Bearer ${token}` } }
-  //       );
+  // const userResponse = await axios.get(
+  //   `http://localhost:5001/api/v1/users/${userId}`,
+  //   { headers: { Authorization: `Bearer ${token}` }, withCredentials:true}
+  // );
   //       const currentUser = userResponse.data.data.user;
 
   //       // Check if the vehicle is liked by the user

@@ -25,7 +25,8 @@ function ResetPassword() {
         {
           password: newPassword,
           passwordConfirm: newPasswordConfirm,
-        }
+        },
+        { withCredentials: true }
       );
 
       setMessage("Password reset successfully! Redirecting to login...");

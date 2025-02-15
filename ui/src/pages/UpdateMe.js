@@ -23,7 +23,8 @@ const UpdateMe = () => {
         const userId = getUserIdFromToken(token);
 
         const response = await axios.get(
-          `http://localhost:5001/api/v1/users/${userId}`
+          `http://localhost:5001/api/v1/users/${userId}`,
+          { withCredentials: true }
         );
 
         const { name, email, phoneNumber } = response.data.data.user;
@@ -76,6 +77,7 @@ const UpdateMe = () => {
         updatedData,
         {
           headers: { Authorization: `Bearer ${token}` },
+          withCredentials: true,
         }
       );
 

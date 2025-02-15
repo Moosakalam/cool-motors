@@ -128,6 +128,7 @@ const EditVehicle = () => {
             headers: {
               Authorization: `Bearer ${token}`,
             },
+            withCredentials: true,
           }
         );
         const filteredData = filterFields(response.data.data.vehicle);
@@ -172,6 +173,7 @@ const EditVehicle = () => {
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          withCredentials: true,
         }
       );
       setSuccessMessage("Vehicle updated successfully!");

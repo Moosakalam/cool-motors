@@ -21,6 +21,7 @@ const ReviewVehicles = () => {
           headers: {
             Authorization: `Bearer ${token}`, // Add the token to the request header
           },
+          withCredentials: true,
         }
       );
       if (!response.data.data.vehicle) {
@@ -47,6 +48,7 @@ const ReviewVehicles = () => {
           headers: {
             Authorization: `Bearer ${token}`, // Add the token to the request header
           },
+          withCredentials: true,
         }
       );
       fetchVehicle(); // Fetch next vehicle after approval
@@ -65,6 +67,7 @@ const ReviewVehicles = () => {
           headers: {
             Authorization: `Bearer ${token}`, // Add the token to the request header
           },
+          withCredentials: true,
         }
       );
       fetchVehicle(); // Fetch next vehicle after disapproval

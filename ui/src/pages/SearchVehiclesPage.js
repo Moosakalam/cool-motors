@@ -127,6 +127,7 @@ const SearchVehiclesPage = () => {
         "http://localhost:5001/api/v1/vehicles/search",
         {
           params: activeFilters,
+          withCredentials: true,
         }
       );
       setVehicles(response.data.data.vehicles);

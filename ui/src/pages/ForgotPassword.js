@@ -12,7 +12,10 @@ function ForgotPassword() {
     try {
       const response = await axios.post(
         "http://localhost:5001/api/v1/users/forgotPassword",
-        { email }
+        { email },
+        {
+          withCredentials: true,
+        }
       );
       setMessage(
         response.data.message || "Reset link sent to your email.(Mailtrap)"

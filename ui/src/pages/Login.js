@@ -17,6 +17,9 @@ function Login() {
         {
           email,
           password,
+        },
+        {
+          withCredentials: true,
         }
       );
       localStorage.setItem("token", response.data.token);

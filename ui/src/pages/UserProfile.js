@@ -14,7 +14,8 @@ function UserProfile() {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5001/api/v1/users/${userId}`
+          `http://localhost:5001/api/v1/users/${userId}`,
+          { withCredentials: true }
         );
         setUserData(response.data.data.user);
       } catch (error) {
@@ -25,7 +26,8 @@ function UserProfile() {
     const fetchListedVehicles = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5001/api/v1/users/${userId}/vehicles`
+          `http://localhost:5001/api/v1/users/${userId}/vehicles`,
+          { withCredentials: true }
         );
         setListedVehicles(response.data.data.vehicles);
       } catch (error) {

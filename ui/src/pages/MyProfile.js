@@ -39,8 +39,8 @@ function MyProfile() {
           {
             headers: {
               Authorization: `Bearer ${token}`, // Add Bearer token
-              withCredentials: true,
             },
+            withCredentials: true,
           }
         );
         setListedVehicles(response.data.data.vehicles);
@@ -56,8 +56,8 @@ function MyProfile() {
           {
             headers: {
               Authorization: `Bearer ${token}`, // Add Bearer token
-              withCredentials: true,
             },
+            withCredentials: true,
           }
         );
         setLikedVehicles(response.data.data.likedVehicles);
@@ -81,8 +81,8 @@ function MyProfile() {
       await axios.delete(`http://localhost:5001/api/v1/vehicles/${vehicleId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
-          withCredentials: true,
         },
+        withCredentials: true,
       });
       setListedVehicles((prevVehicles) =>
         prevVehicles.filter((vehicle) => vehicle._id !== vehicleId)
