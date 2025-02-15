@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "../AuthContext";
 import "./css/EditVehicle.css";
 
 const EditVehicle = () => {
@@ -108,9 +109,8 @@ const EditVehicle = () => {
     "Other",
   ];
 
-  //   console.log(carMakes);
-
   const { vehicleId } = useParams();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [vehicleData, setVehicleData] = useState(null);
   const [customLocation, setCustomLocation] = useState(""); // For custom location
@@ -119,15 +119,18 @@ const EditVehicle = () => {
   const [successMessage, setSuccessMessage] = useState(null);
 
   useEffect(() => {
+    if (!user) {
+      navigate("/restricted");
+      return;
+    }
+  }, [user, navigate]);
+
+  useEffect(() => {
     const fetchVehicleData = async () => {
       try {
-        const token = localStorage.getItem("token");
         const response = await axios.get(
           `http://localhost:5001/api/v1/vehicles/${vehicleId}`,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
             withCredentials: true,
           }
         );
@@ -158,8 +161,6 @@ const EditVehicle = () => {
   const handleUpdate = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
-
       // Update location field with custom location if applicable
       const updatedData = { ...vehicleData };
       if (vehicleData.location === "Other") {
@@ -170,9 +171,6 @@ const EditVehicle = () => {
         `http://localhost:5001/api/v1/vehicles/${vehicleId}`,
         updatedData,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
           withCredentials: true,
         }
       );
@@ -185,6 +183,10 @@ const EditVehicle = () => {
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
+
+  // if (!user) {
+  //   navigate("/restricted");
+  // }
 
   return (
     <div className="edit-vehicle-container">

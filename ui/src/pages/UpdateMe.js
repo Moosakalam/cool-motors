@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { getUserIdFromToken } from "../utils/jwtDecode";
 import "./css/UpdateMe.css";
+import { useAuth } from "../AuthContext";
 
 const UpdateMe = () => {
   const [formData, setFormData] = useState({
@@ -13,15 +13,14 @@ const UpdateMe = () => {
   const [message, setMessage] = useState("");
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchUserData = async () => {
+      if (!user?._id) return;
+
+      const userId = user._id;
       try {
-        const token = localStorage.getItem("token");
-        if (!token) return setMessage("No token found. Please log in again.");
-
-        const userId = getUserIdFromToken(token);
-
         const response = await axios.get(
           `http://localhost:5001/api/v1/users/${userId}`,
           { withCredentials: true }
@@ -56,8 +55,6 @@ const UpdateMe = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
-
       // Remove empty fields before sending
       const updatedData = Object.entries(formData).reduce(
         (acc, [key, value]) => {
@@ -76,7 +73,6 @@ const UpdateMe = () => {
         "http://localhost:5001/api/v1/users/updateMe",
         updatedData,
         {
-          headers: { Authorization: `Bearer ${token}` },
           withCredentials: true,
         }
       );
@@ -92,6 +88,11 @@ const UpdateMe = () => {
       );
     }
   };
+
+  if (!user) {
+    navigate("/restricted");
+    return;
+  }
 
   return (
     <div className="update-container">

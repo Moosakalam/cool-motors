@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom"; // Import Link for navigation
 import axios from "axios";
-import "./css/ReviewVehicles.css"; // Import the CSS file for styling
+import { useAuth } from "../AuthContext";
+import "./css/ReviewVehicles.css";
 
 const ReviewVehicles = () => {
   const [vehicle, setVehicle] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
     fetchVehicle();
@@ -14,13 +18,9 @@ const ReviewVehicles = () => {
   const fetchVehicle = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
       const response = await axios.get(
         "http://localhost:5001/api/v1/pending-vehicles/oldest",
         {
-          headers: {
-            Authorization: `Bearer ${token}`, // Add the token to the request header
-          },
           withCredentials: true,
         }
       );
@@ -33,6 +33,9 @@ const ReviewVehicles = () => {
       setLoading(false);
     } catch (err) {
       setError("Failed to fetch vehicle");
+      if (err.response.status === 403) {
+        setError("You Don't have access to this page");
+      }
       setLoading(false);
     }
   };
@@ -40,14 +43,10 @@ const ReviewVehicles = () => {
   const handleApprove = async () => {
     if (!vehicle) return;
     try {
-      const token = localStorage.getItem("token");
       await axios.post(
         `http://localhost:5001/api/v1/pending-vehicles/${vehicle._id}/approve`,
         {},
         {
-          headers: {
-            Authorization: `Bearer ${token}`, // Add the token to the request header
-          },
           withCredentials: true,
         }
       );
@@ -60,13 +59,9 @@ const ReviewVehicles = () => {
   const handleDisapprove = async () => {
     if (!vehicle) return;
     try {
-      const token = localStorage.getItem("token");
       await axios.delete(
         `http://localhost:5001/api/v1/pending-vehicles/${vehicle._id}/disapprove`,
         {
-          headers: {
-            Authorization: `Bearer ${token}`, // Add the token to the request header
-          },
           withCredentials: true,
         }
       );
@@ -75,6 +70,11 @@ const ReviewVehicles = () => {
       setError("Failed to disapprove vehicle");
     }
   };
+
+  if (!user) {
+    navigate("/restricted");
+    return;
+  }
 
   if (loading) return <div>Loading...</div>;
   if (error)

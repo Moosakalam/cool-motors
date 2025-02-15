@@ -12,7 +12,7 @@ function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
+      await axios.post(
         "http://localhost:5001/api/v1/users/login",
         {
           email,
@@ -22,8 +22,7 @@ function Login() {
           withCredentials: true,
         }
       );
-      localStorage.setItem("token", response.data.token);
-      console.log("Token stored after login");
+      // localStorage.setItem("token", response.data.token);
       navigate("/"); // Redirect to home page after login
       window.location.reload(); // Refresh the page after login
     } catch (err) {

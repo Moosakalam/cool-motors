@@ -29,9 +29,6 @@ function Signup() {
         formData,
         { withCredentials: true }
       );
-      // Store the JWT token in localStorage
-      localStorage.setItem("token", response.data.token);
-      console.log("Token stored after signup");
       setSuccess("Signup successful!");
       setFormData({
         name: "",

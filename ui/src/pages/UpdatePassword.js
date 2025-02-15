@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./css/UpdatePassword.css"; // Optional CSS file for styling
+import { useAuth } from "../AuthContext";
+import { useNavigate } from "react-router-dom"; // Import Link for navigation
 
 const UpdatePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -9,16 +11,11 @@ const UpdatePassword = () => {
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const handleUpdatePassword = async (e) => {
     e.preventDefault();
-
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      setError("Unauthorized: Please log in first.");
-      return;
-    }
 
     try {
       const response = await axios.patch(
@@ -29,16 +26,16 @@ const UpdatePassword = () => {
           passwordConfirm: newPasswordConfirm,
         },
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
           withCredentials: true,
         }
       );
 
       setMessage(response.data.message || "Password updated successfully.");
       setError("");
+
+      setTimeout(() => {
+        navigate("/settings");
+      }, 2000);
     } catch (err) {
       setError(
         err.response?.data?.message || "An error occurred. Please try again."
@@ -46,6 +43,11 @@ const UpdatePassword = () => {
       setMessage("");
     }
   };
+
+  if (!user) {
+    navigate("/restricted");
+    return;
+  }
 
   return (
     <div className="update-password-container">

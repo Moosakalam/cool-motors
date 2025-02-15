@@ -1,6 +1,7 @@
 import "./css/ListVehicle.css";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Use this for redirection
+import { useAuth } from "../AuthContext";
 import axios from "axios";
 
 function ListVehicle() {
@@ -19,10 +20,11 @@ function ListVehicle() {
     state: "",
   });
 
+  const { user } = useAuth();
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
-  const navigate = useNavigate(); // To redirect the user after form submission
+  const navigate = useNavigate();
 
   const carMakes = [
     "Toyota",
@@ -158,15 +160,10 @@ function ListVehicle() {
         });
       }
 
-      const token = localStorage.getItem("token");
       await axios.post(
         "http://localhost:5001/api/v1/pending-vehicles/list",
         formDataWithFiles,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
           withCredentials: true,
         }
       );
@@ -184,6 +181,10 @@ function ListVehicle() {
       setSuccess("");
     }
   };
+
+  if (!user) {
+    navigate("/restricted");
+  }
 
   return (
     <div className="vehicle-list-container">

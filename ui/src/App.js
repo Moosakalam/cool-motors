@@ -18,6 +18,7 @@ import UpdatePassword from "./pages/UpdatePassword";
 import ReviewVehicles from "./pages/ReviewVehicles";
 import EditVehicle from "./pages/EditVehicle";
 import UpdateMe from "./pages/UpdateMe";
+import Restricted from "./pages/Restricted";
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
           <Route path="/admin/review-vehicles" element={<ReviewVehicles />} />
           <Route path="/edit/:vehicleId" element={<EditVehicle />} />
           <Route path="/update-me" element={<UpdateMe />} />
+          <Route path="/restricted" element={<Restricted />} />
         </Routes>
       </div>
     </Router>

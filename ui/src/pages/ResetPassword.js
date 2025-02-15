@@ -29,10 +29,10 @@ function ResetPassword() {
         { withCredentials: true }
       );
 
-      setMessage("Password reset successfully! Redirecting to login...");
+      setMessage("Password reset successfully!");
       setError("");
       setTimeout(() => {
-        navigate("/login"); // Redirect to login page
+        navigate("/"); // Redirect to login page
       }, 3000);
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong.");

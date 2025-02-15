@@ -2,6 +2,7 @@ import React, { useEffect, useState, useCallback } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./css/VehicleDetails.css"; // Import the CSS for the modal and blur effect
+import { useAuth } from "../AuthContext";
 
 function VehicleDetails() {
   const { id } = useParams(); // Vehicle ID from URL
@@ -12,6 +13,7 @@ function VehicleDetails() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // State for the current image index
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchVehicleDetails = async () => {
@@ -46,47 +48,17 @@ function VehicleDetails() {
     fetchVehicleDetails();
   }, [id]);
 
-  // useEffect(() => {
-  //   const fetchUserDetails = async () => {
-  //     if (!userId) return; // Exit if no userId is available
-
-  //     try {
-  //       const token = localStorage.getItem("token");
-  //       if (!token) return; // Exit if no token is available
-
-  //       // Fetch current user details using the decoded user ID
-  // const userResponse = await axios.get(
-  //   `http://localhost:5001/api/v1/users/${userId}`,
-  //   { headers: { Authorization: `Bearer ${token}` }, withCredentials:true}
-  // );
-  //       const currentUser = userResponse.data.data.user;
-
-  //       // Check if the vehicle is liked by the user
-  //       const isLiked = currentUser.likedVehicles.includes(vehicle._id);
-  //       // console.log("hi");
-
-  //       setLiked(isLiked);
-  //     } catch (error) {
-  //       console.error("Error fetching user details:", error);
-  //     }
-  //   };
-
-  //   fetchUserDetails();
-  // }, [userId, vehicle]);
-
   useEffect(() => {
     const checkIfVehicleLiked = async () => {
       if (!vehicle || !vehicle._id) return; // Exit if no vehicle ID is available
 
       try {
-        const token = localStorage.getItem("token");
-        if (!token) return; // Exit if no token is available
+        if (!user) return; // Exit if no user is available
 
         // Check if the vehicle is liked using the new API endpoint
         const response = await axios.get(
           `http://localhost:5001/api/v1/vehicles/${vehicle._id}/likes/is-liked`,
           {
-            headers: { Authorization: `Bearer ${token}` },
             withCredentials: true,
           }
         );
@@ -103,15 +75,13 @@ function VehicleDetails() {
   // Function to handle like/unlike
   const handleLikeToggle = async () => {
     try {
-      const token = localStorage.getItem("token");
-      if (!token) return navigate("/login"); // Exit if no token is available
+      if (!user) return navigate("/login");
 
       if (liked) {
         // Unlike the vehicle
         await axios.delete(
           `http://localhost:5001/api/v1/vehicles/${id}/likes`,
           {
-            headers: { Authorization: `Bearer ${token}` },
             withCredentials: true,
           }
         );
@@ -121,7 +91,6 @@ function VehicleDetails() {
           `http://localhost:5001/api/v1/vehicles/${id}/likes`,
           {},
           {
-            headers: { Authorization: `Bearer ${token}` },
             withCredentials: true,
           }
         );

@@ -1,29 +1,24 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { getUserIdFromToken } from "../utils/jwtDecode"; // Adjust the import path if needed
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../AuthContext";
 
 const Settings = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchUserInfo = async () => {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setError("You are not logged in.");
-        return;
-      }
+      if (!user?._id) return;
+
+      const userId = user._id;
 
       try {
-        const userId = getUserIdFromToken(token);
         const response = await axios.get(
           `http://localhost:5001/api/v1/users/${userId}`,
           {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
             withCredentials: true,
           }
         );
@@ -50,7 +45,7 @@ const Settings = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    // localStorage.removeItem("token");
     navigate("/login");
     window.location.reload();
   };
@@ -66,16 +61,10 @@ const Settings = () => {
 
     if (confirmed) {
       try {
-        const token = localStorage.getItem("token");
         await axios.delete("http://localhost:5001/api/v1/users/deleteMe", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
           withCredentials: true,
         });
 
-        // Clear local storage and redirect to login
-        localStorage.removeItem("token");
         alert("Your account has been deleted successfully.");
         navigate("/login");
         window.location.reload();

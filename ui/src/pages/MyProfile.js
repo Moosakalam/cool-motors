@@ -1,87 +1,52 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom"; // Import Link for navigation
+import { useNavigate } from "react-router-dom"; // Import Link for navigation
 import axios from "axios";
-import { getUserIdFromToken } from "../utils/jwtDecode";
+import { useAuth } from "../AuthContext";
 import VehicleCard from "../utils/VehicleCard";
 
 function MyProfile() {
   const [username, setUsername] = useState("");
+  const { user } = useAuth();
   const [listedVehicles, setListedVehicles] = useState([]);
   const [likedVehicles, setLikedVehicles] = useState([]);
   const [activeTab, setActiveTab] = useState("listed");
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // Track login status
+  const navigate = useNavigate();
   const [vehicleToDelete, setVehicleToDelete] = useState(null); // Track the vehicle to be deleted
   const [showModal, setShowModal] = useState(false); // Control the modal visibility
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    const userId = token ? getUserIdFromToken(token) : null;
+    if (!user?._id) return;
 
-    const fetchUserData = async () => {
+    const userId = user._id;
+
+    const fetchUserDetails = async () => {
       try {
-        const response = await axios.get(
-          `http://localhost:5001/api/v1/users/${userId}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
+        const [userRes, listedRes, likedRes] = await Promise.all([
+          axios.get(`http://localhost:5001/api/v1/users/${userId}`, {
             withCredentials: true,
-          }
-        );
-        setUsername(response.data.data.user.name); // Set the username
+          }),
+          axios.get(`http://localhost:5001/api/v1/users/${userId}/vehicles`, {
+            withCredentials: true,
+          }),
+          axios.get(`http://localhost:5001/api/v1/users/${userId}/likes`, {
+            withCredentials: true,
+          }),
+        ]);
+
+        setUsername(userRes.data.data.user.name);
+        setListedVehicles(listedRes.data.data.vehicles);
+        setLikedVehicles(likedRes.data.data.likedVehicles);
       } catch (error) {
-        console.error("Error fetching user's data:", error);
+        console.error("Error fetching user data:", error);
       }
     };
 
-    const fetchListedVehicles = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:5001/api/v1/users/${userId}/vehicles`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Add Bearer token
-            },
-            withCredentials: true,
-          }
-        );
-        setListedVehicles(response.data.data.vehicles);
-      } catch (error) {
-        console.error("Error fetching user's listed vehicles:", error);
-      }
-    };
-
-    const fetchLikedVehicles = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:5001/api/v1/users/${userId}/likes`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`, // Add Bearer token
-            },
-            withCredentials: true,
-          }
-        );
-        setLikedVehicles(response.data.data.likedVehicles);
-      } catch (error) {
-        console.error("Error fetching user's liked vehicles:", error);
-      }
-    };
-
-    if (userId) {
-      fetchUserData();
-      fetchListedVehicles();
-      fetchLikedVehicles();
-    } else {
-      setIsLoggedIn(false); // Set login status to false if no token
-    }
-  }, []);
+    fetchUserDetails();
+  }, [user]); // Depend on `user`, so it fetches data when `user` updates
 
   const handleDelete = async (vehicleId) => {
-    const token = localStorage.getItem("token");
     try {
       await axios.delete(`http://localhost:5001/api/v1/vehicles/${vehicleId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
         withCredentials: true,
       });
       setListedVehicles((prevVehicles) =>
@@ -103,16 +68,8 @@ function MyProfile() {
     setShowModal(false); // Close modal
   };
 
-  if (!isLoggedIn) {
-    return (
-      <div style={{ padding: "20px", textAlign: "center" }}>
-        <h2>You need to log in first!</h2>
-        <p>
-          Please <Link to="/login">log in</Link> to view your profile and
-          vehicles.
-        </p>
-      </div>
-    );
+  if (!user) {
+    navigate("/restricted");
   }
 
   return (

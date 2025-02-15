@@ -85,6 +85,8 @@ exports.protect = catchAsyncError(async (req, res, next) => {
     req.headers.authorization.startsWith("Bearer")
   ) {
     token = req.headers.authorization.split(" ")[1];
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
   }
   // console.log(token);
 
@@ -114,6 +116,16 @@ exports.protect = catchAsyncError(async (req, res, next) => {
   // res.status(200).json({
   //   status: "success",
   // });
+});
+
+exports.isLoggedIn = catchAsyncError(async (req, res, next) => {
+  if (!req.user) {
+    return next(new AppError("Not Logged In", 401));
+  }
+  res.status(200).json({
+    status: "success",
+    user: req.user,
+  });
 });
 
 // exports.restrictToAdmin = (req, res, next) => {
@@ -208,7 +220,7 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
   user.passwordResetExpires = undefined;
 
   // 3) Change the passwordChangedAt property
-  await user.save();
+  await user.save({ validateBeforeSave: false });
 
   // 4) Log the uset in(send JWT)
   createAndSendToken(user, 200, res);

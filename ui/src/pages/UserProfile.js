@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom"; // Add useNavigate for redirect
 import axios from "axios";
-import { getUserIdFromToken } from "../utils/jwtDecode";
 import VehicleCard from "../utils/VehicleCard";
+import { useAuth } from "../AuthContext";
 
 function UserProfile() {
   const { userId } = useParams();
   const navigate = useNavigate(); // Use navigate for redirection
   const [userData, setUserData] = useState(null);
   const [listedVehicles, setListedVehicles] = useState([]);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -38,13 +39,9 @@ function UserProfile() {
     fetchUserData();
     fetchListedVehicles();
 
-    const token = localStorage.getItem("token");
-    if (token) {
-      const decodedUserId = getUserIdFromToken(token);
-      if (decodedUserId === userId) {
+    if (user) {
+      if (user._id === userId) {
         // Redirect the user to MyProfile if viewing their own profile
-        console.log("hello");
-
         navigate("/my-profile");
       }
     }
