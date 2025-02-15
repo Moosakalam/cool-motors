@@ -20,7 +20,7 @@ function MyProfile() {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          `http://127.0.0.1:5001/api/v1/users/${userId}`,
+          `http://localhost:5001/api/v1/users/${userId}`,
           {
             headers: { Authorization: `Bearer ${token}` },
             withCredentials: true,
@@ -35,7 +35,7 @@ function MyProfile() {
     const fetchListedVehicles = async () => {
       try {
         const response = await axios.get(
-          `http://127.0.0.1:5001/api/v1/users/${userId}/vehicles`,
+          `http://localhost:5001/api/v1/users/${userId}/vehicles`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Add Bearer token
@@ -52,7 +52,7 @@ function MyProfile() {
     const fetchLikedVehicles = async () => {
       try {
         const response = await axios.get(
-          `http://127.0.0.1:5001/api/v1/users/${userId}/likes`,
+          `http://localhost:5001/api/v1/users/${userId}/likes`,
           {
             headers: {
               Authorization: `Bearer ${token}`, // Add Bearer token
@@ -78,7 +78,7 @@ function MyProfile() {
   const handleDelete = async (vehicleId) => {
     const token = localStorage.getItem("token");
     try {
-      await axios.delete(`http://127.0.0.1:5001/api/v1/vehicles/${vehicleId}`, {
+      await axios.delete(`http://localhost:5001/api/v1/vehicles/${vehicleId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
           withCredentials: true,

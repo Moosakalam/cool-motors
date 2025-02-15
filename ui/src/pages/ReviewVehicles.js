@@ -16,7 +16,7 @@ const ReviewVehicles = () => {
       setLoading(true);
       const token = localStorage.getItem("token");
       const response = await axios.get(
-        "http://127.0.0.1:5001/api/v1/pending-vehicles/oldest",
+        "http://localhost:5001/api/v1/pending-vehicles/oldest",
         {
           headers: {
             Authorization: `Bearer ${token}`, // Add the token to the request header
@@ -41,7 +41,7 @@ const ReviewVehicles = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.post(
-        `http://127.0.0.1:5001/api/v1/pending-vehicles/${vehicle._id}/approve`,
+        `http://localhost:5001/api/v1/pending-vehicles/${vehicle._id}/approve`,
         {},
         {
           headers: {
@@ -60,7 +60,7 @@ const ReviewVehicles = () => {
     try {
       const token = localStorage.getItem("token");
       await axios.delete(
-        `http://127.0.0.1:5001/api/v1/pending-vehicles/${vehicle._id}/disapprove`,
+        `http://localhost:5001/api/v1/pending-vehicles/${vehicle._id}/disapprove`,
         {
           headers: {
             Authorization: `Bearer ${token}`, // Add the token to the request header

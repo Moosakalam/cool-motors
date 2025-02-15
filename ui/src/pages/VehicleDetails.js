@@ -29,7 +29,7 @@ function VehicleDetails() {
         // Fetch seller details if available
         if (fetchedVehicle.listedBy) {
           const sellerResponse = await axios.get(
-            `http://127.0.0.1:5001/api/v1/users/${fetchedVehicle.listedBy}`,
+            `http://localhost:5001/api/v1/users/${fetchedVehicle.listedBy}`,
             {
               withCredentials: true,
             }
@@ -56,7 +56,7 @@ function VehicleDetails() {
 
   //       // Fetch current user details using the decoded user ID
   //       const userResponse = await axios.get(
-  //         `http://127.0.0.1:5001/api/v1/users/${userId}`,
+  //         `http://localhost:5001/api/v1/users/${userId}`,
   //         { headers: { Authorization: `Bearer ${token}` } }
   //       );
   //       const currentUser = userResponse.data.data.user;
@@ -109,7 +109,7 @@ function VehicleDetails() {
       if (liked) {
         // Unlike the vehicle
         await axios.delete(
-          `http://127.0.0.1:5001/api/v1/vehicles/${id}/likes`,
+          `http://localhost:5001/api/v1/vehicles/${id}/likes`,
           {
             headers: { Authorization: `Bearer ${token}` },
             withCredentials: true,
@@ -118,7 +118,7 @@ function VehicleDetails() {
       } else {
         // Like the vehicle
         await axios.post(
-          `http://127.0.0.1:5001/api/v1/vehicles/${id}/likes`,
+          `http://localhost:5001/api/v1/vehicles/${id}/likes`,
           {},
           {
             headers: { Authorization: `Bearer ${token}` },

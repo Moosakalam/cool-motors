@@ -21,7 +21,7 @@ function ResetPassword() {
 
     try {
       await axios.patch(
-        `http://127.0.0.1:5001/api/v1/users/resetPassword/${resetToken}`,
+        `http://localhost:5001/api/v1/users/resetPassword/${resetToken}`,
         {
           password: newPassword,
           passwordConfirm: newPasswordConfirm,

@@ -25,7 +25,7 @@ function Signup() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://127.0.0.1:5001/api/v1/users/signup",
+        "http://localhost:5001/api/v1/users/signup",
         formData
       );
       // Store the JWT token in localStorage

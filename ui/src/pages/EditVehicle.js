@@ -123,7 +123,7 @@ const EditVehicle = () => {
       try {
         const token = localStorage.getItem("token");
         const response = await axios.get(
-          `http://127.0.0.1:5001/api/v1/vehicles/${vehicleId}`,
+          `http://localhost:5001/api/v1/vehicles/${vehicleId}`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -166,7 +166,7 @@ const EditVehicle = () => {
       }
 
       await axios.patch(
-        `http://127.0.0.1:5001/api/v1/vehicles/${vehicleId}`,
+        `http://localhost:5001/api/v1/vehicles/${vehicleId}`,
         updatedData,
         {
           headers: {

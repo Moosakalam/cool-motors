@@ -14,7 +14,7 @@ function UserProfile() {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          `http://127.0.0.1:5001/api/v1/users/${userId}`
+          `http://localhost:5001/api/v1/users/${userId}`
         );
         setUserData(response.data.data.user);
       } catch (error) {
@@ -25,7 +25,7 @@ function UserProfile() {
     const fetchListedVehicles = async () => {
       try {
         const response = await axios.get(
-          `http://127.0.0.1:5001/api/v1/users/${userId}/vehicles`
+          `http://localhost:5001/api/v1/users/${userId}/vehicles`
         );
         setListedVehicles(response.data.data.vehicles);
       } catch (error) {

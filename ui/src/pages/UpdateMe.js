@@ -23,7 +23,7 @@ const UpdateMe = () => {
         const userId = getUserIdFromToken(token);
 
         const response = await axios.get(
-          `http://127.0.0.1:5001/api/v1/users/${userId}`
+          `http://localhost:5001/api/v1/users/${userId}`
         );
 
         const { name, email, phoneNumber } = response.data.data.user;
@@ -72,7 +72,7 @@ const UpdateMe = () => {
       }
 
       await axios.patch(
-        "http://127.0.0.1:5001/api/v1/users/updateMe",
+        "http://localhost:5001/api/v1/users/updateMe",
         updatedData,
         {
           headers: { Authorization: `Bearer ${token}` },

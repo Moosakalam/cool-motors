@@ -11,7 +11,7 @@ function ForgotPassword() {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "http://127.0.0.1:5001/api/v1/users/forgotPassword",
+        "http://localhost:5001/api/v1/users/forgotPassword",
         { email }
       );
       setMessage(

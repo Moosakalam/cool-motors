@@ -22,7 +22,7 @@ const UpdatePassword = () => {
 
     try {
       const response = await axios.patch(
-        "http://127.0.0.1:5001/api/v1/users/updatePassword",
+        "http://localhost:5001/api/v1/users/updatePassword",
         {
           currentPassword,
           password: newPassword,

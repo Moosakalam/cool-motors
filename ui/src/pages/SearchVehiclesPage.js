@@ -124,7 +124,7 @@ const SearchVehiclesPage = () => {
   const fetchVehicles = async (activeFilters) => {
     try {
       const response = await axios.get(
-        "http://127.0.0.1:5001/api/v1/vehicles/search",
+        "http://localhost:5001/api/v1/vehicles/search",
         {
           params: activeFilters,
         }
