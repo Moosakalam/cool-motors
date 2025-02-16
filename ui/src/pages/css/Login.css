@@ -79,3 +79,27 @@ input[type="password"]:focus {
 .forgot-password a:hover {
   text-decoration: underline;
 }
+
+.password-group {
+  position: relative;
+}
+
+.password-input-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.password-input-wrapper input {
+  flex: 1;
+  padding-right: 40px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #555;
+}

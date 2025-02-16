@@ -118,12 +118,12 @@ const EditVehicle = () => {
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
 
-  useEffect(() => {
-    if (!user) {
-      navigate("/restricted");
-      return;
-    }
-  }, [user, navigate]);
+  // useEffect(() => {
+  //   if (!user) {
+  //     navigate("/restricted");
+  //     return;
+  //   }
+  // }, [user, navigate]);
 
   useEffect(() => {
     const fetchVehicleData = async () => {
@@ -184,9 +184,9 @@ const EditVehicle = () => {
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
 
-  // if (!user) {
-  //   navigate("/restricted");
-  // }
+  if (!user) {
+    navigate("/restricted");
+  }
 
   return (
     <div className="edit-vehicle-container">

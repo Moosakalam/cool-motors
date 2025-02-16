@@ -14,6 +14,7 @@ router.get("/isLoggedIn", authController.protect, authController.isLoggedIn);
 
 router.post("/signup", authController.signup);
 router.post("/login", authController.login);
+router.get("/logout", authController.logout);
 
 //returns vehicles listed by "userId"
 router.get("/:userId/vehicles", vehicleController.getVehiclesOfUser);

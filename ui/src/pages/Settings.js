@@ -30,7 +30,7 @@ const Settings = () => {
     };
 
     fetchUserInfo();
-  }, []);
+  }, [user]);
 
   const handleChangePassword = () => {
     navigate("/change-password");
@@ -44,10 +44,17 @@ const Settings = () => {
     navigate("/update-me");
   };
 
-  const handleLogout = () => {
-    // localStorage.removeItem("token");
-    navigate("/login");
-    window.location.reload();
+  const handleLogout = async () => {
+    try {
+      await axios.get("http://localhost:5001/api/v1/users/logout", {
+        withCredentials: true,
+      });
+
+      navigate("/");
+      window.location.reload();
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
   };
 
   const handleReviewVehicles = () => {

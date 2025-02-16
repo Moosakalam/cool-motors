@@ -69,6 +69,7 @@ import "./Navbar.css";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../AuthContext";
+import userIcon from "./images/user.png";
 
 const Navbar = () => {
   const { user } = useAuth();
@@ -91,7 +92,10 @@ const Navbar = () => {
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          <div className="user-menu-title">{user.name || "User Menu"}</div>
+          <div className="user-menu-title">
+            <img src={userIcon} alt="User Icon" className="user-icon" />
+            {user.name || "User Menu"}
+          </div>
           {isHovered && (
             <div className="dropdown-menu">
               <Link to={`/my-profile`} className="dropdown-link">
@@ -103,9 +107,6 @@ const Navbar = () => {
               <Link to="/settings" className="dropdown-link">
                 Settings
               </Link>
-              {/* <div onClick={handleLogout} className="dropdown-link logout">
-                Logout
-              </div> */}
             </div>
           )}
         </div>

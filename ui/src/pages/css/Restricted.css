@@ -1,0 +1,36 @@
+.restricted-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  /* height: 100vh; */
+  /* background-color: #f8f9fa; */
+  text-align: center;
+}
+
+.restricted-title {
+  font-size: 2rem;
+  color: #d9534f;
+  margin-bottom: 10px;
+}
+
+.restricted-message {
+  font-size: 1.2rem;
+  color: #6c757d;
+  margin-bottom: 20px;
+}
+
+.restricted-button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+.restricted-button:hover {
+  background-color: #0056b3;
+}
