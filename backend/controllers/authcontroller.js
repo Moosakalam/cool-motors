@@ -41,27 +41,96 @@ const createAndSendToken = (user, statusCode, res) => {
   });
 };
 
-exports.signup = catchAsyncError(async (req, res, next) => {
-  //we cant use the following line of code to create a new user because anyone an define their role as admin while defining the req.body
-  // const newUser = await User.create(req.body);
+// exports.signup = catchAsyncError(async (req, res, next) => {
+//   //we cant use the following line of code to create a new user because anyone an define their role as admin while defining the req.body
+//   // const newUser = await User.create(req.body);
 
-  //here the user can only define the name, email, password
+//   //here the user can only define the name, email, password
+//   const newUser = await User.create({
+//     name: req.body.name,
+//     email: req.body.email,
+//     password: req.body.password,
+//     passwordConfirm: req.body.passwordConfirm,
+//     phoneNumber: req.body.phoneNumber,
+//     // passwordChangedAt: req.body.passwordChangedAt,
+//     // role: req.body.role,
+//   });
+
+//   const url = `${process.env.FRONTEND_URL_DEV}/`;
+//   // console.log(url);
+
+//   await new Email(newUser, url).sendWelcome();
+
+//   createAndSendToken(newUser, 201, res);
+// });
+
+exports.signup = catchAsyncError(async (req, res, next) => {
   const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
     phoneNumber: req.body.phoneNumber,
-    // passwordChangedAt: req.body.passwordChangedAt,
-    // role: req.body.role,
+    isVerified: false, // New users are unverified
   });
 
-  const url = `${process.env.FRONTEND_URL_DEV}/`;
-  // console.log(url);
+  // Generate a verification token
+  // const verificationToken = crypto.randomBytes(32).toString("hex");
+  const verificationToken = newUser.createEmailVerificationToken();
+  // newUser.emailVerificationToken = crypto
+  //   .createHash("sha256")
+  //   .update(verificationToken)
+  //   .digest("hex");
+  // newUser.emailVerificationExpires = Date.now() + 24 * 60 * 60 * 1000; // Expires in 24 hours
+  await newUser.save({ validateBeforeSave: false });
 
-  await new Email(newUser, url).sendWelcome();
+  try {
+    // Verification URL
+    const verificationURL = `${process.env.FRONTEND_URL_DEV}/verify-email/${verificationToken}`;
 
-  createAndSendToken(newUser, 201, res);
+    // Send verification email
+    await new Email(newUser, verificationURL).sendVerificationEmail();
+  } catch (err) {
+    newUser.emailVerificationToken = undefined;
+    newUser.emailVerificationToken = undefined;
+    await newUser.save({ validateBeforeSave: false });
+
+    return next(new AppError("Error sending email. Please try again", 500));
+  }
+
+  res.status(201).json({
+    status: "success",
+    message:
+      "Verification email sent. Please verify your email before logging in.",
+  });
+});
+
+exports.verifyEmail = catchAsyncError(async (req, res, next) => {
+  // Hash token to match stored hash
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+
+  // console.log(hashedToken);
+
+  // Find user with matching token and check if it’s still valid
+  const user = await User.findOne({
+    emailVerificationToken: hashedToken,
+    emailVerificationExpires: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return next(new AppError("Invalid or expired verification token", 400));
+  }
+
+  // Mark user as verified
+  user.isVerified = true;
+  user.emailVerificationToken = undefined;
+  user.emailVerificationExpires = undefined;
+  await user.save({ validateBeforeSave: false });
+
+  createAndSendToken(user, 200, res);
 });
 
 exports.login = catchAsyncError(async (req, res, next) => {
@@ -73,6 +142,10 @@ exports.login = catchAsyncError(async (req, res, next) => {
 
   //check if the user exists and password is correct
   const user = await User.findOne({ email }).select("+password");
+
+  if (user.isVerified === false) {
+    return next(new AppError("Please verify your email to log in", 401));
+  }
 
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError("Incorrect email or pasword", 401));
@@ -223,6 +296,7 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
     .createHash("sha256")
     .update(req.params.token)
     .digest("hex");
+
   const user = await User.findOne({
     passwordResetToken: encryptedToken,
     //check if expiration time is in the future:

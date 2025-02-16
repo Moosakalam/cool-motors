@@ -19,6 +19,7 @@ import ReviewVehicles from "./pages/ReviewVehicles";
 import EditVehicle from "./pages/EditVehicle";
 import UpdateMe from "./pages/UpdateMe";
 import Restricted from "./pages/Restricted";
+import VerifyEmail from "./pages/VerifyEmail";
 
 function App() {
   return (
@@ -39,6 +40,10 @@ function App() {
           <Route
             path="/reset-password/:resetToken"
             element={<ResetPassword />}
+          />
+          <Route
+            path="/verify-email/:verificationToken"
+            element={<VerifyEmail />}
           />
           <Route path="/settings" element={<Settings />} />
           <Route path="/update-password" element={<UpdatePassword />} />

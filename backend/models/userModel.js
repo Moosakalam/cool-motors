@@ -62,6 +62,13 @@ const userSchema = mongoose.Schema({
     default: true,
     select: false,
   },
+  emailVerificationToken: String,
+  emailVerificationExpires: Date,
+  isVerified: {
+    type: Boolean,
+    default: false,
+    select: false,
+  },
 });
 
 //ENCRYPT PASSWORD:
@@ -124,10 +131,28 @@ userSchema.methods.createPasswordResetToken = function () {
     .update(resetToken)
     .digest("hex");
 
-  console.log({ resetToken }, this.passwordResetToken);
+  // console.log({ resetToken }, this.passwordResetToken);
 
   //password reset token expires in 10 mins
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+
+  return resetToken;
+};
+
+userSchema.methods.createEmailVerificationToken = function () {
+  //Genral token(not encrypted)
+  const resetToken = crypto.randomBytes(32).toString("hex");
+
+  //Encrypted token to be saved in the database
+  this.emailVerificationToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  // console.log({ resetToken }, this.passwordResetToken);
+
+  //password reset token expires in 10 mins
+  this.emailVerificationExpires = Date.now() + 24 * 60 * 60 * 1000;
 
   return resetToken;
 };

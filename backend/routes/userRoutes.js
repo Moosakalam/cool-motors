@@ -13,6 +13,7 @@ router.use("/:userId/likes", likeRouter);
 router.get("/isLoggedIn", authController.protect, authController.isLoggedIn);
 
 router.post("/signup", authController.signup);
+router.get("/verify-email/:token", authController.verifyEmail);
 router.post("/login", authController.login);
 router.get("/logout", authController.logout);
 
