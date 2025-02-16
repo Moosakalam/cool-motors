@@ -32,7 +32,7 @@ function ResetPassword() {
       setMessage("Password reset successfully!");
       setError("");
       setTimeout(() => {
-        navigate("/"); // Redirect to login page
+        navigate("/login"); // Redirect to login page
       }, 3000);
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong.");
