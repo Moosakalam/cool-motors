@@ -85,4 +85,12 @@ module.exports = class Email {
       "Please verify your email address(valid for 24 hours)"
     );
   }
+
+  async sendApprovalEmail() {
+    await this.send("approval", "Your vehicle listing has been approved");
+  }
+
+  async sendDisapprovalEmail() {
+    await this.send("disapproval", "Your vehicle listing has been disapproved");
+  }
 };

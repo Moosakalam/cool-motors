@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vehicle Disapproved</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        padding: 20px;
+      }
+      .container {
+        max-width: 600px;
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+      .btn {
+        display: inline-block;
+        background: #dc3545;
+        color: #fff;
+        padding: 10px 20px;
+        text-decoration: none;
+        border-radius: 5px;
+        margin-top: 20px;
+      }
+      .footer {
+        margin-top: 20px;
+        font-size: 12px;
+        color: #777;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Your Vehicle Listing Was Not Approved</h2>
+      <p>Hi {{firstName}},</p>
+      <p>
+        Unfortunately, your vehicle listing did not meet our approval criteria
+        and was not published.
+      </p>
+      <p>
+        You can list another vehicle that meets the criteria by clicking the
+        button below.
+      </p>
+      <a href="{{url}}" class="btn">List</a>
+      <p class="footer">
+        If you have any questions, feel free to contact our support team.
+      </p>
+    </div>
+  </body>
+</html>

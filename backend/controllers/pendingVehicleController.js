@@ -3,7 +3,7 @@ const AppError = require("../utils/appError");
 const PendingVehicle = require("../models/pendingVehicleModel");
 const Vehicle = require("../models/vehicleModel");
 const User = require("../models/userModel");
-const sendEmail = require("../utils/email");
+const Email = require("../utils/email");
 const crypto = require("crypto");
 
 const generateFileName = (bytes = 32) =>
@@ -123,19 +123,11 @@ exports.approveVehicle = catchAsyncError(async (req, res, next) => {
   // Remove the vehicle from the `pendingVehicles` collection
   await PendingVehicle.findByIdAndDelete(id);
 
-  //SEND APPROVED EMAIL TO USER
-  const listedBy = pendingVehicle.listedBy;
-  const user = await User.findById(listedBy);
-  const email = user.email;
-  const message = "Your vehicle is approved and posted.";
-
   try {
-    await sendEmail({
-      email: email,
-      //or user.email
-      subject: "Vehilce approved",
-      message,
-    });
+    // SEND APPROVED EMAIL TO USER
+    const user = await User.findById(pendingVehicle.listedBy);
+    const url = `${process.env.FRONTEND_URL_DEV}/vehicle/${approvedVehicle._id}`;
+    await new Email(user, url).sendApprovalEmail();
   } catch (err) {
     return next(
       new AppError(
@@ -174,27 +166,20 @@ exports.disapproveVehicle = catchAsyncError(async (req, res, next) => {
   // Find and remove the pending vehicle by ID
   await PendingVehicle.findByIdAndDelete(id);
 
+  // try {
   //SEND DISAPPROVED EMAIL TO USER
-  const listedBy = pendingVehicle.listedBy;
-  const user = await User.findById(listedBy);
-  const email = user.email;
-  const message = "Your vehicle is disapproved.";
+  const user = await User.findById(pendingVehicle.listedBy);
+  const url = `${process.env.FRONTEND_URL_DEV}/list`;
 
-  try {
-    await sendEmail({
-      email: email,
-      //or user.email
-      subject: "Vehilce disapproved",
-      message,
-    });
-  } catch (err) {
-    return next(
-      new AppError(
-        "There was an error sending the email. Please try again later",
-        500
-      )
-    );
-  }
+  await new Email(user, url).sendDisapprovalEmail();
+  // } catch (err) {
+  //   return next(
+  //     new AppError(
+  //       "There was an error sending the email. Please try again later",
+  //       500
+  //     )
+  //   );
+  // }
 
   res.status(200).json({
     status: "success",

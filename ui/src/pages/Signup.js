@@ -24,11 +24,9 @@ function Signup() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        "http://localhost:5001/api/v1/users/signup",
-        formData,
-        { withCredentials: true }
-      );
+      await axios.post("http://localhost:5001/api/v1/users/signup", formData, {
+        withCredentials: true,
+      });
       setSuccess("Signup successful!");
       setFormData({
         name: "",
@@ -37,6 +35,9 @@ function Signup() {
         passwordConfirm: "",
       });
       setError("");
+      alert(
+        "A verification link has been sent to you. Please visit it to verify your email."
+      );
       navigate("/"); // Redirect to home page after login
       window.location.reload(); // Refresh the page after login
     } catch (err) {

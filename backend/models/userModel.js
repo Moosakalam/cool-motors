@@ -67,7 +67,7 @@ const userSchema = mongoose.Schema({
   isVerified: {
     type: Boolean,
     default: false,
-    select: false,
+    // select: false,
   },
 });
 
@@ -142,6 +142,7 @@ userSchema.methods.createPasswordResetToken = function () {
 userSchema.methods.createEmailVerificationToken = function () {
   //Genral token(not encrypted)
   const resetToken = crypto.randomBytes(32).toString("hex");
+  console.log("resetToken", resetToken);
 
   //Encrypted token to be saved in the database
   this.emailVerificationToken = crypto

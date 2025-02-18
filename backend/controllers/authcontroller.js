@@ -112,7 +112,8 @@ exports.verifyEmail = catchAsyncError(async (req, res, next) => {
     .update(req.params.token)
     .digest("hex");
 
-  // console.log(hashedToken);
+  console.log(hashedToken);
+  console.log(req.params.token);
 
   // Find user with matching token and check if it’s still valid
   const user = await User.findOne({
