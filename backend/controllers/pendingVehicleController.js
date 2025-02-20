@@ -45,8 +45,6 @@ exports.listVehicle = catchAsyncError(async (req, res, next) => {
 
   const imageUrls = [];
 
-  // console.log("kiuvg");
-
   // Loop through the files and upload each one to S3
   for (const file of files) {
     const fileName = generateFileName();
@@ -126,7 +124,12 @@ exports.approveVehicle = catchAsyncError(async (req, res, next) => {
   try {
     // SEND APPROVED EMAIL TO USER
     const user = await User.findById(pendingVehicle.listedBy);
-    const url = `${process.env.FRONTEND_URL_DEV}/vehicle/${approvedVehicle._id}`;
+    let url = "";
+    if (process.env.NODE_ENV === "development") {
+      url = `${process.env.FRONTEND_URL_DEV}/vehicle/${approvedVehicle._id}`;
+    } else {
+      url = `${process.env.FRONTEND_URL_PROD}/vehicle/${approvedVehicle._id}`;
+    }
     await new Email(user, url).sendApprovalEmail();
   } catch (err) {
     return next(
@@ -169,7 +172,12 @@ exports.disapproveVehicle = catchAsyncError(async (req, res, next) => {
   try {
     // SEND DISAPPROVED EMAIL TO USER
     const user = await User.findById(pendingVehicle.listedBy);
-    const url = `${process.env.FRONTEND_URL_DEV}/list`;
+    let url = "";
+    if (process.env.NODE_ENV === "development") {
+      url = `${process.env.FRONTEND_URL_DEV}/list`;
+    } else {
+      url = `${process.env.FRONTEND_URL_PROD}/list`;
+    }
 
     await new Email(user, url).sendDisapprovalEmail();
   } catch (err) {

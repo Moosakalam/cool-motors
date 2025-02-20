@@ -86,7 +86,12 @@ exports.signup = catchAsyncError(async (req, res, next) => {
 
   try {
     // Verification URL
-    const verificationURL = `${process.env.FRONTEND_URL_DEV}/verify-email/${verificationToken}`;
+    let verificationURL = "";
+    if (process.env.NODE_ENV === "development") {
+      verificationURL = `${process.env.FRONTEND_URL_DEV}/verify-email/${verificationToken}`;
+    } else {
+      verificationURL = `${process.env.FRONTEND_URL_PROD}/verify-email/${verificationToken}`;
+    }
 
     // Send verification email
     await new Email(newUser, verificationURL).sendVerificationEmail();
@@ -261,7 +266,12 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
 
   try {
     //ui URL:
-    const resetURL = `${process.env.FRONTEND_URL_DEV}/reset-password/${resetToken}`;
+    let resetURL = "";
+    if (process.env.NODE_ENV === "development") {
+      resetURL = `${process.env.FRONTEND_URL_DEV}/reset-password/${resetToken}`;
+    } else {
+      resetURL = `${process.env.FRONTEND_URL_PROD}/reset-password/${resetToken}`;
+    }
 
     // await sendEmail({
     //   email: req.body.email,
