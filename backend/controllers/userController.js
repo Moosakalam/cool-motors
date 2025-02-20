@@ -132,8 +132,11 @@ exports.deleteMe = catchAsyncError(async (req, res, next) => {
     await Like.findByIdAndDelete(like._id);
   }
 
-  // Deactivate the user
-  await User.findByIdAndUpdate(req.user._id, { active: false });
+  // // Deactivate the user
+  // await User.findByIdAndUpdate(req.user._id, { active: false });
+
+  //delete user
+  await User.findByIdAndDelete(req.user._id);
 
   res.status(204).json({
     status: "success",

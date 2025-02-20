@@ -1,5 +1,6 @@
 const Vehicle = require("../models/vehicleModel");
 const User = require("../models/userModel");
+const Like = require("../models/likeModel");
 const catchAsyncError = require("../utils/catchAsyncError");
 const AppError = require("../utils/appError");
 const crypto = require("crypto");
@@ -303,6 +304,12 @@ exports.deleteVehicle = catchAsyncError(async (req, res, next) => {
     return next(
       new AppError("You don't have permission to delete this vehicle", 403)
     );
+  }
+
+  //delete likes of this vehicle
+  const likes = await Like.find({ vehicle: req.params.vehicleId });
+  for (const like of likes) {
+    await Like.findByIdAndDelete(like._id);
   }
 
   // Delete the vehicle
