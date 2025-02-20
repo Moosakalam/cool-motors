@@ -24,6 +24,7 @@ function ListVehicle() {
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const carMakes = [
@@ -146,6 +147,7 @@ function ListVehicle() {
     e.preventDefault();
     setError("");
     setSuccess("");
+    setLoading(true);
 
     try {
       const formDataWithFiles = new FormData();
@@ -179,6 +181,8 @@ function ListVehicle() {
     } catch (err) {
       setError(err.response?.data?.message || "Failed to add vehicle");
       setSuccess("");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -189,7 +193,15 @@ function ListVehicle() {
   return (
     <div className="vehicle-list-container">
       <h2 className="form-title">List Vehicle</h2>
-      <form className="vehicle-form" onSubmit={handleSubmit}>
+      {/* <form className="vehicle-form" onSubmit={handleSubmit}> */}
+      <form
+        className="vehicle-form"
+        onSubmit={handleSubmit}
+        style={{
+          pointerEvents: loading ? "none" : "auto",
+          opacity: loading ? 0.6 : 1,
+        }}
+      >
         <div className="form-group">
           <label htmlFor="make">Make*</label>
           <input
@@ -408,8 +420,11 @@ function ListVehicle() {
           />
         </div>
         {/*------------------------------------------------------------ */}
-        <button type="submit" className="submit-button">
+        {/* <button type="submit" className="submit-button">
           Add Vehicle
+        </button> */}
+        <button type="submit" className="submit-button" disabled={loading}>
+          {loading ? "Adding..." : "Add Vehicle"}
         </button>
       </form>
       {error && <p className="error-message">{error}</p>}

@@ -1,89 +1,110 @@
-/* ReviewVehicles.css */
-
-.admin-slideshow {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  background-color: #f4f4f9;
-  min-height: 100vh; /* Ensure it covers the full height of the viewport */
-}
-
-.vehicle-slide {
-  width: 100%;
-  max-width: 1000px; /* Maximum width for the vehicle card */
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: center;
-  height: auto;
-}
-
-h2 {
-  font-size: 2rem;
-  color: #333;
-  margin-bottom: 15px;
-  font-weight: 600;
-}
-
-.vehicle-image {
-  width: 100%; /* Allow image to take up the full width */
-  height: auto; /* Maintain aspect ratio */
-  border-radius: 10px;
-  margin-bottom: 20px;
-}
-
-.vehicle-info {
-  font-size: 1rem;
-  color: #333;
-  margin-bottom: 20px;
+.vehicle-details {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
   text-align: left;
-  width: 100%; /* Ensure text aligns properly with image width */
+  transition: opacity 0.3s ease-in-out;
 }
 
-.vehicle-info p {
-  margin: 8px 0;
+.vehicle-details img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
 }
 
-.vehicle-info strong {
-  color: #4caf50;
+.vehicle-details img:hover {
+  transform: scale(1.02);
 }
 
 .action-buttons {
   display: flex;
-  justify-content: space-around;
-  width: 100%; /* Ensure buttons span across the width */
+  gap: 15px;
   margin-top: 20px;
 }
 
-button {
-  padding: 12px 25px;
-  font-size: 1.1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+.approve-btn,
+.disapprove-btn {
+  padding: 10px 15px;
   border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
 }
 
 .approve-btn {
-  background-color: #4caf50;
+  background: #28a745;
   color: white;
 }
 
 .approve-btn:hover {
-  background-color: #45a049;
+  background: #218838;
 }
 
 .disapprove-btn {
-  background-color: #f44336;
+  background: #dc3545;
   color: white;
 }
 
 .disapprove-btn:hover {
-  background-color: #e53935;
+  background: #c82333;
+}
+
+/* Modal Styles */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.close {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 40px;
+  color: white;
+  cursor: pointer;
+}
+
+.prev-button,
+.next-button {
+  position: absolute;
+  top: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 25px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.prev-button {
+  left: 10px;
+}
+
+.next-button {
+  right: 10px;
+}
+
+.prev-button:hover,
+.next-button:hover {
+  background: rgba(0, 0, 0, 0.8);
 }

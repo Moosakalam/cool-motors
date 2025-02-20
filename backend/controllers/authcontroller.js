@@ -149,12 +149,12 @@ exports.login = catchAsyncError(async (req, res, next) => {
   //check if the user exists and password is correct
   const user = await User.findOne({ email }).select("+password");
 
-  if (user.isVerified === false) {
-    return next(new AppError("Please verify your email to log in", 401));
-  }
-
   if (!user || !(await user.correctPassword(password, user.password))) {
     return next(new AppError("Incorrect email or pasword", 401));
+  }
+
+  if (user.isVerified === false) {
+    return next(new AppError("Please verify your email to log in", 401));
   }
 
   //if everything is okay, create token and send response
