@@ -166,20 +166,20 @@ exports.disapproveVehicle = catchAsyncError(async (req, res, next) => {
   // Find and remove the pending vehicle by ID
   await PendingVehicle.findByIdAndDelete(id);
 
-  // try {
-  //SEND DISAPPROVED EMAIL TO USER
-  const user = await User.findById(pendingVehicle.listedBy);
-  const url = `${process.env.FRONTEND_URL_DEV}/list`;
+  try {
+    // SEND DISAPPROVED EMAIL TO USER
+    const user = await User.findById(pendingVehicle.listedBy);
+    const url = `${process.env.FRONTEND_URL_DEV}/list`;
 
-  await new Email(user, url).sendDisapprovalEmail();
-  // } catch (err) {
-  //   return next(
-  //     new AppError(
-  //       "There was an error sending the email. Please try again later",
-  //       500
-  //     )
-  //   );
-  // }
+    await new Email(user, url).sendDisapprovalEmail();
+  } catch (err) {
+    return next(
+      new AppError(
+        "There was an error sending the email. Please try again later",
+        500
+      )
+    );
+  }
 
   res.status(200).json({
     status: "success",

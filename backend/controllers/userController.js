@@ -1,8 +1,28 @@
 const Vehicle = require("../models/vehicleModel");
 const PendingVehicle = require("../models/pendingVehicleModel");
 const User = require("../models/userModel");
+const Like = require("../models/likeModel");
 const catchAsyncError = require("../utils/catchAsyncError");
 const AppError = require("../utils/appError");
+
+const {
+  S3Client,
+  PutObjectCommand,
+  DeleteObjectCommand,
+} = require("@aws-sdk/client-s3");
+
+const bucketName = process.env.AWS_BUCKET_NAME;
+const region = process.env.AWS_BUCKET_REGION;
+const accessKeyId = process.env.AWS_ACCESS_KEY;
+const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
+
+const s3Client = new S3Client({
+  region,
+  credentials: {
+    accessKeyId,
+    secretAccessKey,
+  },
+});
 
 const filterObj = (obj, ...allowedFields) => {
   const newObj = {};
@@ -84,10 +104,32 @@ exports.deleteMe = catchAsyncError(async (req, res, next) => {
     await Vehicle.findByIdAndDelete(vehicleId); // This will trigger the query middleware for cleanup
   }
 
+  // // Check for any pending vehicles listed by the user and delete them
+  // const pendingVehicles = await PendingVehicle.find({ listedBy: req.user._id });
+  // for (const pendingVehicle of pendingVehicles) {
+  //   await PendingVehicle.findByIdAndDelete(pendingVehicle._id); // Delete pending vehicles listed by the user
+  // }
+
   // Check for any pending vehicles listed by the user and delete them
   const pendingVehicles = await PendingVehicle.find({ listedBy: req.user._id });
   for (const pendingVehicle of pendingVehicles) {
+    // Delete images from S3
+    for (const image of pendingVehicle.images) {
+      const key = image.split("amazonaws.com/")[1];
+      const deleteParams = {
+        Bucket: bucketName,
+        Key: key,
+      };
+      await s3Client.send(new DeleteObjectCommand(deleteParams));
+    }
+
     await PendingVehicle.findByIdAndDelete(pendingVehicle._id); // Delete pending vehicles listed by the user
+  }
+
+  //check for any likes and delete them
+  const likes = await Like.find({ user: req.user._id });
+  for (const like of likes) {
+    await Like.findByIdAndDelete(like._id);
   }
 
   // Deactivate the user

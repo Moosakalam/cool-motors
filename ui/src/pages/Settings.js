@@ -71,9 +71,12 @@ const Settings = () => {
         await axios.delete("http://localhost:5001/api/v1/users/deleteMe", {
           withCredentials: true,
         });
+        await axios.get("http://localhost:5001/api/v1/users/logout", {
+          withCredentials: true,
+        });
 
         alert("Your account has been deleted successfully.");
-        navigate("/login");
+        navigate("/");
         window.location.reload();
       } catch (err) {
         console.error("Error deleting account:", err);
