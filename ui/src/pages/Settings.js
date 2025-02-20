@@ -44,6 +44,10 @@ const Settings = () => {
     navigate("/update-me");
   };
 
+  const handleUpdateEmail = () => {
+    navigate("/update-my-email");
+  };
+
   const handleLogout = async () => {
     try {
       await axios.get("http://localhost:5001/api/v1/users/logout", {
@@ -138,6 +142,21 @@ const Settings = () => {
         }}
       >
         Update Profile
+      </button>
+      <button
+        onClick={handleUpdateEmail}
+        style={{
+          display: "block",
+          margin: "10px 0",
+          padding: "10px 20px",
+          backgroundColor: "#007bff",
+          color: "#fff",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+        }}
+      >
+        Update Email
       </button>
       {isAdmin && (
         <button

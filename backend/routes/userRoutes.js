@@ -31,6 +31,14 @@ router.get(
 router.post("/forgotPassword", authController.forgotPassword);
 router.patch("/resetPassword/:token", authController.resetPassword);
 
+//update and verify updated email
+router.patch(
+  "/update-email",
+  authController.protect,
+  userController.requestEmailUpdate
+);
+router.get("/verify-email-update/:token", userController.verifyEmailUpdate);
+
 router.patch(
   "/updatePassword",
   authController.protect,

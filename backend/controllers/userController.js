@@ -1,9 +1,11 @@
+const crypto = require("crypto");
 const Vehicle = require("../models/vehicleModel");
 const PendingVehicle = require("../models/pendingVehicleModel");
 const User = require("../models/userModel");
 const Like = require("../models/likeModel");
 const catchAsyncError = require("../utils/catchAsyncError");
 const AppError = require("../utils/appError");
+const Email = require("../utils/email");
 
 const {
   S3Client,
@@ -75,8 +77,14 @@ exports.updateMe = catchAsyncError(async (req, res, next) => {
     );
   }
 
+  if (req.body.email) {
+    return next(
+      new AppError("This route is not for updating your email.", 400)
+    );
+  }
+
   //filter out fields that are not allowed to be updated like password
-  const filteredBody = filterObj(req.body, "name", "email", "phoneNumber");
+  const filteredBody = filterObj(req.body, "name", "phoneNumber");
 
   //new: true returns the new updated user and not the old one
   const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
@@ -89,6 +97,83 @@ exports.updateMe = catchAsyncError(async (req, res, next) => {
     data: {
       user: updatedUser,
     },
+  });
+});
+
+exports.requestEmailUpdate = catchAsyncError(async (req, res, next) => {
+  const { email } = req.body;
+
+  if (!email) {
+    return next(new AppError("Please provide a new email.", 400));
+  }
+
+  // Check if the email is already in use
+  const existingUser = await User.findOne({ email });
+  if (existingUser) {
+    return next(new AppError("This email is already in use.", 400));
+  }
+
+  const user = await User.findById(req.user.id);
+  user.pendingEmail = email;
+  const verificationToken = user.createEmailVerificationToken();
+  await user.save({ validateBeforeSave: false });
+
+  try {
+    // Verification URL
+    let verificationURL = "";
+    if (process.env.NODE_ENV === "development") {
+      verificationURL = `${process.env.FRONTEND_URL_DEV}/verify-email-update/${verificationToken}`;
+    } else {
+      verificationURL = `${process.env.FRONTEND_URL_PROD}/verify-email-update/${verificationToken}`;
+    }
+
+    // Send verification email
+    await new Email(user, verificationURL).sendEmailUpdateVerification(email);
+  } catch (err) {
+    user.pendingEmail = undefined;
+    user.emailVerificationToken = undefined;
+    user.emailVerificationToken = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    return next(new AppError("Error sending email. Please try again", 500));
+  }
+
+  res.status(200).json({
+    status: "success",
+    message: "Verification email sent. Please check your inbox.",
+  });
+});
+
+exports.verifyEmailUpdate = catchAsyncError(async (req, res, next) => {
+  // Hash token to match stored hash
+  const hashedToken = crypto
+    .createHash("sha256")
+    .update(req.params.token)
+    .digest("hex");
+
+  // console.log(hashedToken);
+  // console.log(req.params.token);
+
+  // Find user with matching token and check if it’s still valid
+  const user = await User.findOne({
+    emailVerificationToken: hashedToken,
+    emailVerificationExpires: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return next(new AppError("Invalid or expired verification token", 400));
+  }
+
+  // Update email and clear verification fields
+  user.email = user.pendingEmail;
+  user.pendingEmail = undefined;
+  user.emailVerificationToken = undefined;
+  user.emailVerificationExpires = undefined;
+  await user.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    status: "success",
+    message: "Email updated successfully.",
   });
 });
 

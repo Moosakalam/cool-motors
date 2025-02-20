@@ -44,13 +44,6 @@ module.exports = class Email {
       `${__dirname}/emailMessages/${template}.html`,
       "utf-8"
     );
-    // let text = fs.readFileSync(
-    //   `${__dirname}/emailMessages/${template}.txt`,
-    //   "utf-8"
-    // );
-    // text = text
-    //   .replace(/{{firstName}}/g, this.firstName)
-    //   .replace(/{{url}}/g, this.url);
     html = html
       .replace(/{{firstName}}/g, this.firstName)
       .replace(/{{url}}/g, this.url);
@@ -82,6 +75,14 @@ module.exports = class Email {
   async sendVerificationEmail() {
     await this.send(
       "emailVerification",
+      "Please verify your email address(valid for 24 hours)"
+    );
+  }
+
+  async sendEmailUpdateVerification(newEmail) {
+    this.to = newEmail;
+    await this.send(
+      "emailUpdateVerification",
       "Please verify your email address(valid for 24 hours)"
     );
   }

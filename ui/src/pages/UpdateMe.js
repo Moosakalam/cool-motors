@@ -26,10 +26,9 @@ const UpdateMe = () => {
           { withCredentials: true }
         );
 
-        const { name, email, phoneNumber } = response.data.data.user;
+        const { name, phoneNumber } = response.data.data.user;
         setFormData({
           name: name || "",
-          email: email || "",
           phoneNumber: phoneNumber || "",
         });
       } catch (error) {
@@ -112,7 +111,7 @@ const UpdateMe = () => {
           />
         </div>
 
-        <div className="form-group">
+        {/* <div className="form-group">
           <label htmlFor="email">Email</label>
           <input
             type="email"
@@ -121,7 +120,7 @@ const UpdateMe = () => {
             value={formData.email}
             onChange={handleChange}
           />
-        </div>
+        </div> */}
 
         <div className="form-group">
           <label htmlFor="phoneNumber">Phone Number</label>

@@ -69,6 +69,7 @@ const userSchema = mongoose.Schema({
     default: false,
     // select: false,
   },
+  pendingEmail: String,
 });
 
 //ENCRYPT PASSWORD:
@@ -142,7 +143,7 @@ userSchema.methods.createPasswordResetToken = function () {
 userSchema.methods.createEmailVerificationToken = function () {
   //Genral token(not encrypted)
   const resetToken = crypto.randomBytes(32).toString("hex");
-  console.log("resetToken", resetToken);
+  // console.log("resetToken", resetToken);
 
   //Encrypted token to be saved in the database
   this.emailVerificationToken = crypto

@@ -20,6 +20,8 @@ import EditVehicle from "./pages/EditVehicle";
 import UpdateMe from "./pages/UpdateMe";
 import Restricted from "./pages/Restricted";
 import VerifyEmail from "./pages/VerifyEmail";
+import VerifyEmailUpdate from "./pages/VerifyEmailUpdate";
+import UpdateMyEmail from "./pages/UpdateMyEmail";
 
 function App() {
   return (
@@ -44,6 +46,11 @@ function App() {
           <Route
             path="/verify-email/:verificationToken"
             element={<VerifyEmail />}
+          />
+          <Route path="/update-my-email" element={<UpdateMyEmail />} />
+          <Route
+            path="/verify-email-update/:verificationToken"
+            element={<VerifyEmailUpdate />}
           />
           <Route path="/settings" element={<Settings />} />
           <Route path="/update-password" element={<UpdatePassword />} />
