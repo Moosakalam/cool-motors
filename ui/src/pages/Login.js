@@ -11,10 +11,12 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await axios.post(
         "http://localhost:5001/api/v1/users/login",
@@ -26,13 +28,22 @@ function Login() {
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
       setPassword(""); // Clear password field on error
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="login-container">
       <h2 className="login-title">Login</h2>
-      <form className="login-form" onSubmit={handleSubmit}>
+      <form
+        className="login-form"
+        onSubmit={handleSubmit}
+        style={{
+          pointerEvents: loading ? "none" : "auto",
+          opacity: loading ? 0.6 : 1,
+        }}
+      >
         <div className="form-group">
           <label htmlFor="email">Email</label>
           <input
@@ -68,8 +79,8 @@ function Login() {
           </div>
         </div>
 
-        <button type="submit" className="login-button">
-          Login
+        <button type="submit" className="login-button" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
         </button>
       </form>
 

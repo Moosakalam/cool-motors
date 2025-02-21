@@ -114,7 +114,8 @@ const EditVehicle = () => {
   const navigate = useNavigate();
   const [vehicleData, setVehicleData] = useState(null);
   const [customLocation, setCustomLocation] = useState(""); // For custom location
-  const [loading, setLoading] = useState(true);
+  const [fetchLoading, setFetchLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
 
@@ -127,6 +128,7 @@ const EditVehicle = () => {
 
   useEffect(() => {
     const fetchVehicleData = async () => {
+      setFetchLoading(true);
       try {
         const response = await axios.get(
           `http://localhost:5001/api/v1/vehicles/${vehicleId}`,
@@ -136,10 +138,10 @@ const EditVehicle = () => {
         );
         const filteredData = filterFields(response.data.data.vehicle);
         setVehicleData(filteredData);
-        setLoading(false);
+        setFetchLoading(false);
       } catch (err) {
-        setError("Failed to fetch vehicle data");
-        setLoading(false);
+        setError(err.response?.data?.message || "Failed to fetch vehicle data");
+        setFetchLoading(false);
       }
     };
     fetchVehicleData();
@@ -160,6 +162,7 @@ const EditVehicle = () => {
 
   const handleUpdate = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       // Update location field with custom location if applicable
       const updatedData = { ...vehicleData };
@@ -177,16 +180,21 @@ const EditVehicle = () => {
       setSuccessMessage("Vehicle updated successfully!");
       setTimeout(() => navigate("/my-profile"), 2000);
     } catch (err) {
-      setError("Failed to update vehicle");
+      setError(err.response?.data?.message || "Failed to update vehicle");
+    } finally {
+      setLoading(false);
     }
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (fetchLoading) return <div>Loading...</div>;
   if (error) return <div>{error}</div>;
+  if (!vehicleData) return <div>Loading vehicle data...</div>;
 
+  // useEffect(() => {
   if (!user) {
     navigate("/restricted");
   }
+  // }, [user, navigate]);
 
   return (
     <div className="edit-vehicle-container">
@@ -194,7 +202,14 @@ const EditVehicle = () => {
       {successMessage && (
         <div className="success-message">{successMessage}</div>
       )}
-      <form onSubmit={handleUpdate} className="edit-vehicle-form">
+      <form
+        onSubmit={handleUpdate}
+        className="edit-vehicle-form"
+        style={{
+          pointerEvents: loading ? "none" : "auto",
+          opacity: loading ? 0.6 : 1,
+        }}
+      >
         {Object.keys(vehicleData).map((key) => (
           <div key={key} className="form-group">
             <label htmlFor={key}>
@@ -372,8 +387,8 @@ const EditVehicle = () => {
             )}
           </div>
         ))}
-        <button type="submit" className="update-button">
-          Update
+        <button type="submit" className="update-button" disabled={loading}>
+          {loading ? "Updating..." : "Update"}
         </button>
       </form>
     </div>

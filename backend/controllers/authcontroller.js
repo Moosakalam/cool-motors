@@ -253,6 +253,15 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
     return next(new AppError("There is no user with that email", 404));
   }
 
+  if (!user.isVerified) {
+    return next(
+      new AppError(
+        "Email not verified. Please verify your email before resetting the password.",
+        403
+      )
+    );
+  }
+
   //Generate random reset token
   const resetToken = user.createPasswordResetToken();
   await user.save({ validateBeforeSave: false });
@@ -285,7 +294,7 @@ exports.forgotPassword = catchAsyncError(async (req, res, next) => {
 
     res.status(200).json({
       status: "success",
-      message: "Token sent to email(Mailtrap)",
+      message: "Token sent to email",
     });
   } catch (err) {
     user.passwordResetToken = undefined;
@@ -327,8 +336,13 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
   // 3) Change the passwordChangedAt property
   await user.save({ validateBeforeSave: false });
 
-  // 4) Log the uset in(send JWT)
-  createAndSendToken(user, 200, res);
+  // // 4) Log the uset in(send JWT)
+  // createAndSendToken(user, 200, res);
+
+  res.status(200).json({
+    status: "success",
+    message: "Password has been reset successfully.",
+  });
 });
 
 exports.updatePassword = catchAsyncError(async (req, res, next) => {

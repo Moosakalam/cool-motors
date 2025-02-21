@@ -6,16 +6,18 @@ import "./css/ResetPassword.css";
 function ResetPassword() {
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
-  const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { resetToken } = useParams(); // Extract token from URL params
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     if (newPassword !== newPasswordConfirm) {
       setError("Passwords do not match!");
+      setLoading(false);
       return;
     }
 
@@ -28,22 +30,31 @@ function ResetPassword() {
         },
         { withCredentials: true }
       );
-
-      setMessage("Password reset successfully!");
+      alert(
+        "Password has been reset successfully. Please login with the new password."
+      );
       setError("");
-      setTimeout(() => {
-        navigate("/login"); // Redirect to login page
-      }, 3000);
+      // setTimeout(() => {
+      navigate("/login"); // Redirect to login page
+      // }, 3000);
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong.");
-      setMessage("");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="reset-password-container">
       <h2 className="reset-password-title">Reset Your Password</h2>
-      <form className="reset-password-form" onSubmit={handleSubmit}>
+      <form
+        className="reset-password-form"
+        onSubmit={handleSubmit}
+        style={{
+          pointerEvents: loading ? "none" : "auto",
+          opacity: loading ? 0.6 : 1,
+        }}
+      >
         <div className="form-group">
           <label htmlFor="newPassword">New Password</label>
           <input
@@ -64,11 +75,14 @@ function ResetPassword() {
             required
           />
         </div>
-        <button type="submit" className="reset-password-button">
-          Reset Password
+        <button
+          type="submit"
+          className="reset-password-button"
+          disabled={loading}
+        >
+          {loading ? "Loading..." : "Reset Password"}
         </button>
       </form>
-      {message && <p className="success-message">{message}</p>}
       {error && <p className="error-message">{error}</p>}
     </div>
   );

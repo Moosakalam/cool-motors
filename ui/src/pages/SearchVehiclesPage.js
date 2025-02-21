@@ -84,6 +84,7 @@ const SearchVehiclesPage = () => {
   });
 
   const [vehicles, setVehicles] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   // Parse query parameters from the URL on page load
   useEffect(() => {
@@ -122,6 +123,7 @@ const SearchVehiclesPage = () => {
   };
 
   const fetchVehicles = async (activeFilters) => {
+    setLoading(true);
     try {
       const response = await axios.get(
         "http://localhost:5001/api/v1/vehicles/search",
@@ -133,6 +135,8 @@ const SearchVehiclesPage = () => {
       setVehicles(response.data.data.vehicles);
     } catch (error) {
       console.error("Error fetching vehicles:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -194,8 +198,12 @@ const SearchVehiclesPage = () => {
           </div>
         ))}
 
-        <button className="apply-filter-btn" onClick={handleApplyFilters}>
-          Apply Filters
+        <button
+          className="apply-filter-btn"
+          onClick={handleApplyFilters}
+          disabled={loading}
+        >
+          {loading ? "Loading..." : "Apply Filters"}
         </button>
       </div>
 
