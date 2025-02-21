@@ -1,4 +1,6 @@
 const mongoose = require("mongoose");
+const User = require("../models/userModel");
+
 const {
   S3Client,
   PutObjectCommand,
@@ -156,6 +158,14 @@ const pendingVehicleSchema = mongoose.Schema(
 //   } catch (error) {
 //     console.error("Error deleting images from S3:", error);
 //   }
+// });
+
+// pendingVehicleSchema.post("findOneAndDelete", async function (vehicle) {
+//   if (!vehicle) return;
+
+//   await User.findByIdAndUpdate(vehicle.listedBy, {
+//     $inc: { totalVehicles: -1 },
+//   });
 // });
 
 const PendingVehicle = mongoose.model("PendingVehicle", pendingVehicleSchema);

@@ -11,6 +11,7 @@ const UpdateMe = () => {
   });
   const [originalData, setOriginalData] = useState({});
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -53,10 +54,12 @@ const UpdateMe = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     // Prevent submitting unchanged data
     if (JSON.stringify(formData) === JSON.stringify(originalData)) {
       setMessage("No changes detected.");
+      setLoading(false);
       return;
     }
 
@@ -86,6 +89,8 @@ const UpdateMe = () => {
       setMessage(
         error.response?.data?.message || "An error occurred. Please try again."
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -100,7 +105,14 @@ const UpdateMe = () => {
       {message && (
         <p className={`message ${success ? "success" : "error"}`}>{message}</p>
       )}
-      <form onSubmit={handleSubmit} className="update-form">
+      <form
+        onSubmit={handleSubmit}
+        className="update-form"
+        style={{
+          pointerEvents: loading ? "none" : "auto",
+          opacity: loading ? 0.6 : 1,
+        }}
+      >
         <div className="form-group">
           <label htmlFor="name">Name</label>
           <input
@@ -123,8 +135,8 @@ const UpdateMe = () => {
           />
         </div>
 
-        <button type="submit" className="submit-btn">
-          Update
+        <button type="submit" className="submit-btn" disabled={loading}>
+          {loading ? "Updating..." : "Update"}
         </button>
       </form>
     </div>

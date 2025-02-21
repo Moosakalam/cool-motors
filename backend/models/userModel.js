@@ -54,6 +54,10 @@ const userSchema = mongoose.Schema({
       ref: "Vehicle",
     },
   ],
+  totalVehicles: {
+    type: Number,
+    default: 0,
+  },
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,

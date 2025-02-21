@@ -62,7 +62,14 @@ const UpdateMyEmail = () => {
         <p className={`message ${success ? "success" : "error"}`}>{message}</p>
       )}
 
-      <form onSubmit={handleSubmit} className="update-form">
+      <form
+        onSubmit={handleSubmit}
+        className="update-form"
+        style={{
+          pointerEvents: loading ? "none" : "auto",
+          opacity: loading ? 0.6 : 1,
+        }}
+      >
         <div className="form-group">
           <label htmlFor="email">Email</label>
           <input

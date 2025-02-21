@@ -14,6 +14,7 @@ function Signup() {
   const navigate = useNavigate();
 
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
 
   const handleChange = (e) => {
@@ -23,6 +24,7 @@ function Signup() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     try {
       await axios.post("http://localhost:5001/api/v1/users/signup", formData, {
         withCredentials: true,
@@ -43,6 +45,8 @@ function Signup() {
     } catch (err) {
       setError(err.response.data.message || "Signup failed");
       setSuccess("");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -50,7 +54,13 @@ function Signup() {
     <div className="container">
       <h2>Signup</h2>
       <br></br>
-      <form onSubmit={handleSubmit}>
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          pointerEvents: loading ? "none" : "auto",
+          opacity: loading ? 0.6 : 1,
+        }}
+      >
         <input
           type="text"
           name="name"
@@ -96,7 +106,9 @@ function Signup() {
             className="phone-input" // Add a class for styling
           />
         </div>
-        <button type="submit">Signup</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Loading..." : "Signup"}
+        </button>
       </form>
       {error && <p className="error">{error}</p>}
       {success && <p className="success">{success}</p>}

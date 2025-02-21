@@ -161,9 +161,10 @@ vehicleSchema.post("findOneAndDelete", async function (vehicle) {
       await s3Client.send(new DeleteObjectCommand(deleteParams));
     }
 
-    // Remove vehicle reference from the user's listedVehicles array
+    // Remove vehicle reference from the user's listedVehicles array and decrement totalVehicles count
     await mongoose.model("User").findByIdAndUpdate(vehicle.listedBy, {
       $pull: { listedVehicles: vehicle._id },
+      $inc: { totalVehicles: -1 },
     });
 
     // Remove all likes associated with the vehicle

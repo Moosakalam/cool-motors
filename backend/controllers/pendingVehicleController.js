@@ -29,12 +29,18 @@ const s3Client = new S3Client({
 });
 
 exports.listVehicle = catchAsyncError(async (req, res, next) => {
-  // //check if the user is listing more number of vehicles than the limit.
-  // const userId = req.user._id;
-  // const user = await User.findById(userId);
-  // if (user.listedVehicles.length >= 1) {
-  //   return next(new AppError("You can't list more than 1 vehicle at a time."));
-  // }
+  //check if the user is listing more number of vehicles than the limit.
+  const user = await User.findById(req.user._id);
+  if (
+    user.role !== "admin" &&
+    user.totalVehicles >= process.env.MAX_VEHICLES_NUM
+  ) {
+    return next(
+      new AppError(
+        `You can't list more than ${process.env.MAX_VEHICLES_NUM} vehicle at a time.`
+      )
+    );
+  }
 
   const files = req.files; // Handling multiple files
 
@@ -83,12 +89,8 @@ exports.listVehicle = catchAsyncError(async (req, res, next) => {
     images: imageUrls, // Storing the array of image URLs
   });
 
-  //   // Add the vehicle to the owner's User document
-  //   await User.findByIdAndUpdate(req.user._id, {
-  //     $push: { listedVehicles: newVehicle._id },
-  //   });
-
-  // console.log("ikh");
+  user.totalVehicles += 1;
+  await user.save({ validateBeforeSave: false });
 
   res.status(201).json({
     status: "success",
@@ -169,9 +171,16 @@ exports.disapproveVehicle = catchAsyncError(async (req, res, next) => {
   // Find and remove the pending vehicle by ID
   await PendingVehicle.findByIdAndDelete(id);
 
+  const user = await User.findByIdAndUpdate(
+    pendingVehicle.listedBy,
+    {
+      $inc: { totalVehicles: -1 },
+    },
+    { new: true }
+  );
+
   try {
     // SEND DISAPPROVED EMAIL TO USER
-    const user = await User.findById(pendingVehicle.listedBy);
     let url = "";
     if (process.env.NODE_ENV === "development") {
       url = `${process.env.FRONTEND_URL_DEV}/list`;

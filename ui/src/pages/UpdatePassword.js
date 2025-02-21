@@ -11,11 +11,13 @@ const UpdatePassword = () => {
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
 
   const handleUpdatePassword = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const response = await axios.patch(
@@ -41,6 +43,8 @@ const UpdatePassword = () => {
         err.response?.data?.message || "An error occurred. Please try again."
       );
       setMessage("");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -54,7 +58,13 @@ const UpdatePassword = () => {
       <h2>Update Password</h2>
       {message && <p className="success-message">{message}</p>}
       {error && <p className="error-message">{error}</p>}
-      <form onSubmit={handleUpdatePassword}>
+      <form
+        onSubmit={handleUpdatePassword}
+        style={{
+          pointerEvents: loading ? "none" : "auto",
+          opacity: loading ? 0.6 : 1,
+        }}
+      >
         <div className="form-group">
           <label htmlFor="currentPassword">Current Password:</label>
           <input
@@ -88,8 +98,8 @@ const UpdatePassword = () => {
           />
         </div>
 
-        <button type="submit" className="btn-update">
-          Update Password
+        <button type="submit" className="btn-update" disabled={loading}>
+          {loading ? "Updating..." : "Update Password"}
         </button>
       </form>
     </div>
