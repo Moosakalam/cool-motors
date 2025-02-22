@@ -5,8 +5,8 @@ const Vehicle = require("../models/vehicleModel");
 function startCronJobs() {
   //for deleting unverified users:
   cron.schedule(
-    // "0 0 * * *", //runnig everyday at midnight
-    "* * * * * *", //running every second
+    "0 0 * * *", //runnig everyday at midnight
+    // "* * * * * *", //running every second
     async () => {
       try {
         console.log("Checking for expired and unverified users..");
@@ -28,10 +28,10 @@ function startCronJobs() {
 
   //for deleting expired vehicles:
   cron.schedule(
-    // "0 0 * * *", //runnig everyday at midnight
-    "* * * * * *", //running every second
+    "0 0 * * *", //runnig everyday at midnight
+    // "* * * * * *", //running every second
     async () => {
-      //   console.log("Running vehicle cleanup cron job...");
+      console.log("Running vehicle cleanup cron job...");
 
       try {
         // Find all expired vehicles
