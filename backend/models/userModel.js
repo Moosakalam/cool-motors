@@ -158,7 +158,8 @@ userSchema.methods.createEmailVerificationToken = function () {
   // console.log({ resetToken }, this.passwordResetToken);
 
   //password reset token expires in 10 mins
-  this.emailVerificationExpires = Date.now() + 24 * 60 * 60 * 1000;
+  // this.emailVerificationExpires = Date.now() + 24 * 60 * 60 * 1000;
+  this.emailVerificationExpires = Date.now() + 10 * 1000;
 
   return resetToken;
 };

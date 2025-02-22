@@ -128,9 +128,29 @@ const vehicleSchema = mongoose.Schema(
       type: String,
       required: [true, "Please enter a description for your vehicle"],
     },
+    // tag: {
+    //   type: String,
+    //   enum: {
+    //     values: [
+    //       "clean",
+    //       "classic",
+    //       "vintage",
+    //       "exotic",
+    //       "luxury",
+    //       "rare",
+    //       "modified",
+    //     ],
+    //     message: "{VALUE} is not a valid tag.",
+    //   },
+    // },
     numberOfLikes: {
       type: Number,
       default: 0,
+    },
+    expiresAt: {
+      type: Date,
+      // default: Date.now() + 30 * 24 * 60 * 60 * 1000,
+      immutable: true,
     },
   },
   {
@@ -170,7 +190,7 @@ vehicleSchema.post("findOneAndDelete", async function (vehicle) {
     // Remove all likes associated with the vehicle
     await mongoose.model("Like").deleteMany({ vehicle: vehicle._id });
   } catch (error) {
-    console.error("Error during vehicle deletion:", error);
+    console.error("Error during vehicle deletion: \n", error);
   }
 });
 

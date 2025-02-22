@@ -1,5 +1,6 @@
 const dotenv = require("dotenv");
 const mongoose = require("mongoose");
+const startCronJobs = require("./utils/cronJobs");
 
 process.on("uncaughtException", (err) => {
   console.log("UNCAUGHT EXCEPTION:");
@@ -17,9 +18,10 @@ const DB = process.env.DATABASE.replace(
   process.env.DATABASE_PASSWORD
 );
 
-mongoose
-  .connect(DB)
-  .then(() => console.log("Database connection is successful"));
+mongoose.connect(DB).then(() => {
+  console.log("Database connection is successful");
+  // startCronJobs();
+});
 
 // console.log(process.env);
 // console.log(app.get('env'));

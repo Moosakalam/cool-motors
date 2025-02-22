@@ -122,10 +122,6 @@ const pendingVehicleSchema = mongoose.Schema(
       ref: "User",
       required: [true, "please provide user"],
     },
-    image: {
-      type: String, // Store the URL of the image
-      // required: [true, "Please upload an image of your vehicle"],
-    },
     images: {
       type: [String], // Store the URLs of the images
       // required: [true, "Please upload an image of your vehicle"],
@@ -133,6 +129,27 @@ const pendingVehicleSchema = mongoose.Schema(
     description: {
       type: String,
       required: [true, "Please enter a description for your vehicle"],
+    },
+    // tag: {
+    //   type: [String],
+    //   enum: {
+    //     values: [
+    //       "clean",
+    //       "classic",
+    //       "vintage",
+    //       "exotic",
+    //       "luxury",
+    //       "rare",
+    //       "modified",
+    //     ],
+    //     message: "{VALUE} is not a valid tag.",
+    //   },
+    // },
+    expiresAt: {
+      type: Date,
+      // default: () => Date.now() + 30 * 24 * 60 * 60 * 1000, // Correct way to set dynamic default
+      default: () => Date.now() + 60 * 1000,
+      immutable: true, // Prevents direct updates
     },
   },
   {
