@@ -10,7 +10,7 @@ const UpdateMyEmail = () => {
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
 
   useEffect(() => {
     if (user?.email) setEmail(user.email);
@@ -50,10 +50,11 @@ const UpdateMyEmail = () => {
     }
   };
 
-  if (!user) {
-    navigate("/restricted");
-    return null;
-  }
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate("/restricted");
+    }
+  }, [user, authLoading, navigate]);
 
   return (
     <div className="update-container">

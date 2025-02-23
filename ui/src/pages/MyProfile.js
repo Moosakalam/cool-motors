@@ -6,7 +6,7 @@ import VehicleCard from "../utils/VehicleCard";
 
 function MyProfile() {
   const [username, setUsername] = useState("");
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [listedVehicles, setListedVehicles] = useState([]);
   const [likedVehicles, setLikedVehicles] = useState([]);
   const [activeTab, setActiveTab] = useState("listed");
@@ -68,9 +68,11 @@ function MyProfile() {
     setShowModal(false); // Close modal
   };
 
-  if (!user) {
-    navigate("/restricted");
-  }
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate("/restricted");
+    }
+  }, [user, authLoading, navigate]);
 
   return (
     <div style={{ padding: "20px" }}>

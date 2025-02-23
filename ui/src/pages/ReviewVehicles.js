@@ -15,7 +15,7 @@ function ReviewVehicles() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // State for the current image index
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
 
   useEffect(() => {
     fetchVehicle();
@@ -137,8 +137,10 @@ function ReviewVehicles() {
   }, [isModalOpen, nextImage, prevImage]);
 
   useEffect(() => {
-    if (!user) navigate("/restricted");
-  }, [user, navigate]);
+    if (!authLoading && !user) {
+      navigate("/restricted");
+    }
+  }, [user, authLoading, navigate]);
 
   if (error) {
     return (

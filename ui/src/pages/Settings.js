@@ -7,7 +7,7 @@ const Settings = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -90,6 +90,12 @@ const Settings = () => {
       }
     }
   };
+
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate("/restricted");
+    }
+  }, [user, authLoading, navigate]);
 
   if (error) {
     return <p>{error}</p>;

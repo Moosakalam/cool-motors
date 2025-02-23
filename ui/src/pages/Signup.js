@@ -1,8 +1,9 @@
 // src/Signup.js
 import "./css/Signup.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../AuthContext";
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ function Signup() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState("");
+  const { user, loading: authLoading } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -49,6 +51,13 @@ function Signup() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      alert("You are already logged in.");
+      navigate("/");
+    }
+  }, [user, authLoading, navigate]);
 
   return (
     <div className="container">

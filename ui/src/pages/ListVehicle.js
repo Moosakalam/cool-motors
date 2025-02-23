@@ -1,5 +1,5 @@
 import "./css/ListVehicle.css";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // Use this for redirection
 import { useAuth } from "../AuthContext";
 import axios from "axios";
@@ -20,7 +20,7 @@ function ListVehicle() {
     state: "",
   });
 
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
@@ -186,9 +186,11 @@ function ListVehicle() {
     }
   };
 
-  if (!user) {
-    navigate("/restricted");
-  }
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate("/restricted");
+    }
+  }, [user, authLoading, navigate]);
 
   return (
     <div className="vehicle-list-container">

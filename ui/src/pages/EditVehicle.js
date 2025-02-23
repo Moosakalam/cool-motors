@@ -110,24 +110,18 @@ const EditVehicle = () => {
   ];
 
   const { vehicleId } = useParams();
-  const { user } = useAuth();
-  const navigate = useNavigate();
   const [vehicleData, setVehicleData] = useState(null);
   const [customLocation, setCustomLocation] = useState(""); // For custom location
   const [fetchLoading, setFetchLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [successMessage, setSuccessMessage] = useState(null);
-
-  // useEffect(() => {
-  //   if (!user) {
-  //     navigate("/restricted");
-  //     return;
-  //   }
-  // }, [user, navigate]);
+  const navigate = useNavigate();
+  const { user, loading: authLoading } = useAuth();
 
   useEffect(() => {
     const fetchVehicleData = async () => {
+      if (!user?._id) return;
       setFetchLoading(true);
       try {
         const response = await axios.get(
@@ -138,17 +132,20 @@ const EditVehicle = () => {
         );
         const filteredData = filterFields(response.data.data.vehicle);
         setVehicleData(filteredData);
-        setFetchLoading(false);
+        if (user._id !== filteredData.listedBy) {
+          setError("You don't have access to this page.");
+        }
       } catch (err) {
         setError(err.response?.data?.message || "Failed to fetch vehicle data");
+      } finally {
         setFetchLoading(false);
       }
     };
     fetchVehicleData();
-  }, [vehicleId]);
+  }, [vehicleId, user]);
 
   const filterFields = (data) => {
-    const { listedBy, __v, updatedAt, images, _id, ...filteredData } = data;
+    const { __v, updatedAt, images, _id, ...filteredData } = data;
     return filteredData;
   };
 
@@ -186,15 +183,21 @@ const EditVehicle = () => {
     }
   };
 
-  if (fetchLoading) return <div>Loading...</div>;
-  if (error) return <div>{error}</div>;
-  if (!vehicleData) return <div>Loading vehicle data...</div>;
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate("/restricted");
+    }
+  }, [user, authLoading, navigate]);
 
-  // useEffect(() => {
-  if (!user) {
-    navigate("/restricted");
+  if (fetchLoading) return <div>Loading...</div>;
+  if (error) {
+    return (
+      <div>
+        <h2 align="center">{error}</h2>
+      </div>
+    );
   }
-  // }, [user, navigate]);
+  if (!vehicleData) return <div>Loading vehicle data...</div>;
 
   return (
     <div className="edit-vehicle-container">

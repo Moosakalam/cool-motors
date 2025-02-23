@@ -1,10 +1,11 @@
 import "./css/Login.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 // import { Eye, EyeOff } from "lucide-react"; // Import icons for toggle
 import eye from "../utils/images/eye.svg";
 import eyeOff from "../utils/images/eye-off.svg";
+import { useAuth } from "../AuthContext";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -13,6 +14,8 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user, loading: authLoading } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -23,7 +26,9 @@ function Login() {
         { email, password },
         { withCredentials: true }
       );
-      navigate("/"); // Redirect to home page
+      const redirectTo =
+        new URLSearchParams(location.search).get("redirect") || "/";
+      navigate(redirectTo);
       window.location.reload(); // Refresh after login
     } catch (err) {
       setError(err.response?.data?.message || "Login failed");
@@ -32,6 +37,13 @@ function Login() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      alert("You are already logged in.");
+      navigate("/");
+    }
+  }, [user, authLoading, navigate]);
 
   return (
     <div className="login-container">

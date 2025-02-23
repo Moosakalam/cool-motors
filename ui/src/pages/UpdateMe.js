@@ -14,7 +14,7 @@ const UpdateMe = () => {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
 
   // Fetch user data
   const fetchUserData = useCallback(async () => {
@@ -94,10 +94,11 @@ const UpdateMe = () => {
     }
   };
 
-  if (!user) {
-    navigate("/restricted");
-    return null;
-  }
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate("/restricted");
+    }
+  }, [user, authLoading, navigate]);
 
   return (
     <div className="update-container">

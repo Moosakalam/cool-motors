@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import "./css/VehicleDetails.css"; // Import the CSS for the modal and blur effect
 import { useAuth } from "../AuthContext";
@@ -14,6 +14,7 @@ function VehicleDetails() {
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
   const navigate = useNavigate();
   const { user } = useAuth();
+  const location = useLocation();
 
   useEffect(() => {
     const fetchVehicleDetails = async () => {
@@ -70,12 +71,20 @@ function VehicleDetails() {
     };
 
     checkIfVehicleLiked();
-  }, [vehicle]);
+  }, [vehicle, user]);
 
   // Function to handle like/unlike
   const handleLikeToggle = async () => {
     try {
-      if (!user) return navigate("/login");
+      if (!user) {
+        const shouldNavigate = window.confirm(
+          "You need to login to like the vehicle. Do you want to go to the login page?"
+        );
+        if (shouldNavigate) {
+          navigate(`/login?redirect=${encodeURIComponent(location.pathname)}`);
+        }
+        return;
+      }
 
       if (liked) {
         // Unlike the vehicle

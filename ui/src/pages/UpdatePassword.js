@@ -1,5 +1,5 @@
 // src/pages/UpdatePassword.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "./css/UpdatePassword.css"; // Optional CSS file for styling
 import { useAuth } from "../AuthContext";
@@ -12,7 +12,7 @@ const UpdatePassword = () => {
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
   const handleUpdatePassword = async (e) => {
@@ -48,10 +48,11 @@ const UpdatePassword = () => {
     }
   };
 
-  if (!user) {
-    navigate("/restricted");
-    return;
-  }
+  useEffect(() => {
+    if (!authLoading && !user) {
+      navigate("/restricted");
+    }
+  }, [user, authLoading, navigate]);
 
   return (
     <div className="update-password-container">
