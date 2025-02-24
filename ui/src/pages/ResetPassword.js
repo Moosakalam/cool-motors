@@ -18,6 +18,8 @@ function ResetPassword() {
     if (newPassword !== newPasswordConfirm) {
       setError("Passwords do not match!");
       setLoading(false);
+      setNewPassword("");
+      setNewPasswordConfirm("");
       return;
     }
 

@@ -49,15 +49,18 @@ const Settings = () => {
   };
 
   const handleLogout = async () => {
-    try {
-      await axios.get("http://localhost:5001/api/v1/users/logout", {
-        withCredentials: true,
-      });
+    const confirmed = window.confirm("Are you sure you want to log out?");
+    if (confirmed) {
+      try {
+        await axios.get("http://localhost:5001/api/v1/users/logout", {
+          withCredentials: true,
+        });
 
-      navigate("/");
-      window.location.reload();
-    } catch (error) {
-      console.error("Error during logout:", error);
+        navigate("/");
+        window.location.reload();
+      } catch (error) {
+        console.error("Error during logout:", error);
+      }
     }
   };
 
@@ -66,28 +69,33 @@ const Settings = () => {
   };
 
   const handleDeleteAccount = async () => {
-    const confirmed = window.confirm(
-      "Are you sure you want to delete your account? This action will remove all your vehicles and data permanently."
+    const firstName = user?.name?.split(" ")[0] || "your";
+    const confirmationText = `delete ${firstName}'s account`;
+    const userInput = prompt(
+      `To confirm account deletion, type: "${confirmationText}"`
     );
 
-    if (confirmed) {
-      try {
-        await axios.delete("http://localhost:5001/api/v1/users/deleteMe", {
-          withCredentials: true,
-        });
-        await axios.get("http://localhost:5001/api/v1/users/logout", {
-          withCredentials: true,
-        });
+    if (userInput !== confirmationText) {
+      alert("Account deletion canceled. The input did not match.");
+      return;
+    }
 
-        alert("Your account has been deleted successfully.");
-        navigate("/");
-        window.location.reload();
-      } catch (err) {
-        console.error("Error deleting account:", err);
-        alert(
-          err.response?.data?.message || "An error occurred. Please try again."
-        );
-      }
+    try {
+      await axios.delete("http://localhost:5001/api/v1/users/deleteMe", {
+        withCredentials: true,
+      });
+      await axios.get("http://localhost:5001/api/v1/users/logout", {
+        withCredentials: true,
+      });
+
+      alert("Your account has been deleted successfully.");
+      navigate("/");
+      window.location.reload();
+    } catch (err) {
+      console.error("Error deleting account:", err);
+      alert(
+        err.response?.data?.message || "An error occurred. Please try again."
+      );
     }
   };
 

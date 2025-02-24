@@ -147,8 +147,8 @@ const pendingVehicleSchema = mongoose.Schema(
     // },
     expiresAt: {
       type: Date,
-      // default: () => Date.now() + 30 * 24 * 60 * 60 * 1000, // Correct way to set dynamic default
-      default: () => Date.now() + 60 * 1000,
+      default: () => Date.now() + 30 * 24 * 60 * 60 * 1000, // Correct way to set dynamic default
+      // default: () => Date.now() + 60 * 1000,
       immutable: true, // Prevents direct updates
     },
   },

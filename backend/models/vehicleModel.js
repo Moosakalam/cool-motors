@@ -1,9 +1,6 @@
 const mongoose = require("mongoose");
-const {
-  S3Client,
-  PutObjectCommand,
-  DeleteObjectCommand,
-} = require("@aws-sdk/client-s3");
+const { S3Client, DeleteObjectCommand } = require("@aws-sdk/client-s3");
+require("dotenv").config();
 
 const bucketName = process.env.AWS_BUCKET_NAME;
 const region = process.env.AWS_BUCKET_REGION;
@@ -169,10 +166,22 @@ vehicleSchema.index({ state: 1, location: 1 }); // Compound index for state and 
 vehicleSchema.post("findOneAndDelete", async function (vehicle) {
   if (!vehicle) return;
 
+  // Remove vehicle reference from the user's listedVehicles array and decrement totalVehicles count
+  await mongoose.model("User").findByIdAndUpdate(vehicle.listedBy, {
+    $pull: { listedVehicles: vehicle._id },
+    $inc: { totalVehicles: -1 },
+  });
+
+  // Remove all likes associated with the vehicle
+  await mongoose.model("Like").deleteMany({ vehicle: vehicle._id });
+
   try {
-    // Delete images from S3
+    console.log(bucketName);
+    console.log(region);
+    console.log(accessKeyId);
+    console.log(secretAccessKey);
+    //deleting the image of vehicle from s3
     for (const image of vehicle.images) {
-      // console.log(image);
       const key = image.split("amazonaws.com/")[1];
       const deleteParams = {
         Bucket: bucketName,
@@ -180,15 +189,6 @@ vehicleSchema.post("findOneAndDelete", async function (vehicle) {
       };
       await s3Client.send(new DeleteObjectCommand(deleteParams));
     }
-
-    // Remove vehicle reference from the user's listedVehicles array and decrement totalVehicles count
-    await mongoose.model("User").findByIdAndUpdate(vehicle.listedBy, {
-      $pull: { listedVehicles: vehicle._id },
-      $inc: { totalVehicles: -1 },
-    });
-
-    // Remove all likes associated with the vehicle
-    await mongoose.model("Like").deleteMany({ vehicle: vehicle._id });
   } catch (error) {
     console.error("Error during vehicle deletion: \n", error);
   }

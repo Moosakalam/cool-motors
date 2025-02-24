@@ -334,7 +334,7 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
   user.passwordResetExpires = undefined;
 
   // 3) Change the passwordChangedAt property
-  await user.save({ validateBeforeSave: false });
+  await user.save();
 
   // // 4) Log the uset in(send JWT)
   // createAndSendToken(user, 200, res);
