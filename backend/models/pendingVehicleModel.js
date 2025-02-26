@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const User = require("../models/userModel");
+const { states } = require("../utils/data");
 
 const {
   S3Client,
@@ -111,6 +112,7 @@ const pendingVehicleSchema = mongoose.Schema(
     },
     state: {
       type: String,
+      enum: { values: states, message: "{VALUE} is not a valid state" },
       required: [true, "Please enter the state(location) of your vehicle"],
     },
     location: {
@@ -145,12 +147,12 @@ const pendingVehicleSchema = mongoose.Schema(
     //     message: "{VALUE} is not a valid tag.",
     //   },
     // },
-    expiresAt: {
-      type: Date,
-      default: () => Date.now() + 30 * 24 * 60 * 60 * 1000, // Correct way to set dynamic default
-      // default: () => Date.now() + 60 * 1000,
-      immutable: true, // Prevents direct updates
-    },
+    // expiresAt: {
+    //   type: Date,
+    //   default: () => Date.now() + 30 * 24 * 60 * 60 * 1000, // Correct way to set dynamic default
+    //   // default: () => Date.now() + 60 * 1000,
+    //   immutable: true, // Prevents direct updates
+    // },
   },
   {
     timestamps: true,

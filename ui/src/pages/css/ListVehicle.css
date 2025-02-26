@@ -69,19 +69,6 @@ select:focus {
   text-align: center;
 }
 
-.success-modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  border: 1px solid #ccc;
-  padding: 20px;
-  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
-  z-index: 1000;
-  text-align: center;
-}
-
 .success-modal p {
   font-size: 18px;
   color: green;

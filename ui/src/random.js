@@ -1,149 +1,156 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom"; // Import Link for navigation
+import React, { useEffect, useState } from "react";
+import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import { useAuth } from "../AuthContext";
-import "./css/ReviewVehicles.css";
+import "./css/VehicleDetails.css";
 
-const ReviewVehicles = () => {
+function VehicleDetails() {
+  const { id } = useParams();
   const [vehicle, setVehicle] = useState(null);
+  const [seller, setSeller] = useState(null);
+  const [liked, setLiked] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
+  const location = useLocation();
 
   useEffect(() => {
-    fetchVehicle();
-  }, []);
-
-  const fetchVehicle = async () => {
-    try {
-      setLoading(true);
-      const response = await axios.get(
-        "http://localhost:5001/api/v1/pending-vehicles/oldest",
-        {
-          withCredentials: true,
+    axios
+      .get(`http://localhost:5001/api/v1/vehicles/${id}`, {
+        withCredentials: true,
+      })
+      .then(({ data }) => {
+        setVehicle(data.data.vehicle);
+        if (data.data.vehicle.listedBy) {
+          return axios.get(
+            `http://localhost:5001/api/v1/users/${data.data.vehicle.listedBy}`,
+            { withCredentials: true }
+          );
         }
-      );
-      if (!response.data.data.vehicle) {
-        setError("No pending vehicles");
-        setLoading(false);
-        return;
-      }
-      setVehicle(response.data.data.vehicle);
-      setLoading(false);
-    } catch (err) {
-      setError("Failed to fetch vehicle");
-      if (err.response.status === 403) {
-        setError("You Don't have access to this page");
-      }
-      setLoading(false);
-    }
-  };
+      })
+      .then((res) => res && setSeller(res.data.data.user))
+      .catch(console.error)
+      .finally(() => setLoading(false));
+  }, [id]);
 
-  const handleApprove = async () => {
-    if (!vehicle) return;
+  useEffect(() => {
+    if (!vehicle || !user) return;
+    axios
+      .get(
+        `http://localhost:5001/api/v1/vehicles/${vehicle._id}/likes/is-liked`,
+        { withCredentials: true }
+      )
+      .then(({ data }) => setLiked(data.data.isLiked))
+      .catch(console.error);
+  }, [vehicle, user]);
+
+  const handleLikeToggle = async () => {
+    if (!user) {
+      if (window.confirm("Login to like this vehicle?")) {
+        navigate(`/login?redirect=${encodeURIComponent(location.pathname)}`);
+      }
+      return;
+    }
     try {
-      await axios.post(
-        `http://localhost:5001/api/v1/pending-vehicles/${vehicle._id}/approve`,
+      await axios[liked ? "delete" : "post"](
+        `http://localhost:5001/api/v1/vehicles/${id}/likes`,
         {},
-        {
-          withCredentials: true,
-        }
+        { withCredentials: true }
       );
-      fetchVehicle(); // Fetch next vehicle after approval
-    } catch (err) {
-      setError(err.response?.data?.message || "Failed to approve vehicle");
+      setLiked(!liked);
+    } catch (error) {
+      console.error("Error updating like status:", error);
     }
   };
 
-  const handleDisapprove = async () => {
-    if (!vehicle) return;
-    try {
-      await axios.delete(
-        `http://localhost:5001/api/v1/pending-vehicles/${vehicle._id}/disapprove`,
-        {
-          withCredentials: true,
-        }
-      );
-      fetchVehicle(); // Fetch next vehicle after disapproval
-    } catch (err) {
-      setError("Failed to disapprove vehicle");
-    }
-  };
-
-  if (!user) {
-    navigate("/restricted");
-    return;
-  }
+  const nextImage = () =>
+    setCurrentImageIndex((i) => (i + 1 < vehicle.images.length ? i + 1 : i));
+  const prevImage = () => setCurrentImageIndex((i) => (i > 0 ? i - 1 : i));
 
   if (loading) return <div>Loading...</div>;
-  if (error)
-    return (
-      <div>
-        <h2 align="center">{error}</h2>
-      </div>
-    );
+  if (!vehicle) return <div>Vehicle not found</div>;
 
   return (
-    <div className="admin-slideshow">
-      <div className="vehicle-slide">
+    <div
+      className={`vehicle-details ${isModalOpen ? "blur-background" : ""}`}
+      style={{ maxWidth: 800, margin: "0 auto" }}
+    >
+      <div style={{ position: "relative", marginTop: 20 }}>
         <img
-          src={vehicle.images[0] || "placeholder.jpg"}
-          alt={vehicle.name}
-          className="vehicle-image"
+          src={vehicle.images?.[currentImageIndex] || "placeholder.jpg"}
+          alt="Vehicle"
+          style={{
+            width: "100%",
+            height: 400,
+            objectFit: "cover",
+            borderRadius: 10,
+            cursor: "pointer",
+          }}
+          onClick={() => setIsModalOpen(true)}
         />
-        <div className="vehicle-info">
-          <p>
-            <strong>Make:</strong> {vehicle.make}
-          </p>
-          <p>
-            <strong>Model:</strong> {vehicle.model}
-          </p>
-          <p>
-            <strong>Year:</strong> {vehicle.year}
-          </p>
-          <p>
-            <strong>Price:</strong> ₹{vehicle.price}
-          </p>
-          <p>
-            <strong>Fuel Type:</strong> {vehicle.fuelType}
-          </p>
-          <p>
-            <strong>Transmission:</strong> {vehicle.transmission}
-          </p>
-          <p>
-            <strong>Engine Displacement:</strong> {vehicle.engineDisplacement}L
-          </p>
-          <p>
-            <strong>Engine Type:</strong> {vehicle.engineType}
-          </p>
-          <p>
-            <strong>Odometer:</strong> {vehicle.odometer} km
-          </p>
-          <p>
-            <strong>Ownership:</strong> {vehicle.ownership} Owners
-          </p>
-          <p>
-            <strong>State:</strong> {vehicle.state}
-          </p>
-          <p>
-            <strong>Location:</strong> {vehicle.location}
-          </p>
-          <p>
-            <strong>Description:</strong> {vehicle.description}
-          </p>
-        </div>
-        <div className="action-buttons">
-          <button onClick={handleApprove} className="approve-btn">
-            Approve
+        <button
+          onClick={handleLikeToggle}
+          style={{ position: "absolute", bottom: 10, right: 10 }}
+        >
+          {liked ? "Unlike" : "Like"}
+        </button>
+        {vehicle.images?.length > 1 && (
+          <div
+            style={{
+              position: "absolute",
+              top: 10,
+              right: 10,
+              background: "rgba(0,0,0,0.7)",
+              color: "#fff",
+              padding: "5px 10px",
+              borderRadius: 5,
+            }}
+          >
+            {currentImageIndex + 1}/{vehicle.images.length}
+          </div>
+        )}
+        {currentImageIndex > 0 && (
+          <button
+            onClick={prevImage}
+            style={{ position: "absolute", top: "50%", left: 10 }}
+          >
+            {"<"}
           </button>
-          <button onClick={handleDisapprove} className="disapprove-btn">
-            Disapprove
+        )}
+        {currentImageIndex < vehicle.images.length - 1 && (
+          <button
+            onClick={nextImage}
+            style={{ position: "absolute", top: "50%", right: 10 }}
+          >
+            {">"}
           </button>
-        </div>
+        )}
       </div>
+      <h2>
+        {vehicle.year} {vehicle.make} {vehicle.model}
+      </h2>
+      <h1>₹{vehicle.price.toLocaleString("en-IN")}</h1>
+      <p>
+        <strong>Fuel Type:</strong> {vehicle.fuelType}
+      </p>
+      <p>
+        <strong>Transmission:</strong> {vehicle.transmission}
+      </p>
+      <p>
+        <strong>Odometer:</strong> {vehicle.odometer} km
+      </p>
+      <p>
+        <strong>Seller:</strong>{" "}
+        {seller ? (
+          <Link to={`/user/${seller._id}`}>{seller.name}</Link>
+        ) : (
+          "Loading seller details..."
+        )}
+      </p>
     </div>
   );
-};
+}
 
-export default ReviewVehicles;
+export default VehicleDetails;

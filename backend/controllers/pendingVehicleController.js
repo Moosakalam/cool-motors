@@ -113,6 +113,8 @@ exports.approveVehicle = catchAsyncError(async (req, res, next) => {
   const approvedVehicle = await Vehicle.create({
     ...pendingVehicle.toObject(), // Copy all fields
     _id: undefined, // Exclude _id to allow MongoDB to generate a new ID
+    createdAt: undefined,
+    updatedAt: undefined,
   });
 
   // Add the vehicle to the owner's User document

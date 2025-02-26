@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom"; // Use this for redirection
 import { useAuth } from "../AuthContext";
 import axios from "axios";
+import { locations, states } from "../utils/data";
 
 function ListVehicle() {
   const [formData, setFormData] = useState({
@@ -23,7 +24,6 @@ function ListVehicle() {
   const { user, loading: authLoading } = useAuth();
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
@@ -75,63 +75,6 @@ function ListVehicle() {
     "Rotary",
   ];
   const ownerships = Array.from({ length: 10 }, (_, i) => i + 1);
-  const states = [
-    // States
-    "Andhra Pradesh",
-    "Arunachal Pradesh",
-    "Assam",
-    "Bihar",
-    "Chhattisgarh",
-    "Goa",
-    "Gujarat",
-    "Haryana",
-    "Himachal Pradesh",
-    "Jharkhand",
-    "Karnataka",
-    "Kerala",
-    "Madhya Pradesh",
-    "Maharashtra",
-    "Manipur",
-    "Meghalaya",
-    "Mizoram",
-    "Nagaland",
-    "Odisha",
-    "Punjab",
-    "Rajasthan",
-    "Sikkim",
-    "Tamil Nadu",
-    "Telangana",
-    "Tripura",
-    "Uttar Pradesh",
-    "Uttarakhand",
-    "West Bengal",
-
-    // Union Territories
-    "Andaman and Nicobar Islands",
-    "Chandigarh",
-    "Dadra and Nagar Haveli and Daman and Diu",
-    "Delhi",
-    "Jammu and Kashmir",
-    "Ladakh",
-    "Lakshadweep",
-    "Puducherry",
-  ];
-
-  const locations = [
-    "Mumbai",
-    "Delhi",
-    "Bangalore",
-    "Hyderabad",
-    "Chennai",
-    "Kolkata",
-    "Pune",
-    "Ahmedabad",
-    "Jaipur",
-    "Surat",
-    "Lucknow",
-    "Kanpur",
-    "Nagpur",
-  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -146,7 +89,6 @@ function ListVehicle() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccess("");
     setLoading(true);
 
     try {
@@ -170,17 +112,11 @@ function ListVehicle() {
         }
       );
 
-      setSuccess("Vehicle added successfully!");
       setError("");
-
-      // After 3 seconds, hide the modal and redirect
-      setTimeout(() => {
-        setSuccess(false);
-        navigate("/my-profile");
-      }, 3000); // 3 seconds delay
+      alert("Details submitted successfully. Please wait for update (email).");
+      navigate("/");
     } catch (err) {
       setError(err.response?.data?.message || "Failed to add vehicle");
-      setSuccess("");
     } finally {
       setLoading(false);
     }
@@ -377,7 +313,7 @@ function ListVehicle() {
           />
         </div>
 
-        <div className="form-group">
+        {/* <div className="form-group">
           <label htmlFor="state">State*</label>
           <input
             type="text"
@@ -392,6 +328,24 @@ function ListVehicle() {
               <option key={num} value={num} />
             ))}
           </datalist>
+        </div> */}
+        <div className="form-group">
+          <label htmlFor="state">State*</label>
+          <select
+            type="text"
+            name="state"
+            list="states"
+            value={formData.state}
+            onChange={handleChange}
+            required
+          >
+            <option value="">Select state</option>
+            {states.map((num) => (
+              <option key={num} value={num}>
+                {num}
+              </option>
+            ))}
+          </select>
         </div>
 
         <div className="form-group">
@@ -430,11 +384,6 @@ function ListVehicle() {
         </button>
       </form>
       {error && <p className="error-message">{error}</p>}
-      {success && (
-        <div className="success-modal">
-          <p>Vehicle added successfully! Redirecting...</p>
-        </div>
-      )}{" "}
     </div>
   );
 }

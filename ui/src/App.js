@@ -4,7 +4,8 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage"; // Import the HomePage component
 // import VehicleList from "./VehicleList";
 import UserProfile from "./pages/UserProfile";
-import MyProfile from "./pages/MyProfile";
+import MyVehicles from "./pages/MyVehicles";
+import LikedVehicles from "./pages/LikedVehicles";
 import ListVehicle from "./pages/ListVehicle";
 import VehicleDetails from "./pages/VehicleDetails";
 import Signup from "./pages/Signup";
@@ -32,7 +33,8 @@ function App() {
           <Route path="/" element={<HomePage />} />
           {/* <Route path="/" element={<VehicleList />} /> */}
           <Route path="/user/:userId" element={<UserProfile />} />
-          <Route path="/my-profile" element={<MyProfile />} />
+          <Route path="/my-vehicles" element={<MyVehicles />} />
+          <Route path="/liked-vehicles" element={<LikedVehicles />} />
           <Route path="/list" element={<ListVehicle />} />
           <Route path="/vehicle/:id" element={<VehicleDetails />} />
           <Route path="/login" element={<Login />} />

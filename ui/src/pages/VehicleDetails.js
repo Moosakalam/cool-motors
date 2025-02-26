@@ -3,6 +3,8 @@ import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import "./css/VehicleDetails.css"; // Import the CSS for the modal and blur effect
 import { useAuth } from "../AuthContext";
+import left from "../utils/images/left.png";
+import right from "../utils/images/right.png";
 
 function VehicleDetails() {
   const { id } = useParams(); // Vehicle ID from URL
@@ -28,7 +30,6 @@ function VehicleDetails() {
         );
         const fetchedVehicle = vehicleResponse.data.data.vehicle;
         setVehicle(fetchedVehicle);
-
         // Fetch seller details if available
         if (fetchedVehicle.listedBy) {
           const sellerResponse = await axios.get(
@@ -45,17 +46,13 @@ function VehicleDetails() {
         setLoading(false);
       }
     };
-
     fetchVehicleDetails();
   }, [id]);
 
   useEffect(() => {
     const checkIfVehicleLiked = async () => {
-      if (!vehicle || !vehicle._id) return; // Exit if no vehicle ID is available
-
+      if (!vehicle || !vehicle._id || !user) return; // Exit if no vehicle ID or user is available
       try {
-        if (!user) return; // Exit if no user is available
-
         // Check if the vehicle is liked using the new API endpoint
         const response = await axios.get(
           `http://localhost:5001/api/v1/vehicles/${vehicle._id}/likes/is-liked`,
@@ -63,31 +60,23 @@ function VehicleDetails() {
             withCredentials: true,
           }
         );
-
         setLiked(response.data.data.isLiked);
       } catch (error) {
         console.error("Error checking if vehicle is liked:", error);
       }
     };
-
     checkIfVehicleLiked();
   }, [vehicle, user]);
 
-  // Function to handle like/unlike
   const handleLikeToggle = async () => {
-    try {
-      if (!user) {
-        const shouldNavigate = window.confirm(
-          "You need to login to like the vehicle. Do you want to go to the login page?"
-        );
-        if (shouldNavigate) {
-          navigate(`/login?redirect=${encodeURIComponent(location.pathname)}`);
-        }
-        return;
+    if (!user) {
+      if (window.confirm("Login to like this vehicle?")) {
+        navigate(`/login?redirect=${encodeURIComponent(location.pathname)}`);
       }
-
+      return;
+    }
+    try {
       if (liked) {
-        // Unlike the vehicle
         await axios.delete(
           `http://localhost:5001/api/v1/vehicles/${id}/likes`,
           {
@@ -95,7 +84,6 @@ function VehicleDetails() {
           }
         );
       } else {
-        // Like the vehicle
         await axios.post(
           `http://localhost:5001/api/v1/vehicles/${id}/likes`,
           {},
@@ -104,33 +92,28 @@ function VehicleDetails() {
           }
         );
       }
-      // Toggle the liked state
       setLiked(!liked);
     } catch (error) {
       console.error("Error updating like status:", error);
     }
   };
 
-  // Memoized function to go to the next image
   const nextImage = useCallback(() => {
     setCurrentImageIndex((prevIndex) =>
       prevIndex === vehicle.images.length - 1 ? 0 : prevIndex + 1
     );
   }, [vehicle]);
 
-  // Memoized function to go to the previous image
   const prevImage = useCallback(() => {
     setCurrentImageIndex((prevIndex) =>
       prevIndex === 0 ? vehicle.images.length - 1 : prevIndex - 1
     );
   }, [vehicle]);
 
-  // Function to handle image click and open modal
   const openImageModal = () => {
     setIsModalOpen(true);
   };
 
-  // Function to close the modal
   const closeModal = () => {
     setIsModalOpen(false);
   };
@@ -170,9 +153,8 @@ function VehicleDetails() {
     <div>
       <div
         className={`vehicle-details ${isModalOpen ? "blur-background" : ""}`}
-        style={{ maxWidth: "800px", margin: "0 auto", textAlign: "left" }}
       >
-        <div style={{ position: "relative", marginTop: "20px" }}>
+        <div className="image-container">
           <img
             src={
               vehicle.images && vehicle.images.length > 0
@@ -180,72 +162,59 @@ function VehicleDetails() {
                 : "placeholder.jpg"
             }
             alt={`${vehicle.make} ${vehicle.model}`}
+            className="vehicle-image"
             style={{
-              width: "100%",
-              height: "400px",
-              objectFit: "cover",
-              borderRadius: "10px",
-              cursor: "pointer", // Add pointer to indicate clickable
+              objectFit: "contain",
             }}
             onClick={openImageModal} // Open modal on click
           />
-          <button
-            onClick={handleLikeToggle}
-            style={{
-              position: "absolute",
-              bottom: "10px",
-              right: "10px",
-              background: liked ? "#ff4d4d" : "#4CAF50",
-              color: "#fff",
-              padding: "10px 20px",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-          >
+          <button onClick={handleLikeToggle} className="like-button">
             {liked ? "Unlike" : "Like"}
           </button>
+          {
+            <div className="image-counter">
+              {currentImageIndex + 1}/{vehicle.images.length}
+            </div>
+          }
           {/* Previous Button */}
-          {vehicle.images && vehicle.images.length > 1 && (
-            <button
+          {vehicle.images?.length > 1 && (
+            <img
+              src={left}
+              alt="Previuos"
               onClick={prevImage}
               style={{
                 position: "absolute",
                 top: "50%",
                 left: "10px",
-                background: "rgba(0, 0, 0, 0.5)",
-                color: "#fff",
-                padding: "10px",
-                border: "none",
-                borderRadius: "5px",
+                transform: "translateY(-50%)", // Centers it vertically
+                height: "3rem", // Reduce size
+                width: "3rem",
                 cursor: "pointer",
-                fontFamily: "cursive",
-                fontSize: 25,
+                opacity: 0.7,
+                background: "#fff",
               }}
-            >
-              {"<"}
-            </button>
+              className="nav-arrow left-arrow"
+            />
           )}
+
           {/* Next Button */}
-          {vehicle.images && vehicle.images.length > 1 && (
-            <button
+          {vehicle.images?.length > 1 && (
+            <img
+              src={right}
+              alt="Next"
               onClick={nextImage}
               style={{
                 position: "absolute",
                 top: "50%",
                 right: "10px",
-                background: "rgba(0, 0, 0, 0.5)",
-                color: "#fff",
-                padding: "10px",
-                border: "none",
-                borderRadius: "5px",
+                transform: "translateY(-50%)", // Centers it vertically
+                height: "3rem", // Reduce size
+                width: "3rem",
                 cursor: "pointer",
-                fontFamily: "cursive",
-                fontSize: 25,
+                opacity: 0.7,
+                background: "#fff",
               }}
-            >
-              {">"}
-            </button>
+            />
           )}
         </div>
         <h2 style={{ fontSize: "32px", marginTop: "20px" }}>
@@ -301,10 +270,10 @@ function VehicleDetails() {
             : ""}{" "}
           {vehicle.engineType ? vehicle.engineType : ""}
         </p>
-        <p>
+        {/* <p>
           <strong>Sellers's Phone Number:</strong>{" "}
           {seller.phoneNumber ? `+91 ${seller.phoneNumber}` : "--"}
-        </p>
+        </p> */}
         <p>
           {seller.phoneNumber ? (
             <a
@@ -333,27 +302,31 @@ function VehicleDetails() {
           <span className="close" onClick={closeModal}>
             &times;
           </span>
+          {
+            <div className="image-counter-modal">
+              {currentImageIndex + 1}/{vehicle.images.length}
+            </div>
+          }
           {/* Previous Button */}
-          <button
-            className="prev-button"
-            onClick={prevImage}
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "10px",
-              background: "rgba(0, 0, 0, 0.5)",
-              color: "#fff",
-              padding: "10px",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-              fontFamily: "cursive",
-              fontSize: "25px",
-              zIndex: 1,
-            }}
-          >
-            {"<"}
-          </button>
+          {vehicle.images?.length > 1 && (
+            <img
+              src={left}
+              alt="Previuos"
+              onClick={prevImage}
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "10px",
+                transform: "translateY(-50%)", // Centers it vertically
+                height: "3rem", // Reduce size
+                width: "3rem",
+                cursor: "pointer",
+                opacity: 0.7,
+                background: "#fff",
+                borderRadius: "10px",
+              }}
+            />
+          )}
           <img
             className="modal-content"
             src={vehicle.images[currentImageIndex]}
@@ -365,26 +338,25 @@ function VehicleDetails() {
             }}
           />
           {/* Next Button */}
-          <button
-            className="next-button"
-            onClick={nextImage}
-            style={{
-              position: "absolute",
-              top: "50%",
-              right: "10px",
-              background: "rgba(0, 0, 0, 0.5)",
-              color: "#fff",
-              padding: "10px",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-              fontFamily: "cursive",
-              fontSize: "25px",
-              zIndex: 1,
-            }}
-          >
-            {">"}
-          </button>
+          {vehicle.images?.length > 1 && (
+            <img
+              src={right}
+              alt="Next"
+              onClick={nextImage}
+              style={{
+                position: "absolute",
+                top: "50%",
+                right: "10px",
+                transform: "translateY(-50%)", // Centers it vertically
+                height: "3rem", // Reduce size
+                width: "3rem",
+                cursor: "pointer",
+                opacity: 0.7,
+                background: "#fff",
+                borderRadius: "10px",
+              }}
+            />
+          )}
         </div>
       )}
     </div>

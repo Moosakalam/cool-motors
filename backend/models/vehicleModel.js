@@ -146,7 +146,7 @@ const vehicleSchema = mongoose.Schema(
     },
     expiresAt: {
       type: Date,
-      // default: Date.now() + 30 * 24 * 60 * 60 * 1000,
+      default: () => Date.now() + 30 * 24 * 60 * 60 * 1000, // Correct way to set dynamic default
       immutable: true,
     },
   },
@@ -176,10 +176,6 @@ vehicleSchema.post("findOneAndDelete", async function (vehicle) {
   await mongoose.model("Like").deleteMany({ vehicle: vehicle._id });
 
   try {
-    console.log(bucketName);
-    console.log(region);
-    console.log(accessKeyId);
-    console.log(secretAccessKey);
     //deleting the image of vehicle from s3
     for (const image of vehicle.images) {
       const key = image.split("amazonaws.com/")[1];
