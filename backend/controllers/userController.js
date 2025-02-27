@@ -178,22 +178,26 @@ exports.verifyEmailUpdate = catchAsyncError(async (req, res, next) => {
 });
 
 exports.deleteMe = catchAsyncError(async (req, res, next) => {
-  const user = await User.findById(req.user._id);
+  const { password } = req.body;
+  if (!password) {
+    return next(
+      new AppError("Please provide your password to delete your account", 400)
+    );
+  }
 
+  const user = await User.findById(req.user._id).select("+password");
   if (!user) {
     return next(new AppError("User not found", 404));
+  }
+
+  if (!(await user.correctPassword(password, user.password))) {
+    return next(new AppError("Incorrect Password.", 401));
   }
 
   // Delete all vehicles listed by the user
   for (const vehicleId of user.listedVehicles) {
     await Vehicle.findByIdAndDelete(vehicleId); // This will trigger the query middleware for cleanup
   }
-
-  // // Check for any pending vehicles listed by the user and delete them
-  // const pendingVehicles = await PendingVehicle.find({ listedBy: req.user._id });
-  // for (const pendingVehicle of pendingVehicles) {
-  //   await PendingVehicle.findByIdAndDelete(pendingVehicle._id); // Delete pending vehicles listed by the user
-  // }
 
   // Check for any pending vehicles listed by the user and delete them
   const pendingVehicles = await PendingVehicle.find({ listedBy: req.user._id });

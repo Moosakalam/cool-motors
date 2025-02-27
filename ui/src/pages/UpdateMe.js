@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./css/UpdateMe.css";
 import { useAuth } from "../AuthContext";
+import Restricted from "../utils/Restricted";
 
 const UpdateMe = () => {
   const [formData, setFormData] = useState({
@@ -94,11 +95,12 @@ const UpdateMe = () => {
     }
   };
 
-  useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/restricted");
-    }
-  }, [user, authLoading, navigate]);
+  // useEffect(() => {
+  if (!authLoading && !user) {
+    // navigate("/restricted");
+    return <Restricted />;
+  }
+  // }, [user, authLoading, navigate]);
 
   return (
     <div className="update-container">

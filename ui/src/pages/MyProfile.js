@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom"; // Import Link for navigation
 import axios from "axios";
 import { useAuth } from "../AuthContext";
 import VehicleCard from "../utils/VehicleCard";
+import Restricted from "../utils/Restricted";
 
 function MyProfile() {
   const [username, setUsername] = useState("");
@@ -68,11 +69,12 @@ function MyProfile() {
     setShowModal(false); // Close modal
   };
 
-  useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/restricted");
-    }
-  }, [user, authLoading, navigate]);
+  // useEffect(() => {
+  if (!authLoading && !user) {
+    // navigate("/restricted");
+    return <Restricted />;
+  }
+  // }, [user, authLoading, navigate]);
 
   return (
     <div style={{ padding: "20px" }}>

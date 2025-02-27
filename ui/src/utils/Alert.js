@@ -1,5 +1,5 @@
 import React from "react";
-import "./Modal.css"; // Shared styles for Alert & Confirmation
+import "./css/Modal.css"; // Shared styles for Alert & Confirmation
 
 const Alert = ({ message, onClose }) => {
   return (

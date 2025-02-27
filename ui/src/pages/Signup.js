@@ -4,6 +4,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../AuthContext";
+import eye from "../utils/images/eye.svg";
+import eyeOff from "../utils/images/eye-off.svg";
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -16,12 +18,17 @@ function Signup() {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
   const [success, setSuccess] = useState("");
   const { user, loading: authLoading } = useAuth();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    if (name === "password") setPassword(value);
+    if (name === "passwordConfirm") setPasswordConfirm(value);
   };
 
   const handleSubmit = async (e) => {
@@ -46,6 +53,8 @@ function Signup() {
       window.location.reload(); // Refresh the page after login
     } catch (err) {
       setError(err.response.data.message || "Signup failed");
+      setPassword("");
+      setPasswordConfirm("");
       setSuccess("");
     } finally {
       setLoading(false);
@@ -86,18 +95,31 @@ function Signup() {
           placeholder="Email"
           required
         />
+        <div className="password-input-wrapper">
+          <input
+            type={showPassword ? "text" : "password"}
+            name="password"
+            value={password}
+            onChange={handleChange}
+            placeholder="Password"
+            required
+          />
+          <button
+            type="button"
+            className="password-toggle"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? (
+              <img src={eye} alt="" />
+            ) : (
+              <img src={eyeOff} alt="" />
+            )}
+          </button>
+        </div>
         <input
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          placeholder="Password"
-          required
-        />
-        <input
-          type="password"
+          type={showPassword ? "text" : "password"}
           name="passwordConfirm"
-          value={formData.passwordConfirm}
+          value={passwordConfirm}
           onChange={handleChange}
           placeholder="Confirm Password"
           required
@@ -115,7 +137,7 @@ function Signup() {
             className="phone-input" // Add a class for styling
           />
         </div>
-        <button type="submit" disabled={loading}>
+        <button type="submit" disabled={loading} className="submit-btn">
           {loading ? "Loading..." : "Signup"}
         </button>
       </form>

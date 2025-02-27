@@ -2,7 +2,6 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import HomePage from "./pages/HomePage"; // Import the HomePage component
-// import VehicleList from "./VehicleList";
 import UserProfile from "./pages/UserProfile";
 import MyVehicles from "./pages/MyVehicles";
 import LikedVehicles from "./pages/LikedVehicles";
@@ -19,7 +18,7 @@ import UpdatePassword from "./pages/UpdatePassword";
 import ReviewVehicles from "./pages/ReviewVehicles";
 import EditVehicle from "./pages/EditVehicle";
 import UpdateMe from "./pages/UpdateMe";
-import Restricted from "./pages/Restricted";
+// import Restricted from "./pages/Restricted";
 import VerifyEmail from "./pages/VerifyEmail";
 import VerifyEmailUpdate from "./pages/VerifyEmailUpdate";
 import UpdateMyEmail from "./pages/UpdateMyEmail";
@@ -31,7 +30,6 @@ function App() {
         <Navbar /> {/* Navbar will be rendered on all pages */}
         <Routes>
           <Route path="/" element={<HomePage />} />
-          {/* <Route path="/" element={<VehicleList />} /> */}
           <Route path="/user/:userId" element={<UserProfile />} />
           <Route path="/my-vehicles" element={<MyVehicles />} />
           <Route path="/liked-vehicles" element={<LikedVehicles />} />
@@ -59,7 +57,7 @@ function App() {
           <Route path="/admin/review-vehicles" element={<ReviewVehicles />} />
           <Route path="/edit/:vehicleId" element={<EditVehicle />} />
           <Route path="/update-me" element={<UpdateMe />} />
-          <Route path="/restricted" element={<Restricted />} />
+          {/* <Route path="/restricted" element={<Restricted />} /> */}
         </Routes>
       </div>
     </Router>

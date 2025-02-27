@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import VehicleCard from "../utils/VehicleCard";
 import Confirmation from "../utils/Confirmation";
 import "./css/MyVehicles.css"; // External CSS file
+import Restricted from "../utils/Restricted";
 
 function MyVehicles() {
   const { user, loading: authLoading } = useAuth();
@@ -43,11 +44,12 @@ function MyVehicles() {
     }
   };
 
-  useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/restricted");
-    }
-  }, [user, authLoading, navigate]);
+  // useEffect(() => {
+  if (!authLoading && !user) {
+    // navigate("/restricted");
+    return <Restricted />;
+  }
+  // }, [user, authLoading, navigate]);
 
   return (
     <div className="my-vehicles-container">

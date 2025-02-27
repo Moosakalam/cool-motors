@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import "./Modal.css"; // Shared styles
+import "./css/Modal.css"; // Shared styles
 
 const Confirmation = ({
   message,

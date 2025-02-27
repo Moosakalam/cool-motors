@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
+import Restricted from "../utils/Restricted";
 
 const Settings = () => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -69,20 +70,26 @@ const Settings = () => {
   };
 
   const handleDeleteAccount = async () => {
-    const firstName = user?.name?.split(" ")[0] || "your";
-    const confirmationText = `delete ${firstName}'s account`;
-    const userInput = prompt(
-      `To confirm account deletion, type: "${confirmationText}"`
-    );
+    // const firstName = user?.name?.split(" ")[0] || "your";
+    // const confirmationText = `delete ${firstName}'s account`;
+    // const userInput = prompt(
+    //   `To confirm account deletion, type: "${confirmationText}"`
+    // );
 
-    if (userInput !== confirmationText) {
-      alert("Account deletion canceled. The input did not match.");
+    // if (userInput !== confirmationText) {
+    //   alert("Account deletion canceled. The input did not match.");
+    //   return;
+    // }
+    const password = prompt("Enter your password to confirm account deletion:");
+    if (!password) {
+      alert("Account deletion canceled. Password is required.");
       return;
     }
 
     try {
       await axios.delete("http://localhost:5001/api/v1/users/deleteMe", {
         withCredentials: true,
+        data: { password }, // Send password in request body
       });
       await axios.get("http://localhost:5001/api/v1/users/logout", {
         withCredentials: true,
@@ -92,18 +99,19 @@ const Settings = () => {
       navigate("/");
       window.location.reload();
     } catch (err) {
-      console.error("Error deleting account:", err);
+      // console.error("Error deleting account:", err);
       alert(
         err.response?.data?.message || "An error occurred. Please try again."
       );
     }
   };
 
-  useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/restricted");
-    }
-  }, [user, authLoading, navigate]);
+  // useEffect(() => {
+  if (!authLoading && !user) {
+    // navigate("/restricted");
+    return <Restricted />;
+  }
+  // }, [user, authLoading, navigate]);
 
   if (error) {
     return <p>{error}</p>;

@@ -42,10 +42,10 @@ function UserProfile() {
     if (user) {
       if (user._id === userId) {
         // Redirect the user to MyProfile if viewing their own profile
-        navigate("/my-profile");
+        navigate("/my-vehicles");
       }
     }
-  }, [userId, navigate]);
+  }, [userId, navigate, user]);
 
   return (
     <div style={{ padding: "20px" }}>

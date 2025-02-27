@@ -1,9 +1,10 @@
 // src/pages/UpdatePassword.js
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import "./css/UpdatePassword.css"; // Optional CSS file for styling
 import { useAuth } from "../AuthContext";
 import { useNavigate } from "react-router-dom"; // Import Link for navigation
+import Restricted from "../utils/Restricted";
 
 const UpdatePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -48,11 +49,12 @@ const UpdatePassword = () => {
     }
   };
 
-  useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/restricted");
-    }
-  }, [user, authLoading, navigate]);
+  // useEffect(() => {
+  if (!authLoading && !user) {
+    // navigate("/restricted");
+    return <Restricted />;
+  }
+  // }, [user, authLoading, navigate]);
 
   return (
     <div className="update-password-container">
@@ -69,7 +71,7 @@ const UpdatePassword = () => {
         <div className="form-group">
           <label htmlFor="currentPassword">Current Password:</label>
           <input
-            type="password"
+            type="text"
             id="currentPassword"
             value={currentPassword}
             onChange={(e) => setCurrentPassword(e.target.value)}

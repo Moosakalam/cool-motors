@@ -1,9 +1,10 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import axios from "axios";
 // import "./css/VehicleDetails.css"; // Import the CSS for the modal and blur effect
 import "./css/ReviewVehicles.css"; // Import the CSS for the modal and blur effect
+import Restricted from "../utils/Restricted";
 
 function ReviewVehicles() {
   const [vehicle, setVehicle] = useState(null);
@@ -14,7 +15,7 @@ function ReviewVehicles() {
   const [fetchLoading, setFetchLoading] = useState(false);
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // State for the current image index
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
 
   useEffect(() => {
@@ -136,11 +137,12 @@ function ReviewVehicles() {
     }
   }, [isModalOpen, nextImage, prevImage]);
 
-  useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/restricted");
-    }
-  }, [user, authLoading, navigate]);
+  // useEffect(() => {
+  if (!authLoading && !user) {
+    // navigate("/restricted");
+    return <Restricted />;
+  }
+  // }, [user, authLoading, navigate]);
 
   if (error) {
     return (

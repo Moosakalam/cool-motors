@@ -2,10 +2,13 @@ import React, { useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import "./css/ResetPassword.css";
+import eye from "../utils/images/eye.svg";
+import eyeOff from "../utils/images/eye-off.svg";
 
 function ResetPassword() {
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -41,6 +44,8 @@ function ResetPassword() {
       // }, 3000);
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong.");
+      setNewPassword("");
+      setNewPasswordConfirm("");
     } finally {
       setLoading(false);
     }
@@ -60,17 +65,28 @@ function ResetPassword() {
         <div className="form-group">
           <label htmlFor="newPassword">New Password</label>
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             id="newPassword"
             value={newPassword}
             onChange={(e) => setNewPassword(e.target.value)}
             required
           />
+          <button
+            type="button"
+            className="password-toggle"
+            onClick={() => setShowPassword(!showPassword)}
+          >
+            {showPassword ? (
+              <img src={eye} alt="" />
+            ) : (
+              <img src={eyeOff} alt="" />
+            )}
+          </button>
         </div>
         <div className="form-group">
           <label htmlFor="newPasswordConfirm">Confirm New Password</label>
           <input
-            type="password"
+            type={showPassword ? "text" : "password"}
             id="newPasswordConfirm"
             value={newPasswordConfirm}
             onChange={(e) => setNewPasswordConfirm(e.target.value)}

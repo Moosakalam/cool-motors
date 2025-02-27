@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useAuth } from "../AuthContext";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import VehicleCard from "../utils/VehicleCard";
+import Restricted from "../utils/Restricted";
 
 function LikedVehicles() {
   const { user, loading: authLoading } = useAuth();
   const [likedVehicles, setLikedVehicles] = useState([]);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   useEffect(() => {
     if (!user?._id) return;
@@ -20,11 +21,12 @@ function LikedVehicles() {
       .catch((error) => console.error("Error fetching liked vehicles:", error));
   }, [user]);
 
-  useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/restricted");
-    }
-  }, [user, authLoading, navigate]);
+  // useEffect(() => {
+  if (!authLoading && !user) {
+    // navigate("/restricted");
+    return <Restricted />;
+  }
+  // }, [user, authLoading, navigate]);
 
   return (
     <div style={{ padding: "20px" }}>

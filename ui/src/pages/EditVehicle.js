@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import "./css/EditVehicle.css";
+import Restricted from "../utils/Restricted";
 
 const EditVehicle = () => {
   const carMakes = [
@@ -183,11 +184,12 @@ const EditVehicle = () => {
     }
   };
 
-  useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/restricted");
-    }
-  }, [user, authLoading, navigate]);
+  // useEffect(() => {
+  if (!authLoading && !user) {
+    // navigate("/restricted");
+    return <Restricted />;
+  }
+  // }, [user, authLoading]);
 
   if (fetchLoading) return <div>Loading...</div>;
   if (error) {

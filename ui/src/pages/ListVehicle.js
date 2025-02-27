@@ -1,9 +1,10 @@
 import "./css/ListVehicle.css";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Use this for redirection
 import { useAuth } from "../AuthContext";
 import axios from "axios";
 import { locations, states } from "../utils/data";
+import Restricted from "../utils/Restricted";
 
 function ListVehicle() {
   const [formData, setFormData] = useState({
@@ -122,11 +123,12 @@ function ListVehicle() {
     }
   };
 
-  useEffect(() => {
-    if (!authLoading && !user) {
-      navigate("/restricted");
-    }
-  }, [user, authLoading, navigate]);
+  // useEffect(() => {
+  if (!authLoading && !user) {
+    // navigate("/restricted");
+    return <Restricted />;
+  }
+  // }, [user, authLoading, navigate]);
 
   return (
     <div className="vehicle-list-container">

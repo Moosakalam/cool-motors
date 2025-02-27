@@ -1,57 +1,77 @@
 .container {
-  max-width: 400px; /* Limit the width of the form */
-  margin: auto; /* Center the form */
-  padding: 20px; /* Add padding around the form */
-  border: 1px solid #ddd; /* Light border */
-  border-radius: 8px; /* Rounded corners */
-  background-color: #f9f9f9; /* Light background color */
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+  max-width: 300px; /* Slightly narrower for a better vertical layout */
+  margin: 50px auto; /* Center it with spacing */
+  padding: 20px;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .container h2 {
-  text-align: center; /* Center the title */
-  margin-bottom: 20px; /* Space below the title */
+  margin-bottom: 15px;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.container form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px; /* Even spacing between fields */
+}
+
+.form-group {
+  position: relative;
+  width: 100%;
 }
 
 .container input {
-  width: 100%; /* Full width inputs */
-  padding: 12px; /* More padding for comfort */
-  margin: 10px 0; /* Space above and below inputs */
-  border: 1px solid #ccc; /* Light border */
-  border-radius: 4px; /* Rounded corners */
-  box-sizing: border-box; /* Include padding and border in width */
-  font-size: 16px; /* Larger font size for readability */
+  width: 100%;
+  padding: 10px;
+  padding-right: 35px; /* Space for eye icon */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+  box-sizing: border-box;
 }
 
-.container button {
-  width: 100%; /* Full width button */
-  padding: 12px; /* More padding */
-  background-color: #007bff; /* Bootstrap primary color */
-  color: white; /* White text color */
-  border: none; /* Remove border */
-  border-radius: 4px; /* Rounded corners */
-  cursor: pointer; /* Pointer cursor on hover */
-  font-weight: bold; /* Bold text */
-  font-size: 16px; /* Consistent font size */
-  transition: background-color 0.3s; /* Smooth transition on hover */
+/* Password toggle inside the first password field */
+.password-toggle {
+  position: absolute;
+  right: 10px;
+  top: 70%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
 }
 
-.container button:hover {
-  background-color: #0056b3; /* Darker shade on hover */
+.password-toggle img {
+  width: 16px;
+  height: 16px;
+  opacity: 0.6; /* Make it subtle */
 }
 
-.container p {
-  text-align: center; /* Center align text */
+/* Styling for the submit button */
+.submit-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 14px;
+  transition: background-color 0.3s;
 }
 
-.error {
-  color: red; /* Red color for error messages */
-  text-align: center; /* Center align error messages */
-}
-
-.success {
-  color: green; /* Green color for success messages */
-  text-align: center; /* Center align success messages */
+.submit-btn:hover {
+  background-color: #0056b3;
 }
 
 .phone-number-container {
@@ -60,10 +80,51 @@
 }
 
 .phone-code {
-  margin-right: 8px; /* Adjust spacing between +91 and the input */
-  font-weight: bold; /* Optional: make it bold for emphasis */
+  font-weight: bold;
+  padding: 0 10px;
 }
 
 .phone-input {
-  flex: 1; /* Allow the input to take remaining space */
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 14px;
+}
+
+.error {
+  color: red;
+  font-size: 13px;
+  text-align: center;
+}
+
+.success {
+  color: green;
+  font-size: 13px;
+  text-align: center;
+}
+
+.container p {
+  font-size: 13px;
+  text-align: center;
+}
+
+.container a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.container a:hover {
+  text-decoration: underline;
+}
+
+.password-input-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+}
+
+.password-input-wrapper input {
+  flex: 1;
+  padding-right: 40px;
 }
