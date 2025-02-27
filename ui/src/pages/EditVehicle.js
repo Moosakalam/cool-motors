@@ -4,6 +4,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import "./css/EditVehicle.css";
 import Restricted from "../utils/Restricted";
+import { locations, states } from "../utils/data";
 
 const EditVehicle = () => {
   const carMakes = [
@@ -52,63 +53,6 @@ const EditVehicle = () => {
     "Rotary",
   ];
   const ownerships = Array.from({ length: 10 }, (_, i) => i + 1);
-  const states = [
-    // States
-    "Andhra Pradesh",
-    "Arunachal Pradesh",
-    "Assam",
-    "Bihar",
-    "Chhattisgarh",
-    "Goa",
-    "Gujarat",
-    "Haryana",
-    "Himachal Pradesh",
-    "Jharkhand",
-    "Karnataka",
-    "Kerala",
-    "Madhya Pradesh",
-    "Maharashtra",
-    "Manipur",
-    "Meghalaya",
-    "Mizoram",
-    "Nagaland",
-    "Odisha",
-    "Punjab",
-    "Rajasthan",
-    "Sikkim",
-    "Tamil Nadu",
-    "Telangana",
-    "Tripura",
-    "Uttar Pradesh",
-    "Uttarakhand",
-    "West Bengal",
-
-    // Union Territories
-    "Andaman and Nicobar Islands",
-    "Chandigarh",
-    "Dadra and Nagar Haveli and Daman and Diu",
-    "Delhi",
-    "Jammu and Kashmir",
-    "Ladakh",
-    "Lakshadweep",
-    "Puducherry",
-  ];
-  const locations = [
-    "Mumbai",
-    "Delhi",
-    "Bangalore",
-    "Hyderabad",
-    "Chennai",
-    "Kolkata",
-    "Pune",
-    "Ahmedabad",
-    "Jaipur",
-    "Surat",
-    "Lucknow",
-    "Kanpur",
-    "Nagpur",
-    "Other",
-  ];
 
   const { vehicleId } = useParams();
   const [vehicleData, setVehicleData] = useState(null);
@@ -132,10 +76,11 @@ const EditVehicle = () => {
           }
         );
         const filteredData = filterFields(response.data.data.vehicle);
-        setVehicleData(filteredData);
         if (user._id !== filteredData.listedBy) {
           setError("You don't have access to this page.");
         }
+        delete filteredData.listedBy;
+        setVehicleData(filteredData);
       } catch (err) {
         setError(err.response?.data?.message || "Failed to fetch vehicle data");
       } finally {
@@ -146,7 +91,8 @@ const EditVehicle = () => {
   }, [vehicleId, user]);
 
   const filterFields = (data) => {
-    const { __v, updatedAt, images, _id, ...filteredData } = data;
+    const { __v, updatedAt, images, _id, numberOfLikes, ...filteredData } =
+      data;
     return filteredData;
   };
 
@@ -176,7 +122,7 @@ const EditVehicle = () => {
         }
       );
       setSuccessMessage("Vehicle updated successfully!");
-      setTimeout(() => navigate("/my-profile"), 2000);
+      setTimeout(() => navigate("/my-vehicles"), 2000);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to update vehicle");
     } finally {
@@ -192,13 +138,6 @@ const EditVehicle = () => {
   // }, [user, authLoading]);
 
   if (fetchLoading) return <div>Loading...</div>;
-  if (error) {
-    return (
-      <div>
-        <h2 align="center">{error}</h2>
-      </div>
-    );
-  }
   if (!vehicleData) return <div>Loading vehicle data...</div>;
 
   return (
@@ -392,6 +331,8 @@ const EditVehicle = () => {
             )}
           </div>
         ))}
+        {error && <p className="error-message">{error}</p>}
+
         <button type="submit" className="update-button" disabled={loading}>
           {loading ? "Updating..." : "Update"}
         </button>

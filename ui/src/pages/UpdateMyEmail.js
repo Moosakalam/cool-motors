@@ -39,7 +39,7 @@ const UpdateMyEmail = () => {
       setMessage("Verification email sent. Please check your inbox.");
       setSuccess(true);
 
-      setTimeout(() => navigate("/my-profile"), 2500);
+      // setTimeout(() => navigate("/settings"), 2500);
     } catch (error) {
       console.error("Error updating email:", error);
       setMessage(

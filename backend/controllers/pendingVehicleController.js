@@ -45,9 +45,9 @@ exports.listVehicle = catchAsyncError(async (req, res, next) => {
   const files = req.files; // Handling multiple files
 
   // Check if there are files to upload
-  // if (!files || files.length === 0) {
-  //   return next(new AppError("No images provided", 422));
-  // }
+  if (!files || files.length === 0) {
+    return next(new AppError("No images provided", 422));
+  }
 
   const imageUrls = [];
 

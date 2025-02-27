@@ -84,7 +84,7 @@ const UpdateMe = () => {
 
       setMessage("Profile updated successfully!");
       setSuccess(true);
-      setTimeout(() => navigate("/my-profile"), 2000);
+      setTimeout(() => navigate("/settings"), 2000);
     } catch (error) {
       console.error("Error updating profile:", error);
       setMessage(

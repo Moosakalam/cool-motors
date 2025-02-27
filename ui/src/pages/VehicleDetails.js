@@ -5,6 +5,7 @@ import "./css/VehicleDetails.css"; // Import the CSS for the modal and blur effe
 import { useAuth } from "../AuthContext";
 import left from "../utils/images/left.png";
 import right from "../utils/images/right.png";
+import whatsApp from "../utils/images/WhatsAppButton.png";
 
 function VehicleDetails() {
   const { id } = useParams(); // Vehicle ID from URL
@@ -277,11 +278,16 @@ function VehicleDetails() {
         <p>
           {seller.phoneNumber ? (
             <a
-              href={`https://wa.me/+918885498289?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`}
+              // href={`https://wa.me/${seller.phoneNumber}?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`}
+              href={`whatsapp://send?phone=${seller.phoneNumber}&text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`}
               target="_blank"
               rel="noopener noreferrer"
             >
-              WhatsApp Chat
+              <img
+                src={whatsApp}
+                alt="WhatsApp Chat"
+                style={{ height: "50px", width: "150px", objectFit: "contain" }}
+              ></img>
             </a>
           ) : (
             ""

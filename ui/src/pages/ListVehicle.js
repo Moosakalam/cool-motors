@@ -373,7 +373,7 @@ function ListVehicle() {
             type="file"
             multiple // Enable multiple file selection
             onChange={handleFileChange}
-            // required
+            required
             accept="image/*" // Accept only image files
           />
         </div>

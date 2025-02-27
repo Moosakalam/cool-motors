@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
+const { log } = require("console");
 
 const userSchema = mongoose.Schema({
   name: {
@@ -38,6 +39,9 @@ const userSchema = mongoose.Schema({
     validate: {
       validator: function (value) {
         // Ensure phone number has exactly 10 digits
+        value = value.substring(3);
+        console.log(value);
+
         return /^\d{10}$/.test(value);
       },
       message: "Please provide a valid 10-digit phone number",
@@ -158,8 +162,8 @@ userSchema.methods.createEmailVerificationToken = function () {
   // console.log({ resetToken }, this.passwordResetToken);
 
   //password reset token expires in 10 mins
-  // this.emailVerificationExpires = Date.now() + 24 * 60 * 60 * 1000;
-  this.emailVerificationExpires = Date.now() + 10 * 1000;
+  this.emailVerificationExpires = Date.now() + 24 * 60 * 60 * 1000;
+  // this.emailVerificationExpires = Date.now() + 10 * 1000;
 
   return resetToken;
 };

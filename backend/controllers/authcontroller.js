@@ -70,7 +70,7 @@ exports.signup = catchAsyncError(async (req, res, next) => {
     email: req.body.email,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
-    phoneNumber: req.body.phoneNumber,
+    phoneNumber: `+91${req.body.phoneNumber}`,
     isVerified: false, // New users are unverified
   });
 

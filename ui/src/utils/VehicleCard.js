@@ -12,7 +12,7 @@ function VehicleCard({ vehicle }) {
     >
       <div
         key={vehicle._id}
-        onClick={() => (window.location.href = `/vehicle/${vehicle._id}`)}
+        // onClick={() => (window.location.href = `/vehicle/${vehicle._id}`)}
         style={{
           border: "1px solid #ccc",
           cursor: "pointer",
