@@ -6,6 +6,8 @@ import { useAuth } from "../AuthContext";
 import left from "../utils/images/left.png";
 import right from "../utils/images/right.png";
 import whatsApp from "../utils/images/WhatsAppButton.png";
+import heart from "../utils/images/heart.png";
+import fullHeart from "../utils/images/full-heart.png";
 
 function VehicleDetails() {
   const { id } = useParams(); // Vehicle ID from URL
@@ -170,7 +172,12 @@ function VehicleDetails() {
             onClick={openImageModal} // Open modal on click
           />
           <button onClick={handleLikeToggle} className="like-button">
-            {liked ? "Unlike" : "Like"}
+            <img
+              src={liked ? fullHeart : heart}
+              alt="Like"
+              // className="heart-icon"
+              style={{ width: "30px", height: "30px" }}
+            />
           </button>
           {
             <div className="image-counter">
@@ -340,7 +347,7 @@ function VehicleDetails() {
             style={{
               maxWidth: "90%",
               maxHeight: "90%",
-              objectFit: "contain",
+              // objectFit: "contain",
             }}
           />
           {/* Next Button */}

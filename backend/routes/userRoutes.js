@@ -40,9 +40,9 @@ router.patch(
 router.get("/verify-email-update/:token", userController.verifyEmailUpdate);
 
 router.patch(
-  "/updatePassword",
+  "/changePassword",
   authController.protect,
-  authController.updatePassword
+  authController.changePassword
 );
 
 router.patch("/updateMe", authController.protect, userController.updateMe);

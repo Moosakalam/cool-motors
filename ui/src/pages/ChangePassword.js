@@ -1,12 +1,12 @@
-// src/pages/UpdatePassword.js
+// src/pages/ChangePassword.js
 import React, { useState } from "react";
 import axios from "axios";
-import "./css/UpdatePassword.css"; // Optional CSS file for styling
+import "./css/ChangePassword.css"; // Optional CSS file for styling
 import { useAuth } from "../AuthContext";
 import { useNavigate } from "react-router-dom"; // Import Link for navigation
 import Restricted from "../utils/Restricted";
 
-const UpdatePassword = () => {
+const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
@@ -16,13 +16,13 @@ const UpdatePassword = () => {
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
 
-  const handleUpdatePassword = async (e) => {
+  const handleChangePassword = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
       const response = await axios.patch(
-        "http://localhost:5001/api/v1/users/updatePassword",
+        "http://localhost:5001/api/v1/users/changePassword",
         {
           currentPassword,
           password: newPassword,
@@ -33,7 +33,7 @@ const UpdatePassword = () => {
         }
       );
 
-      setMessage(response.data.message || "Password updated successfully.");
+      setMessage(response.data.message || "Password changed successfully.");
       setError("");
 
       setTimeout(() => {
@@ -58,11 +58,11 @@ const UpdatePassword = () => {
 
   return (
     <div className="update-password-container">
-      <h2>Update Password</h2>
+      <h2>Change Password</h2>
       {message && <p className="success-message">{message}</p>}
       {error && <p className="error-message">{error}</p>}
       <form
-        onSubmit={handleUpdatePassword}
+        onSubmit={handleChangePassword}
         style={{
           pointerEvents: loading ? "none" : "auto",
           opacity: loading ? 0.6 : 1,
@@ -102,11 +102,11 @@ const UpdatePassword = () => {
         </div>
 
         <button type="submit" className="btn-update" disabled={loading}>
-          {loading ? "Updating..." : "Update Password"}
+          {loading ? "Changing..." : "Change Password"}
         </button>
       </form>
     </div>
   );
 };
 
-export default UpdatePassword;
+export default ChangePassword;

@@ -345,7 +345,7 @@ exports.resetPassword = catchAsyncError(async (req, res, next) => {
   });
 });
 
-exports.updatePassword = catchAsyncError(async (req, res, next) => {
+exports.changePassword = catchAsyncError(async (req, res, next) => {
   // 1) Get user
   const user = await User.findById(req.user.id).select("+password");
 

@@ -14,7 +14,7 @@ import SearchVehiclesPage from "./pages/SearchVehiclesPage";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import Settings from "./pages/Settings";
-import UpdatePassword from "./pages/UpdatePassword";
+import ChangePassword from "./pages/ChangePassword";
 import ReviewVehicles from "./pages/ReviewVehicles";
 import EditVehicle from "./pages/EditVehicle";
 import UpdateMe from "./pages/UpdateMe";
@@ -53,7 +53,7 @@ function App() {
             element={<VerifyEmailUpdate />}
           />
           <Route path="/settings" element={<Settings />} />
-          <Route path="/update-password" element={<UpdatePassword />} />
+          <Route path="/update-password" element={<ChangePassword />} />
           <Route path="/admin/review-vehicles" element={<ReviewVehicles />} />
           <Route path="/edit/:vehicleId" element={<EditVehicle />} />
           <Route path="/update-me" element={<UpdateMe />} />

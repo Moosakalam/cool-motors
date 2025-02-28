@@ -33,10 +33,6 @@ const Settings = () => {
     fetchUserInfo();
   }, [user]);
 
-  const handleChangePassword = () => {
-    navigate("/change-password");
-  };
-
   const handleUpdatePassword = () => {
     navigate("/update-password");
   };
@@ -121,21 +117,6 @@ const Settings = () => {
     <div style={{ padding: "20px" }}>
       <h2>Settings</h2>
       <button
-        onClick={handleChangePassword}
-        style={{
-          display: "block",
-          margin: "10px 0",
-          padding: "10px 20px",
-          backgroundColor: "#007bff",
-          color: "#fff",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-        }}
-      >
-        Change Password
-      </button>
-      <button
         onClick={handleUpdatePassword}
         style={{
           display: "block",
@@ -148,7 +129,7 @@ const Settings = () => {
           cursor: "pointer",
         }}
       >
-        Update Password
+        Change Password
       </button>
       <button
         onClick={handleUpdateProfile}

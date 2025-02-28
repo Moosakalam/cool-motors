@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./css/UpdateMe.css";
 import { useAuth } from "../AuthContext";
@@ -10,7 +10,7 @@ const UpdateMyEmail = () => {
   const [message, setMessage] = useState("");
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
 
   useEffect(() => {

@@ -1,156 +1,77 @@
-import React, { useEffect, useState } from "react";
-import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
-import axios from "axios";
-import { useAuth } from "../AuthContext";
-import "./css/VehicleDetails.css";
+import React, { useState, useContext } from "react";
+import { AuthContext } from "../AuthContext"; // Import AuthContext
+import { useNavigate } from "react-router-dom";
+import heart from "./images/heart.png";
+import fullHeart from "./images/full-heart.png";
 
-function VehicleDetails() {
-  const { id } = useParams();
-  const [vehicle, setVehicle] = useState(null);
-  const [seller, setSeller] = useState(null);
-  const [liked, setLiked] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+function VehicleCard({ vehicle }) {
+  const { user } = useContext(AuthContext); // Get user from AuthContext
+  const [isHovered, setIsHovered] = useState(false);
+  const [liked, setLiked] = useState(false); // Track like state
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const location = useLocation();
 
-  useEffect(() => {
-    axios
-      .get(`http://localhost:5001/api/v1/vehicles/${id}`, {
-        withCredentials: true,
-      })
-      .then(({ data }) => {
-        setVehicle(data.data.vehicle);
-        if (data.data.vehicle.listedBy) {
-          return axios.get(
-            `http://localhost:5001/api/v1/users/${data.data.vehicle.listedBy}`,
-            { withCredentials: true }
-          );
-        }
-      })
-      .then((res) => res && setSeller(res.data.data.user))
-      .catch(console.error)
-      .finally(() => setLoading(false));
-  }, [id]);
+  const handleLikeClick = (e) => {
+    e.preventDefault(); // Prevent navigation on click
 
-  useEffect(() => {
-    if (!vehicle || !user) return;
-    axios
-      .get(
-        `http://localhost:5001/api/v1/vehicles/${vehicle._id}/likes/is-liked`,
-        { withCredentials: true }
-      )
-      .then(({ data }) => setLiked(data.data.isLiked))
-      .catch(console.error);
-  }, [vehicle, user]);
-
-  const handleLikeToggle = async () => {
     if (!user) {
-      if (window.confirm("Login to like this vehicle?")) {
-        navigate(`/login?redirect=${encodeURIComponent(location.pathname)}`);
+      // User not logged in, ask to login
+      const confirmLogin = window.confirm(
+        "You need to login to like this vehicle. Do you want to login?"
+      );
+      if (confirmLogin) {
+        navigate("/login");
       }
       return;
     }
-    try {
-      await axios[liked ? "delete" : "post"](
-        `http://localhost:5001/api/v1/vehicles/${id}/likes`,
-        {},
-        { withCredentials: true }
-      );
-      setLiked(!liked);
-    } catch (error) {
-      console.error("Error updating like status:", error);
-    }
+
+    // Toggle liked state (if logged in)
+    setLiked(!liked);
   };
 
-  const nextImage = () =>
-    setCurrentImageIndex((i) => (i + 1 < vehicle.images.length ? i + 1 : i));
-  const prevImage = () => setCurrentImageIndex((i) => (i > 0 ? i - 1 : i));
-
-  if (loading) return <div>Loading...</div>;
-  if (!vehicle) return <div>Vehicle not found</div>;
-
   return (
-    <div
-      className={`vehicle-details ${isModalOpen ? "blur-background" : ""}`}
-      style={{ maxWidth: 800, margin: "0 auto" }}
+    <a
+      href={`/vehicle/${vehicle._id}`}
+      target="_blank"
+      rel="noopener noreferrer"
+      style={{ textDecoration: "none", color: "inherit" }}
     >
-      <div style={{ position: "relative", marginTop: 20 }}>
+      <div
+        className="vehicle-card"
+        key={vehicle._id}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        {/* Like Button */}
         <img
-          src={vehicle.images?.[currentImageIndex] || "placeholder.jpg"}
-          alt="Vehicle"
-          style={{
-            width: "100%",
-            height: 400,
-            objectFit: "cover",
-            borderRadius: 10,
-            cursor: "pointer",
-          }}
-          onClick={() => setIsModalOpen(true)}
+          src={liked ? fullHeart : heart}
+          alt="Like"
+          className="like-button"
+          onClick={handleLikeClick}
         />
-        <button
-          onClick={handleLikeToggle}
-          style={{ position: "absolute", bottom: 10, right: 10 }}
-        >
-          {liked ? "Unlike" : "Like"}
-        </button>
-        {vehicle.images?.length > 1 && (
-          <div
-            style={{
-              position: "absolute",
-              top: 10,
-              right: 10,
-              background: "rgba(0,0,0,0.7)",
-              color: "#fff",
-              padding: "5px 10px",
-              borderRadius: 5,
-            }}
-          >
-            {currentImageIndex + 1}/{vehicle.images.length}
-          </div>
-        )}
-        {currentImageIndex > 0 && (
-          <button
-            onClick={prevImage}
-            style={{ position: "absolute", top: "50%", left: 10 }}
-          >
-            {"<"}
-          </button>
-        )}
-        {currentImageIndex < vehicle.images.length - 1 && (
-          <button
-            onClick={nextImage}
-            style={{ position: "absolute", top: "50%", right: 10 }}
-          >
-            {">"}
-          </button>
-        )}
+
+        {/* Vehicle Image */}
+        <div className="vehicle-image">
+          <img
+            src={
+              vehicle.images && vehicle.images.length > 0
+                ? vehicle.images[0]
+                : "placeholder.jpg"
+            }
+            alt={`${vehicle.make} ${vehicle.model}`}
+            className={`vehicle-img ${isHovered ? "dimmed" : ""}`}
+          />
+        </div>
+
+        {/* Vehicle Details */}
+        <h2 className="vehicle-title">
+          {vehicle.year} {vehicle.make} {vehicle.model}
+        </h2>
+        <h1 className="vehicle-price">
+          ₹{vehicle.price.toLocaleString("en-IN")}
+        </h1>
       </div>
-      <h2>
-        {vehicle.year} {vehicle.make} {vehicle.model}
-      </h2>
-      <h1>₹{vehicle.price.toLocaleString("en-IN")}</h1>
-      <p>
-        <strong>Fuel Type:</strong> {vehicle.fuelType}
-      </p>
-      <p>
-        <strong>Transmission:</strong> {vehicle.transmission}
-      </p>
-      <p>
-        <strong>Odometer:</strong> {vehicle.odometer} km
-      </p>
-      <p>
-        <strong>Seller:</strong>{" "}
-        {seller ? (
-          <Link to={`/user/${seller._id}`}>{seller.name}</Link>
-        ) : (
-          "Loading seller details..."
-        )}
-      </p>
-    </div>
+    </a>
   );
 }
 
-export default VehicleDetails;
+export default VehicleCard;
