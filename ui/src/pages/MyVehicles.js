@@ -28,6 +28,7 @@ function MyVehicles() {
   }, [user]);
 
   const handleDelete = async () => {
+    setShowConfirm(false);
     try {
       await axios.delete(
         `http://localhost:5001/api/v1/vehicles/${vehicleToDelete}`,
@@ -88,7 +89,7 @@ function MyVehicles() {
           message="Are you sure you want to delete this vehicle?"
           confirmText="Delete"
           onCancel={() => setShowConfirm(false)}
-          onConfirm={handleDelete}
+          onConfirm={() => handleDelete()}
         />
       )}
     </div>

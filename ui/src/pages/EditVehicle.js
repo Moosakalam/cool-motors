@@ -5,6 +5,7 @@ import { useAuth } from "../AuthContext";
 import "./css/EditVehicle.css";
 import Restricted from "../utils/Restricted";
 import { locations, states } from "../utils/data";
+import Alert from "../utils/Alert";
 
 const EditVehicle = () => {
   const carMakes = [
@@ -63,6 +64,7 @@ const EditVehicle = () => {
   const [successMessage, setSuccessMessage] = useState(null);
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
+  const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
     const fetchVehicleData = async () => {
@@ -123,6 +125,7 @@ const EditVehicle = () => {
       );
       setSuccessMessage("Vehicle updated successfully!");
       setTimeout(() => navigate("/my-vehicles"), 2000);
+      setShowAlert(true);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to update vehicle");
     } finally {
@@ -143,9 +146,9 @@ const EditVehicle = () => {
   return (
     <div className="edit-vehicle-container">
       <h2>Edit Vehicle</h2>
-      {successMessage && (
+      {/* {successMessage && (
         <div className="success-message">{successMessage}</div>
-      )}
+      )} */}
       <form
         onSubmit={handleUpdate}
         className="edit-vehicle-form"
@@ -337,6 +340,12 @@ const EditVehicle = () => {
           {loading ? "Updating..." : "Update"}
         </button>
       </form>
+      {showAlert && (
+        <Alert
+          message={successMessage}
+          onClose={() => navigate("/my-vehicles")}
+        />
+      )}
     </div>
   );
 };

@@ -4,6 +4,7 @@ import axios from "axios";
 import "./css/UpdateMe.css";
 import { useAuth } from "../AuthContext";
 import Restricted from "../utils/Restricted";
+import Alert from "../utils/Alert";
 
 const UpdateMe = () => {
   const [formData, setFormData] = useState({
@@ -11,11 +12,13 @@ const UpdateMe = () => {
     phoneNumber: "",
   });
   const [originalData, setOriginalData] = useState({});
-  const [message, setMessage] = useState("");
+  // const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
+  // const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
+  const [showAlert, setShowAlert] = useState(false);
 
   // Fetch user data
   const fetchUserData = useCallback(async () => {
@@ -34,7 +37,7 @@ const UpdateMe = () => {
       setOriginalData(userData);
     } catch (error) {
       console.error("Error fetching user data:", error);
-      setMessage(
+      setError(
         error.response?.data?.message ||
           "Failed to load user data. Please try again."
       );
@@ -59,7 +62,7 @@ const UpdateMe = () => {
 
     // Prevent submitting unchanged data
     if (JSON.stringify(formData) === JSON.stringify(originalData)) {
-      setMessage("No changes detected.");
+      setError("No changes detected.");
       setLoading(false);
       return;
     }
@@ -72,7 +75,7 @@ const UpdateMe = () => {
       );
 
       if (Object.keys(updatedData).length === 0) {
-        setMessage("No valid changes detected.");
+        setError("No valid changes detected.");
         return;
       }
 
@@ -82,12 +85,14 @@ const UpdateMe = () => {
         { withCredentials: true }
       );
 
-      setMessage("Profile updated successfully!");
-      setSuccess(true);
-      setTimeout(() => navigate("/settings"), 2000);
+      // setMessage("Profile updated successfully!");
+      // setSuccess(true);
+      // setTimeout(() => navigate("/settings"), 2000);
+      setError("");
+      setShowAlert(true);
     } catch (error) {
       console.error("Error updating profile:", error);
-      setMessage(
+      setError(
         error.response?.data?.message || "An error occurred. Please try again."
       );
     } finally {
@@ -105,9 +110,9 @@ const UpdateMe = () => {
   return (
     <div className="update-container">
       <h1>Update Profile</h1>
-      {message && (
+      {/* {message && (
         <p className={`message ${success ? "success" : "error"}`}>{message}</p>
-      )}
+      )} */}
       <form
         onSubmit={handleSubmit}
         className="update-form"
@@ -141,7 +146,14 @@ const UpdateMe = () => {
         <button type="submit" className="submit-btn" disabled={loading}>
           {loading ? "Updating..." : "Update"}
         </button>
+        {error && <p className="error">{error}</p>}
       </form>
+      {showAlert && (
+        <Alert
+          message="Profile updated successfully!"
+          onClose={() => navigate("/settings")}
+        />
+      )}
     </div>
   );
 };

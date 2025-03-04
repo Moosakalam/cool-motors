@@ -6,6 +6,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import eye from "../utils/images/eye.svg";
 import eyeOff from "../utils/images/eye-off.svg";
+import Alert from "../utils/Alert";
 
 function Signup() {
   const [formData, setFormData] = useState({
@@ -23,6 +24,7 @@ function Signup() {
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [success, setSuccess] = useState("");
   const { user, loading: authLoading } = useAuth();
+  const [showAlert, setShowAlert] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,13 +48,14 @@ function Signup() {
         passwordConfirm: "",
       });
       setError("");
-      alert(
-        "A verification link has been sent to you. Please visit it to verify your email."
-      );
-      navigate("/"); // Redirect to home page after login
-      window.location.reload(); // Refresh the page after login
+      setShowAlert(true);
+      // alert(
+      //   "A verification link has been sent to you. Please visit it to verify your email."
+      // );
+      // navigate("/"); // Redirect to home page after login
+      // window.location.reload(); // Refresh the page after login
     } catch (err) {
-      setError(err.response.data.message || "Signup failed");
+      setError(err.message || "Signup failed");
       setPassword("");
       setPasswordConfirm("");
       setSuccess("");
@@ -148,6 +151,15 @@ function Signup() {
           Already have an account? <Link to="/login">Login</Link>
         </p>
       </div>
+      {showAlert && (
+        <Alert
+          message="A verification link has been sent to you. Please visit it to verify your email."
+          onClose={() => {
+            navigate("/");
+            window.location.reload();
+          }}
+        />
+      )}
     </div>
   );
 }

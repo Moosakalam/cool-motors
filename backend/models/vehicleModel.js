@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const { S3Client, DeleteObjectCommand } = require("@aws-sdk/client-s3");
 require("dotenv").config();
+const { states } = require("../utils/data");
 
 const bucketName = process.env.AWS_BUCKET_NAME;
 const region = process.env.AWS_BUCKET_REGION;
@@ -106,6 +107,7 @@ const vehicleSchema = mongoose.Schema(
     },
     state: {
       type: String,
+      enum: { values: states, message: "{VALUE} is not a valid state" },
       required: [true, "Please enter the state(location) of your vehicle"],
     },
     location: {

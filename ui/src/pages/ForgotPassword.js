@@ -1,12 +1,16 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import Link for navigation
 import axios from "axios";
 import "./css/ForgotPassword.css"; // Add your styles here
+import Alert from "../utils/Alert";
 
 function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+  const [showAlert, setShowAlert] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -21,6 +25,7 @@ function ForgotPassword() {
       );
       setMessage(response.data.message || "Reset link sent to your email.");
       setError(""); // Clear any previous errors
+      setShowAlert(true);
     } catch (err) {
       setError(err.response.data.message || "Something went wrong.");
       setMessage(""); // Clear success message
@@ -59,8 +64,9 @@ function ForgotPassword() {
         </button>
       </form>
 
-      {message && <p className="success-message">{message}</p>}
+      {/* {message && <p className="success-message">{message}</p>} */}
       {error && <p className="error-message">{error}</p>}
+      {showAlert && <Alert message={message} onClose={() => navigate("/")} />}
     </div>
   );
 }

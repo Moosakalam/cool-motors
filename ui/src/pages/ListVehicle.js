@@ -5,6 +5,7 @@ import { useAuth } from "../AuthContext";
 import axios from "axios";
 import { locations, states } from "../utils/data";
 import Restricted from "../utils/Restricted";
+import Alert from "../utils/Alert";
 
 function ListVehicle() {
   const [formData, setFormData] = useState({
@@ -27,6 +28,7 @@ function ListVehicle() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [showAlert, setShowAlert] = useState(false);
 
   const carMakes = [
     "Toyota",
@@ -114,8 +116,9 @@ function ListVehicle() {
       );
 
       setError("");
-      alert("Details submitted successfully. Please wait for update (email).");
-      navigate("/");
+      // alert("Details submitted successfully. Please wait for update (email).");
+      // navigate("/");
+      setShowAlert(true);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to add vehicle");
     } finally {
@@ -386,6 +389,14 @@ function ListVehicle() {
         </button>
       </form>
       {error && <p className="error-message">{error}</p>}
+      {showAlert && (
+        <Alert
+          message={
+            "Details submitted successfully. Please wait for update (email)."
+          }
+          onClose={() => navigate("/")}
+        />
+      )}
     </div>
   );
 }

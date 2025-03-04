@@ -120,6 +120,7 @@ exports.updateVehicle = catchAsyncError(async (req, res, next) => {
     ownership: req.body.ownership || vehicle.ownership,
     description: req.body.description || vehicle.description,
     location: req.body.location || vehicle.location,
+    state: req.body.state || vehicle.state,
   };
 
   // Update the vehicle in the database

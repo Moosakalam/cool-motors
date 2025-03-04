@@ -4,6 +4,7 @@ import axios from "axios";
 import "./css/ResetPassword.css";
 import eye from "../utils/images/eye.svg";
 import eyeOff from "../utils/images/eye-off.svg";
+import Alert from "../utils/Alert";
 
 function ResetPassword() {
   const [newPassword, setNewPassword] = useState("");
@@ -13,6 +14,7 @@ function ResetPassword() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { resetToken } = useParams(); // Extract token from URL params
+  const [showAlert, setShowAlert] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,12 +37,14 @@ function ResetPassword() {
         },
         { withCredentials: true }
       );
-      alert(
-        "Password has been reset successfully. Please login with the new password."
-      );
+      // alert(
+      //   "Password has been reset successfully. Please login with the new password."
+      // );
       setError("");
+      setShowAlert(true);
+
       // setTimeout(() => {
-      navigate("/login"); // Redirect to login page
+      // navigate("/login"); // Redirect to login page
       // }, 3000);
     } catch (err) {
       setError(err.response?.data?.message || "Something went wrong.");
@@ -102,6 +106,12 @@ function ResetPassword() {
         </button>
       </form>
       {error && <p className="error-message">{error}</p>}
+      {showAlert && (
+        <Alert
+          message="Password has been reset successfully. Please login with the new password."
+          onClose={() => navigate("/login")}
+        />
+      )}
     </div>
   );
 }

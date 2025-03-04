@@ -5,6 +5,7 @@ import axios from "axios";
 // import "./css/VehicleDetails.css"; // Import the CSS for the modal and blur effect
 import "./css/ReviewVehicles.css"; // Import the CSS for the modal and blur effect
 import Restricted from "../utils/Restricted";
+import Confirmation from "../utils/Confirmation";
 
 function ReviewVehicles() {
   const [vehicle, setVehicle] = useState(null);
@@ -17,6 +18,8 @@ function ReviewVehicles() {
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
   // const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [decision, setDecision] = useState("");
 
   useEffect(() => {
     fetchVehicle();
@@ -65,6 +68,7 @@ function ReviewVehicles() {
   const handleApprove = async () => {
     if (!vehicle) return;
     setLoading(true);
+    setShowConfirm(false);
     try {
       await axios.post(
         `http://localhost:5001/api/v1/pending-vehicles/${vehicle._id}/approve`,
@@ -84,6 +88,7 @@ function ReviewVehicles() {
   const handleDisapprove = async () => {
     if (!vehicle) return;
     setLoading(true);
+    setShowConfirm(false);
     try {
       await axios.delete(
         `http://localhost:5001/api/v1/pending-vehicles/${vehicle._id}/disapprove`,
@@ -303,14 +308,20 @@ function ReviewVehicles() {
 
         <div className="action-buttons">
           <button
-            onClick={handleApprove}
+            onClick={() => {
+              setShowConfirm(true);
+              setDecision("approve");
+            }}
             className="approve-btn"
             disabled={loading}
           >
             {loading ? "Loading" : "Approve"}
           </button>
           <button
-            onClick={handleDisapprove}
+            onClick={() => {
+              setShowConfirm(true);
+              setDecision("disapprove");
+            }}
             className="disapprove-btn"
             disabled={loading}
           >
@@ -377,6 +388,16 @@ function ReviewVehicles() {
             {">"}
           </button>
         </div>
+      )}
+      {showConfirm && (
+        <Confirmation
+          message={`Are you sure you want to ${decision} this vehicle?`}
+          confirmText="Yes"
+          onCancel={() => setShowConfirm(false)}
+          onConfirm={() => {
+            decision === "approve" ? handleApprove() : handleDisapprove();
+          }}
+        />
       )}
     </div>
   );

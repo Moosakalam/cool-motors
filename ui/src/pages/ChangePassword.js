@@ -5,6 +5,7 @@ import "./css/ChangePassword.css"; // Optional CSS file for styling
 import { useAuth } from "../AuthContext";
 import { useNavigate } from "react-router-dom"; // Import Link for navigation
 import Restricted from "../utils/Restricted";
+import Alert from "../utils/Alert";
 
 const ChangePassword = () => {
   const [currentPassword, setCurrentPassword] = useState("");
@@ -15,6 +16,7 @@ const ChangePassword = () => {
   const [loading, setLoading] = useState(false);
   const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
+  const [showAlert, setShowAlert] = useState(false);
 
   const handleChangePassword = async (e) => {
     e.preventDefault();
@@ -32,13 +34,13 @@ const ChangePassword = () => {
           withCredentials: true,
         }
       );
-
       setMessage(response.data.message || "Password changed successfully.");
       setError("");
+      setShowAlert(true);
 
-      setTimeout(() => {
-        navigate("/settings");
-      }, 2000);
+      // setTimeout(() => {
+      //   navigate("/settings");
+      // }, 2000);
     } catch (err) {
       setError(
         err.response?.data?.message || "An error occurred. Please try again."
@@ -59,7 +61,7 @@ const ChangePassword = () => {
   return (
     <div className="update-password-container">
       <h2>Change Password</h2>
-      {message && <p className="success-message">{message}</p>}
+      {/* {message && <p className="success-message">{message}</p>} */}
       {error && <p className="error-message">{error}</p>}
       <form
         onSubmit={handleChangePassword}
@@ -105,6 +107,9 @@ const ChangePassword = () => {
           {loading ? "Changing..." : "Change Password"}
         </button>
       </form>
+      {showAlert && (
+        <Alert message={message} onClose={() => navigate("/settings")} />
+      )}
     </div>
   );
 };

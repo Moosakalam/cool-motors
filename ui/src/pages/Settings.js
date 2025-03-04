@@ -3,12 +3,16 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import Restricted from "../utils/Restricted";
+import Confirmation from "../utils/Confirmation";
+import Alert from "../utils/Alert";
 
 const Settings = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
     const fetchUserInfo = async () => {
@@ -46,19 +50,20 @@ const Settings = () => {
   };
 
   const handleLogout = async () => {
-    const confirmed = window.confirm("Are you sure you want to log out?");
-    if (confirmed) {
-      try {
-        await axios.get("http://localhost:5001/api/v1/users/logout", {
-          withCredentials: true,
-        });
+    // const confirmed = window.confirm("Are you sure you want to log out?");
+    setShowConfirm(false);
+    // if (confirmed) {
+    try {
+      await axios.get("http://localhost:5001/api/v1/users/logout", {
+        withCredentials: true,
+      });
 
-        navigate("/");
-        window.location.reload();
-      } catch (error) {
-        console.error("Error during logout:", error);
-      }
+      navigate("/");
+      window.location.reload();
+    } catch (error) {
+      console.error("Error during logout:", error);
     }
+    // }
   };
 
   const handleReviewVehicles = () => {
@@ -78,7 +83,7 @@ const Settings = () => {
     // }
     const password = prompt("Enter your password to confirm account deletion:");
     if (!password) {
-      alert("Account deletion canceled. Password is required.");
+      // alert("Account deletion canceled. Password is required.");
       return;
     }
 
@@ -90,10 +95,10 @@ const Settings = () => {
       await axios.get("http://localhost:5001/api/v1/users/logout", {
         withCredentials: true,
       });
-
-      alert("Your account has been deleted successfully.");
-      navigate("/");
-      window.location.reload();
+      setShowAlert(true);
+      // alert("Your account has been deleted successfully.");
+      // navigate("/");
+      // window.location.reload();
     } catch (err) {
       // console.error("Error deleting account:", err);
       alert(
@@ -179,7 +184,7 @@ const Settings = () => {
         </button>
       )}
       <button
-        onClick={handleLogout}
+        onClick={() => setShowConfirm(true)}
         style={{
           display: "block",
           margin: "10px 0",
@@ -208,6 +213,23 @@ const Settings = () => {
       >
         Delete My Account
       </button>
+      {showConfirm && (
+        <Confirmation
+          message="Are you sure you want to logout?"
+          confirmText="Logout"
+          onCancel={() => setShowConfirm(false)}
+          onConfirm={() => handleLogout()}
+        />
+      )}
+      {showAlert && (
+        <Alert
+          message="Your account has been deleted successfully."
+          onClose={() => {
+            navigate("/");
+            window.location.reload();
+          }}
+        />
+      )}
     </div>
   );
 };
