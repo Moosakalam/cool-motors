@@ -2,10 +2,11 @@ import React, { useEffect, useState, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import axios from "axios";
-// import "./css/VehicleDetails.css"; // Import the CSS for the modal and blur effect
-import "./css/ReviewVehicles.css"; // Import the CSS for the modal and blur effect
+import "./css/ReviewVehicles.css";
 import Restricted from "../utils/Restricted";
 import Confirmation from "../utils/Confirmation";
+import left from "../utils/images/left.png";
+import right from "../utils/images/right.png";
 
 function ReviewVehicles() {
   const [vehicle, setVehicle] = useState(null);
@@ -175,6 +176,7 @@ function ReviewVehicles() {
           textAlign: "left",
           pointerEvents: loading ? "none" : "auto",
           opacity: loading ? 0.6 : 1,
+          backgroundColor: "#a9f2b9",
         }}
       >
         <div
@@ -191,53 +193,56 @@ function ReviewVehicles() {
             style={{
               width: "100%",
               height: "400px",
-              objectFit: "cover",
+              objectFit: "contain",
               borderRadius: "10px",
               cursor: "pointer", // Add pointer to indicate clickable
+              backgroundColor: "ThreeDDarkShadow",
             }}
             onClick={openImageModal} // Open modal on click
           />
+          {
+            <div className="image-counter">
+              {currentImageIndex + 1}/{vehicle.images.length}
+            </div>
+          }
           {/* Previous Button */}
-          {vehicle.images && vehicle.images.length > 1 && (
-            <button
+          {vehicle.images?.length > 1 && (
+            <img
+              src={left}
+              alt="Previuos"
               onClick={prevImage}
               style={{
                 position: "absolute",
                 top: "50%",
                 left: "10px",
-                background: "rgba(0, 0, 0, 0.5)",
-                color: "#fff",
-                padding: "10px",
-                border: "none",
-                borderRadius: "5px",
+                transform: "translateY(-50%)", // Centers it vertically
+                height: "3rem", // Reduce size
+                width: "3rem",
                 cursor: "pointer",
-                fontFamily: "cursive",
-                fontSize: 25,
+                opacity: 0.7,
+                background: "#fff",
               }}
-            >
-              {"<"}
-            </button>
+              className="nav-arrow left-arrow"
+            />
           )}
           {/* Next Button */}
-          {vehicle.images && vehicle.images.length > 1 && (
-            <button
+          {vehicle.images?.length > 1 && (
+            <img
+              src={right}
+              alt="Next"
               onClick={nextImage}
               style={{
                 position: "absolute",
                 top: "50%",
                 right: "10px",
-                background: "rgba(0, 0, 0, 0.5)",
-                color: "#fff",
-                padding: "10px",
-                border: "none",
-                borderRadius: "5px",
+                transform: "translateY(-50%)", // Centers it vertically
+                height: "3rem", // Reduce size
+                width: "3rem",
                 cursor: "pointer",
-                fontFamily: "cursive",
-                fontSize: 25,
+                opacity: 0.7,
+                background: "#fff",
               }}
-            >
-              {">"}
-            </button>
+            />
           )}
         </div>
         <h2 style={{ fontSize: "32px", marginTop: "20px" }}>
@@ -335,27 +340,31 @@ function ReviewVehicles() {
           <span className="close" onClick={closeModal}>
             &times;
           </span>
+          {
+            <div className="image-counter-modal">
+              {currentImageIndex + 1}/{vehicle.images.length}
+            </div>
+          }
           {/* Previous Button */}
-          <button
-            className="prev-button"
-            onClick={prevImage}
-            style={{
-              position: "absolute",
-              top: "50%",
-              left: "10px",
-              background: "rgba(0, 0, 0, 0.5)",
-              color: "#fff",
-              padding: "10px",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-              fontFamily: "cursive",
-              fontSize: "25px",
-              zIndex: 1,
-            }}
-          >
-            {"<"}
-          </button>
+          {vehicle.images?.length > 1 && (
+            <img
+              src={left}
+              alt="Previuos"
+              onClick={prevImage}
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "10px",
+                transform: "translateY(-50%)", // Centers it vertically
+                height: "3rem", // Reduce size
+                width: "3rem",
+                cursor: "pointer",
+                opacity: 0.7,
+                background: "#fff",
+                borderRadius: "10px",
+              }}
+            />
+          )}
           <img
             className="modal-content"
             src={vehicle.images[currentImageIndex]}
@@ -367,26 +376,25 @@ function ReviewVehicles() {
             }}
           />
           {/* Next Button */}
-          <button
-            className="next-button"
-            onClick={nextImage}
-            style={{
-              position: "absolute",
-              top: "50%",
-              right: "10px",
-              background: "rgba(0, 0, 0, 0.5)",
-              color: "#fff",
-              padding: "10px",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-              fontFamily: "cursive",
-              fontSize: "25px",
-              zIndex: 1,
-            }}
-          >
-            {">"}
-          </button>
+          {vehicle.images?.length > 1 && (
+            <img
+              src={right}
+              alt="Next"
+              onClick={nextImage}
+              style={{
+                position: "absolute",
+                top: "50%",
+                right: "10px",
+                transform: "translateY(-50%)", // Centers it vertically
+                height: "3rem", // Reduce size
+                width: "3rem",
+                cursor: "pointer",
+                opacity: 0.7,
+                background: "#fff",
+                borderRadius: "10px",
+              }}
+            />
+          )}
         </div>
       )}
       {showConfirm && (

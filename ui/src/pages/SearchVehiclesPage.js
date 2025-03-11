@@ -144,60 +144,56 @@ const SearchVehiclesPage = () => {
     <div className="container">
       {/* Filters Section */}
       <div className="filters">
-        <h2>Filters</h2>
-        {Object.entries(filters).map(([key, value]) => (
-          <div key={key}>
-            <label>
-              {key.charAt(0).toUpperCase() +
-                key.slice(1).replace(/([A-Z])/g, " $1")}
-              :{" "}
-            </label>
-            {[
-              "fuelType",
-              "transmission",
-              "engineType",
-              "state",
-              "sort",
-            ].includes(key) ? (
-              <select name={key} value={value} onChange={handleInputChange}>
-                <option value="">Select...</option>
-                {(key === "fuelType"
-                  ? fuelTypes
-                  : key === "transmission"
-                  ? transmissions
-                  : key === "state"
-                  ? states
-                  : key === "sort"
-                  ? sorts
-                  : engineTypes
-                ).map((option) => (
-                  <option key={option} value={option}>
-                    {option.charAt(0).toUpperCase() + option.slice(1)}
-                  </option>
-                ))}
-              </select>
-            ) : (
-              <input
-                type={
-                  [
-                    "minYear",
-                    "maxYear",
-                    "minPrice",
-                    "maxPrice",
-                    "minOdometer",
-                    "maxOdometer",
-                  ].includes(key)
-                    ? "number"
-                    : "text"
-                }
-                name={key}
-                value={value}
-                onChange={handleInputChange}
-              />
-            )}
-          </div>
-        ))}
-
+        {Object.entries(filters).map(([key, value]) =>
+          ["fuelType", "transmission", "engineType", "state", "sort"].includes(
+            key
+          ) ? (
+            <select
+              key={key}
+              name={key}
+              value={value}
+              onChange={handleInputChange}
+            >
+              <option value="">
+                {key.charAt(0).toUpperCase() + key.slice(1)}
+              </option>
+              {(key === "fuelType"
+                ? fuelTypes
+                : key === "transmission"
+                ? transmissions
+                : key === "state"
+                ? states
+                : key === "sort"
+                ? sorts
+                : engineTypes
+              ).map((option) => (
+                <option key={option} value={option}>
+                  {option.charAt(0).toUpperCase() + option.slice(1)}
+                </option>
+              ))}
+            </select>
+          ) : (
+            <input
+              key={key}
+              type={
+                [
+                  "minYear",
+                  "maxYear",
+                  "minPrice",
+                  "maxPrice",
+                  "minOdometer",
+                  "maxOdometer",
+                ].includes(key)
+                  ? "number"
+                  : "text"
+              }
+              name={key}
+              value={value}
+              placeholder={key.charAt(0).toUpperCase() + key.slice(1)}
+              onChange={handleInputChange}
+            />
+          )
+        )}
         <button
           className="apply-filter-btn"
           onClick={handleApplyFilters}

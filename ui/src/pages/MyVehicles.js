@@ -61,9 +61,23 @@ function MyVehicles() {
         <div className="vehicle-grid">
           {listedVehicles.map((vehicle) => (
             <div key={vehicle._id} className="vehicle-card-wrapper">
-              <VehicleCard vehicle={vehicle} />
+              <VehicleCard
+                vehicle={vehicle}
+                showOptions={true}
+                onEdit={() => navigate(`/edit/${vehicle._id}`)}
+                onDelete={() => {
+                  setShowConfirm(true);
+                  setVehicleToDelete(vehicle._id);
+                }}
+              />
               <div className="vehicle-actions">
-                <button
+                {/* <div className="likes">
+                  <p>
+                    <img src={heart} alt="Likes" className="likes-image" /> :
+                    {vehicle.numberOfLikes}
+                  </p>
+                </div> */}
+                {/* <button
                   onClick={() => {
                     setShowConfirm(true);
                     setVehicleToDelete(vehicle._id);
@@ -77,7 +91,7 @@ function MyVehicles() {
                   className="btn-edit"
                 >
                   Edit
-                </button>
+                </button> */}
               </div>
             </div>
           ))}

@@ -45,3 +45,7 @@
 .btn-edit:hover {
   background-color: #0056b3;
 }
+
+.likes-image {
+  height: 20px;
+}
