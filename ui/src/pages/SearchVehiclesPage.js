@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import VehicleCard from "../utils/VehicleCard";
+import Alert from "../utils/Alert";
 
 const fuelTypes = ["petrol", "diesel", "hybrid", "electric", "lpg", "cng"];
 const transmissions = ["automatic", "manual"];
@@ -85,6 +86,7 @@ const SearchVehiclesPage = () => {
 
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [showAlert, setShowAlert] = useState(false);
 
   // Parse query parameters from the URL on page load
   useEffect(() => {
@@ -112,6 +114,12 @@ const SearchVehiclesPage = () => {
       {}
     );
 
+    if (Object.keys(activeFilters).length === 0) {
+      // alert("Please select at least one filter before searching.");
+      setShowAlert(true);
+      return;
+    }
+
     const queryParams = new URLSearchParams(activeFilters);
     navigate(`/search?${queryParams.toString()}`);
 
@@ -123,6 +131,8 @@ const SearchVehiclesPage = () => {
   };
 
   const fetchVehicles = async (activeFilters) => {
+    if (Object.keys(activeFilters).length === 0) return; // Don't fetch if no filters
+
     setLoading(true);
     try {
       const response = await axios.get(
@@ -206,13 +216,11 @@ const SearchVehiclesPage = () => {
       {/* Results Section */}
       <div className="results">
         <h2>Search Results</h2>
-        {vehicles.length === 0 ? (
-          <p>No vehicles found</p>
-        ) : (
+        {vehicles.length !== 0 && (
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "repeat(3, 1fr)",
+              gridTemplateColumns: "repeat(4, 1fr)",
               gap: "20px",
             }}
           >
@@ -222,6 +230,12 @@ const SearchVehiclesPage = () => {
           </div>
         )}
       </div>
+      {showAlert && (
+        <Alert
+          message="Please select at least one filter before searching."
+          onClose={() => setShowAlert(false)}
+        />
+      )}
     </div>
   );
 };
