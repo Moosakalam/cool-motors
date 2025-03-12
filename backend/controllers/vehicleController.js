@@ -1,4 +1,5 @@
 const Vehicle = require("../models/vehicleModel");
+const SoldVehicle = require("../models/soldVehicleModel");
 const User = require("../models/userModel");
 const Like = require("../models/likeModel");
 const catchAsyncError = require("../utils/catchAsyncError");
@@ -307,11 +308,11 @@ exports.deleteVehicle = catchAsyncError(async (req, res, next) => {
     );
   }
 
-  //delete likes of this vehicle
-  const likes = await Like.find({ vehicle: req.params.vehicleId });
-  for (const like of likes) {
-    await Like.findByIdAndDelete(like._id);
-  }
+  // //delete likes of this vehicle
+  // const likes = await Like.find({ vehicle: req.params.vehicleId });
+  // for (const like of likes) {
+  //   await Like.findByIdAndDelete(like._id);
+  // }
 
   // Delete the vehicle
   await Vehicle.findByIdAndDelete(req.params.vehicleId);
@@ -392,6 +393,50 @@ exports.getRandomVehicles = catchAsyncError(async (req, res, next) => {
     results: vehicles.length,
     data: {
       vehicles,
+    },
+  });
+});
+
+exports.markVehicleAsSold = catchAsyncError(async (req, res, next) => {
+  const { vehicleId } = req.params;
+
+  // Find the vehicle by ID
+  const vehicle = await Vehicle.findById(vehicleId);
+  if (!vehicle) {
+    return next(new AppError("Vehicle not found.", 404));
+  }
+
+  if (String(req.user._id) !== String(vehicle.listedBy)) {
+    return next(
+      new AppError("You don't have permission mark this vehicle as sold.", 403)
+    );
+  }
+
+  // Create a new document in the `SoldVehicle` collection
+  const soldVehicle = await SoldVehicle.create({
+    ...vehicle.toObject(), // Copy all fields
+    _id: undefined,
+    createdAt: undefined,
+    updatedAt: undefined,
+  });
+
+  // Remove the vehicle from the `Vehicle` collection without deleting images
+  await Vehicle.findByIdAndDelete(vehicleId, { skipImageDeletion: true });
+
+  // try {
+  //   // SEND SOLD CONFIRMATION EMAIL TO SELLER
+  //   const user = await User.findById(vehicle.listedBy);
+  //   await new Email(user, soldVehicle).sendSoldConfirmation();
+  // } catch (err) {
+  //   return next(
+  //     new AppError("Error sending email. Please try again later.", 500)
+  //   );
+  // }
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      soldVehicle,
     },
   });
 });

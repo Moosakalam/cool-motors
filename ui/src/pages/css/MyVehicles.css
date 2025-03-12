@@ -49,3 +49,8 @@
 .likes-image {
   height: 20px;
 }
+
+.vehicle-card-wrapper.sold {
+  opacity: 0.6;
+  filter: grayscale(100%);
+}

@@ -29,6 +29,13 @@ router.patch(
   vehicleController.updateVehicle // The update vehicle controller function you created
 );
 
+//edit vehicle
+router.patch(
+  "/:vehicleId/sold",
+  authController.protect,
+  vehicleController.markVehicleAsSold
+);
+
 //search
 router.get("/search", vehicleController.searchVehicles);
 

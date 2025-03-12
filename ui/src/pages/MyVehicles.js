@@ -4,13 +4,15 @@ import { useAuth } from "../AuthContext";
 import { useNavigate } from "react-router-dom";
 import VehicleCard from "../utils/VehicleCard";
 import Confirmation from "../utils/Confirmation";
-import "./css/MyVehicles.css"; // External CSS file
+import "./css/MyVehicles.css";
 import Restricted from "../utils/Restricted";
 
 function MyVehicles() {
   const { user, loading: authLoading } = useAuth();
   const [listedVehicles, setListedVehicles] = useState([]);
   const [vehicleToDelete, setVehicleToDelete] = useState(null);
+  const [soldVehicles, setSoldVehicles] = useState([]);
+  const [isSoldVehicle, setIsSoldVehicle] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
   const navigate = useNavigate();
 
@@ -27,30 +29,84 @@ function MyVehicles() {
       );
   }, [user]);
 
+  useEffect(() => {
+    if (!user?._id) return;
+
+    axios
+      .get(`http://localhost:5001/api/v1/users/sold-vehicles`, {
+        withCredentials: true,
+      })
+      .then((res) => setSoldVehicles(res.data.data.soldVehicles))
+      .catch((error) => console.error("Error fetching sold vehicles:", error));
+  }, [user]);
+
+  // const handleDelete = async () => {
+  //   setShowConfirm(false);
+  //   try {
+  //     await axios.delete(
+  //       `http://localhost:5001/api/v1/vehicles/${vehicleToDelete}`,
+  //       {
+  //         withCredentials: true,
+  //       }
+  //     );
+  //     setListedVehicles((prev) =>
+  //       prev.filter((vehicle) => vehicle._id !== vehicleToDelete)
+  //     );
+  //     setShowConfirm(false);
+  //   } catch (error) {
+  //     console.error("Error deleting vehicle:", error);
+  //   }
+  // };
+
   const handleDelete = async () => {
     setShowConfirm(false);
     try {
-      await axios.delete(
-        `http://localhost:5001/api/v1/vehicles/${vehicleToDelete}`,
-        {
-          withCredentials: true,
-        }
-      );
-      setListedVehicles((prev) =>
-        prev.filter((vehicle) => vehicle._id !== vehicleToDelete)
-      );
-      setShowConfirm(false);
+      const endpoint = isSoldVehicle
+        ? `http://localhost:5001/api/v1/sold-vehicles/${vehicleToDelete}`
+        : `http://localhost:5001/api/v1/vehicles/${vehicleToDelete}`;
+
+      await axios.delete(endpoint, { withCredentials: true });
+
+      if (isSoldVehicle) {
+        setSoldVehicles((prev) =>
+          prev.filter((vehicle) => vehicle._id !== vehicleToDelete)
+        );
+      } else {
+        setListedVehicles((prev) =>
+          prev.filter((vehicle) => vehicle._id !== vehicleToDelete)
+        );
+      }
     } catch (error) {
       console.error("Error deleting vehicle:", error);
     }
   };
 
-  // useEffect(() => {
+  const markAsSold = async (vehicleId) => {
+    if (!window.confirm("Are you sure you want to mark this vehicle as sold?"))
+      return;
+    try {
+      await axios.patch(
+        `http://localhost:5001/api/v1/vehicles/${vehicleId}/sold`,
+        {},
+        { withCredentials: true }
+      );
+
+      setListedVehicles((prev) =>
+        prev.filter((vehicle) => vehicle._id !== vehicleId)
+      );
+
+      const soldVehicle = listedVehicles.find((v) => v._id === vehicleId);
+      if (soldVehicle) {
+        setSoldVehicles((prev) => [...prev, soldVehicle]);
+      }
+    } catch (error) {
+      console.error("Error marking vehicle as sold:", error);
+    }
+  };
+
   if (!authLoading && !user) {
-    // navigate("/restricted");
     return <Restricted />;
   }
-  // }, [user, authLoading, navigate]);
 
   return (
     <div className="my-vehicles-container">
@@ -68,34 +124,35 @@ function MyVehicles() {
                 onDelete={() => {
                   setShowConfirm(true);
                   setVehicleToDelete(vehicle._id);
+                  setIsSoldVehicle(false);
                 }}
+                onMarkAsSold={() => markAsSold(vehicle._id)}
               />
-              <div className="vehicle-actions">
-                {/* <div className="likes">
-                  <p>
-                    <img src={heart} alt="Likes" className="likes-image" /> :
-                    {vehicle.numberOfLikes}
-                  </p>
-                </div> */}
-                {/* <button
-                  onClick={() => {
-                    setShowConfirm(true);
-                    setVehicleToDelete(vehicle._id);
-                  }}
-                  className="btn-delete"
-                >
-                  Delete
-                </button>
-                <button
-                  onClick={() => navigate(`/edit/${vehicle._id}`)}
-                  className="btn-edit"
-                >
-                  Edit
-                </button> */}
-              </div>
+              <div className="vehicle-actions"></div>
             </div>
           ))}
         </div>
+      )}
+
+      {soldVehicles.length !== 0 && (
+        <>
+          <h2>Sold Vehicles</h2>
+          <div className="vehicle-grid">
+            {soldVehicles.map((vehicle) => (
+              <div key={vehicle._id} className="vehicle-card-wrapper sold">
+                <VehicleCard
+                  vehicle={vehicle}
+                  showOptions={true}
+                  onDelete={() => {
+                    setShowConfirm(true);
+                    setVehicleToDelete(vehicle._id);
+                    setIsSoldVehicle(true);
+                  }}
+                />
+              </div>
+            ))}
+          </div>
+        </>
       )}
 
       {showConfirm && (

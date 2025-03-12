@@ -6,7 +6,7 @@ import heart from "./images/heart.png";
 import fullHeart from "./images/full-heart.png";
 import moreIcon from "./images/more.png";
 
-function VehicleCard({ vehicle, showOptions, onEdit, onDelete }) {
+function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [liked, setLiked] = useState(false);
@@ -116,13 +116,15 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete }) {
               opacity: isHovered ? 0.7 : 1,
             }}
           />
-          <img
-            src={liked ? fullHeart : heart}
-            alt="Like"
-            className="like-button"
-            onClick={handleLikeToggle}
-            style={{ width: "20px", height: "20px" }}
-          />
+          {onMarkAsSold && (
+            <img
+              src={liked ? fullHeart : heart}
+              alt="Like"
+              className="like-button"
+              onClick={handleLikeToggle}
+              style={{ width: "20px", height: "20px" }}
+            />
+          )}
           {showOptions && (
             <div
               className="vehicle-card-options"
@@ -156,38 +158,68 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete }) {
                     boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
                     borderRadius: "5px",
                     overflow: "hidden",
+                    minWidth: "95px",
                     zIndex: 10,
+                    width: "auto",
                   }}
                 >
-                  <button
-                    onClick={onEdit}
-                    style={{
-                      display: "block",
-                      padding: "8px 12px",
-                      width: "100%",
-                      border: "none",
-                      background: "transparent",
-                      cursor: "pointer",
-                      textAlign: "left",
-                    }}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={onDelete}
-                    style={{
-                      display: "block",
-                      padding: "8px 12px",
-                      width: "100%",
-                      border: "none",
-                      background: "transparent",
-                      cursor: "pointer",
-                      textAlign: "left",
-                      color: "red",
-                    }}
-                  >
-                    Delete
-                  </button>
+                  {onEdit ? (
+                    <button
+                      onClick={onEdit}
+                      style={{
+                        display: "block",
+                        padding: "8px 12px",
+                        width: "100%",
+                        border: "none",
+                        background: "transparent",
+                        cursor: "pointer",
+                        textAlign: "left",
+                      }}
+                    >
+                      Edit
+                    </button>
+                  ) : (
+                    <></>
+                  )}
+
+                  {onMarkAsSold ? (
+                    <button
+                      onClick={onMarkAsSold}
+                      style={{
+                        display: "block",
+                        padding: "8px 12px",
+                        width: "100%",
+                        border: "none",
+                        background: "transparent",
+                        cursor: "pointer",
+                        textAlign: "left",
+                      }}
+                    >
+                      Mark As Sold
+                    </button>
+                  ) : (
+                    <></>
+                  )}
+
+                  {onDelete ? (
+                    <button
+                      onClick={onDelete}
+                      style={{
+                        display: "block",
+                        padding: "8px 12px",
+                        width: "100%",
+                        border: "none",
+                        background: "transparent",
+                        cursor: "pointer",
+                        textAlign: "left",
+                        color: "red",
+                      }}
+                    >
+                      Delete
+                    </button>
+                  ) : (
+                    <></>
+                  )}
                 </div>
               )}
             </div>

@@ -1,6 +1,7 @@
 const express = require("express");
 const userController = require("../controllers/userController");
 const vehicleController = require("../controllers/vehicleController");
+const soldVehicleController = require("../controllers/soldVehicleController");
 const likeController = require("../controllers/likeController");
 const likeRouter = require("../routes/likeRoutes");
 const authController = require("../controllers/authController");
@@ -19,6 +20,13 @@ router.get("/logout", authController.logout);
 
 //returns vehicles listed by "userId"
 router.get("/:userId/vehicles", vehicleController.getVehiclesOfUser);
+
+//returns sold vehicles if "userId"
+router.get(
+  "/sold-vehicles",
+  authController.protect,
+  soldVehicleController.getSoldVehiclesOfUser
+);
 
 router.get("/:userId", userController.getUser);
 router.get(

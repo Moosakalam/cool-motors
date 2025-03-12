@@ -13,6 +13,7 @@ const cookieParser = require("cookie-parser");
 
 const vehicleRouter = require("./routes/vehicleRoutes");
 const pendingVehicleRouter = require("./routes/pendingVehicleRoutes");
+const soldVehicleRouter = require("./routes/soldVehicleRoutes");
 const userRouter = require("./routes/userRoutes");
 const likeRouter = require("./routes/likeRoutes");
 const AppError = require("./utils/appError");
@@ -68,6 +69,7 @@ app.use((req, res, next) => {
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/vehicles", vehicleRouter);
 app.use("/api/v1/pending-vehicles", pendingVehicleRouter);
+app.use("/api/v1/sold-vehicles", soldVehicleRouter);
 app.use("/api/v1/likes", likeRouter);
 
 //for undefined url:

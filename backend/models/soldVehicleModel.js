@@ -1,28 +1,8 @@
 const mongoose = require("mongoose");
-const User = require("../models/userModel");
 const { states } = require("../utils/data");
 const { deleteS3Images } = require("../utils/tools");
 
-const {
-  S3Client,
-  PutObjectCommand,
-  DeleteObjectCommand,
-} = require("@aws-sdk/client-s3");
-
-const bucketName = process.env.AWS_BUCKET_NAME;
-const region = process.env.AWS_BUCKET_REGION;
-const accessKeyId = process.env.AWS_ACCESS_KEY;
-const secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
-
-const s3Client = new S3Client({
-  region,
-  credentials: {
-    accessKeyId,
-    secretAccessKey,
-  },
-});
-
-const pendingVehicleSchema = mongoose.Schema(
+const soldVehicleSchema = mongoose.Schema(
   {
     make: {
       type: String,
@@ -132,10 +112,9 @@ const pendingVehicleSchema = mongoose.Schema(
     description: {
       type: String,
       required: [true, "Please enter a description for your vehicle"],
-      maxlength: [1000, "Description cannot exceed 1000 characters"],
     },
     // tag: {
-    //   type: [String],
+    //   type: String,
     //   enum: {
     //     values: [
     //       "clean",
@@ -149,11 +128,14 @@ const pendingVehicleSchema = mongoose.Schema(
     //     message: "{VALUE} is not a valid tag.",
     //   },
     // },
+    // numberOfLikes: {
+    //   type: Number,
+    //   default: 0,
+    // },
     // expiresAt: {
     //   type: Date,
     //   default: () => Date.now() + 30 * 24 * 60 * 60 * 1000, // Correct way to set dynamic default
-    //   // default: () => Date.now() + 60 * 1000,
-    //   immutable: true, // Prevents direct updates
+    //   immutable: true,
     // },
   },
   {
@@ -161,8 +143,15 @@ const pendingVehicleSchema = mongoose.Schema(
   }
 );
 
+// // Add indexes
+// soldVehicleSchema.index({ price: 1 }); // Ascending order for price
+// soldVehicleSchema.index({ odometer: 1 }); // Ascending order for odometer
+// soldVehicleSchema.index({ year: -1 }); // Descending order for year
+// // soldVehicleSchema.index({ ownership: 1 }); // Ascending order for ownership
+// soldVehicleSchema.index({ state: 1, location: 1 }); // Compound index for state and location
+
 // Middleware for deleting images from S3 and updating references
-pendingVehicleSchema.post("findOneAndDelete", async function (vehicle) {
+soldVehicleSchema.post("findOneAndDelete", async function (vehicle) {
   if (!vehicle) return;
 
   // Check if image deletion should be skipped
@@ -173,14 +162,6 @@ pendingVehicleSchema.post("findOneAndDelete", async function (vehicle) {
   deleteS3Images(vehicle.images);
 });
 
-// pendingVehicleSchema.post("findOneAndDelete", async function (vehicle) {
-//   if (!vehicle) return;
+const SoldVehicle = mongoose.model("SoldVehicle", soldVehicleSchema);
 
-//   await User.findByIdAndUpdate(vehicle.listedBy, {
-//     $inc: { totalVehicles: -1 },
-//   });
-// });
-
-const PendingVehicle = mongoose.model("PendingVehicle", pendingVehicleSchema);
-
-module.exports = PendingVehicle;
+module.exports = SoldVehicle;

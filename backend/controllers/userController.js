@@ -6,6 +6,7 @@ const Like = require("../models/likeModel");
 const catchAsyncError = require("../utils/catchAsyncError");
 const AppError = require("../utils/appError");
 const Email = require("../utils/email");
+const { deleteS3Images } = require("../utils/tools");
 
 const {
   S3Client,
@@ -196,22 +197,12 @@ exports.deleteMe = catchAsyncError(async (req, res, next) => {
 
   // Delete all vehicles listed by the user
   for (const vehicleId of user.listedVehicles) {
-    await Vehicle.findByIdAndDelete(vehicleId); // This will trigger the query middleware for cleanup
+    await Vehicle.findByIdAndDelete(vehicleId);
   }
 
   // Check for any pending vehicles listed by the user and delete them
   const pendingVehicles = await PendingVehicle.find({ listedBy: req.user._id });
   for (const pendingVehicle of pendingVehicles) {
-    // Delete images from S3
-    for (const image of pendingVehicle.images) {
-      const key = image.split("amazonaws.com/")[1];
-      const deleteParams = {
-        Bucket: bucketName,
-        Key: key,
-      };
-      await s3Client.send(new DeleteObjectCommand(deleteParams));
-    }
-
     await PendingVehicle.findByIdAndDelete(pendingVehicle._id); // Delete pending vehicles listed by the user
   }
 

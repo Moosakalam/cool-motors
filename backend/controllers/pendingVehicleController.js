@@ -5,6 +5,7 @@ const Vehicle = require("../models/vehicleModel");
 const User = require("../models/userModel");
 const Email = require("../utils/email");
 const crypto = require("crypto");
+const { deleteS3Images } = require("../utils/tools");
 
 const generateFileName = (bytes = 32) =>
   crypto.randomBytes(bytes).toString("hex");
@@ -123,7 +124,7 @@ exports.approveVehicle = catchAsyncError(async (req, res, next) => {
   });
 
   // Remove the vehicle from the `pendingVehicles` collection
-  await PendingVehicle.findByIdAndDelete(id);
+  await PendingVehicle.findByIdAndDelete(id, { skipImageDeletion: true });
 
   try {
     // SEND APPROVED EMAIL TO USER
@@ -160,17 +161,7 @@ exports.disapproveVehicle = catchAsyncError(async (req, res, next) => {
     return next(new AppError("Vehicle not found in pending list.", 404));
   }
 
-  //deleting the image of vehicle from s3
-  for (const image of pendingVehicle.images) {
-    const key = image.split("amazonaws.com/")[1];
-    const deleteParams = {
-      Bucket: bucketName,
-      Key: key,
-    };
-    await s3Client.send(new DeleteObjectCommand(deleteParams));
-  }
-
-  // Find and remove the pending vehicle by ID
+  // Find and remove the pending vehicle by ID(images deleting in query middleware)
   await PendingVehicle.findByIdAndDelete(id);
 
   const user = await User.findByIdAndUpdate(
