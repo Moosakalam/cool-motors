@@ -31,7 +31,7 @@ const Confirmation = ({
 
   return (
     <div className="modal-overlay">
-      <div className="modal-content">
+      <div className="info-modal-content">
         <p>{message}</p>
         <div className="modal-buttons">
           <button className="btn-secondary" onClick={onCancel}>

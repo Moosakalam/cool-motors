@@ -4,7 +4,7 @@ import "./css/Modal.css"; // Shared styles for Alert & Confirmation
 const Alert = ({ message, onClose }) => {
   return (
     <div className="modal-overlay">
-      <div className="modal-content">
+      <div className="info-modal-content">
         <p>{message}</p>
         <button className="btn-primary" onClick={onClose}>
           OK

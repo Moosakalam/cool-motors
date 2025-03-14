@@ -8,6 +8,7 @@ import right from "../utils/images/right.png";
 import whatsApp from "../utils/images/WhatsAppButton.png";
 import heart from "../utils/images/heart.png";
 import fullHeart from "../utils/images/full-heart.png";
+import { isMobile } from "../utils/jwtDecode";
 
 function VehicleDetails() {
   const { id } = useParams(); // Vehicle ID from URL
@@ -284,9 +285,18 @@ function VehicleDetails() {
         </p> */}
         <p>
           {seller.phoneNumber ? (
+            // <a
+            //   // href={`https://wa.me/${seller.phoneNumber}?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`}
+            //   href={`whatsapp://send?phone=${seller.phoneNumber}&text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`}
+            //   target="_blank"
+            //   rel="noopener noreferrer"
+            // >
             <a
-              // href={`https://wa.me/${seller.phoneNumber}?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`}
-              href={`whatsapp://send?phone=${seller.phoneNumber}&text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`}
+              href={
+                isMobile()
+                  ? `whatsapp://send?phone=${seller.phoneNumber}&text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`
+                  : `https://wa.me/${seller.phoneNumber}?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`
+              }
               target="_blank"
               rel="noopener noreferrer"
             >

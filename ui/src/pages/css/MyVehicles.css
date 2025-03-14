@@ -2,11 +2,11 @@
   padding: 20px;
 }
 
-.vehicle-grid {
+/* .vehicle-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
-}
+} */
 
 .vehicle-card-wrapper {
   display: flex;

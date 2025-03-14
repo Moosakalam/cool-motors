@@ -40,10 +40,12 @@ function Login() {
 
   useEffect(() => {
     if (user) {
+      const redirectTo =
+        new URLSearchParams(location.search).get("redirect") || "/";
       alert("You are already logged in.");
-      navigate("/");
+      navigate(redirectTo);
     }
-  }, [user, authLoading, navigate]);
+  }, [user, authLoading, navigate, location]);
 
   return (
     <div className="login-container">

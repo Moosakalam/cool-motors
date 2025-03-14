@@ -5,6 +5,7 @@ import axios from "axios";
 import heart from "./images/heart.png";
 import fullHeart from "./images/full-heart.png";
 import moreIcon from "./images/more.png";
+import "./css/VehicleCard.css";
 
 function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -94,12 +95,13 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
         onMouseLeave={() => setIsHovered(false)}
       >
         <div
-          style={{
-            width: "100%",
-            height: "200px",
-            overflow: "hidden",
-            position: "relative",
-          }}
+          // style={{
+          //   width: "100%",
+          //   height: "200px",
+          //   overflow: "hidden",
+          //   position: "relative",
+          // }}
+          className="vehicle-card-image"
         >
           <img
             src={
@@ -116,15 +118,13 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
               opacity: isHovered ? 0.7 : 1,
             }}
           />
-          {onMarkAsSold && (
-            <img
-              src={liked ? fullHeart : heart}
-              alt="Like"
-              className="like-button"
-              onClick={handleLikeToggle}
-              style={{ width: "20px", height: "20px" }}
-            />
-          )}
+          <img
+            src={liked ? fullHeart : heart}
+            alt="Like"
+            className="like-button"
+            onClick={handleLikeToggle}
+            style={{ width: "20px", height: "20px" }}
+          />
           {showOptions && (
             <div
               className="vehicle-card-options"
@@ -163,63 +163,49 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
                     width: "auto",
                   }}
                 >
-                  {onEdit ? (
-                    <button
-                      onClick={onEdit}
-                      style={{
-                        display: "block",
-                        padding: "8px 12px",
-                        width: "100%",
-                        border: "none",
-                        background: "transparent",
-                        cursor: "pointer",
-                        textAlign: "left",
-                      }}
-                    >
-                      Edit
-                    </button>
-                  ) : (
-                    <></>
-                  )}
-
-                  {onMarkAsSold ? (
-                    <button
-                      onClick={onMarkAsSold}
-                      style={{
-                        display: "block",
-                        padding: "8px 12px",
-                        width: "100%",
-                        border: "none",
-                        background: "transparent",
-                        cursor: "pointer",
-                        textAlign: "left",
-                      }}
-                    >
-                      Mark As Sold
-                    </button>
-                  ) : (
-                    <></>
-                  )}
-
-                  {onDelete ? (
-                    <button
-                      onClick={onDelete}
-                      style={{
-                        display: "block",
-                        padding: "8px 12px",
-                        width: "100%",
-                        border: "none",
-                        background: "transparent",
-                        cursor: "pointer",
-                        textAlign: "left",
-                        color: "red",
-                      }}
-                    >
-                      Delete
-                    </button>
-                  ) : (
-                    <></>
-                  )}
+                  <button
+                    onClick={onEdit}
+                    style={{
+                      display: "block",
+                      padding: "8px 12px",
+                      width: "100%",
+                      border: "none",
+                      background: "transparent",
+                      cursor: "pointer",
+                      textAlign: "left",
+                    }}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    onClick={onMarkAsSold}
+                    style={{
+                      display: "block",
+                      padding: "8px 12px",
+                      width: "100%",
+                      border: "none",
+                      background: "transparent",
+                      cursor: "pointer",
+                      textAlign: "left",
+                    }}
+                  >
+                    Mark As Sold
+                  </button>
+                  <button
+                    onClick={onDelete}
+                    style={{
+                      display: "block",
+                      padding: "8px 12px",
+                      width: "100%",
+                      border: "none",
+                      background: "transparent",
+                      cursor: "pointer",
+                      textAlign: "left",
+                      color: "red",
+                    }}
+                  >
+                    Delete
+                  </button>
                 </div>
               )}
             </div>
