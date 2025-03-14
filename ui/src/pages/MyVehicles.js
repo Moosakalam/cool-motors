@@ -3,6 +3,7 @@ import axios from "axios";
 import { useAuth } from "../AuthContext";
 import { useNavigate } from "react-router-dom";
 import VehicleCard from "../utils/VehicleCard";
+import SoldVehicleCard from "../utils/SoldVehicleCard";
 import Confirmation from "../utils/Confirmation";
 import "./css/MyVehicles.css";
 import Restricted from "../utils/Restricted";
@@ -139,17 +140,15 @@ function MyVehicles() {
           <h2>Sold Vehicles</h2>
           <div className="vehicle-grid">
             {soldVehicles.map((vehicle) => (
-              <div key={vehicle._id} className="vehicle-card-wrapper sold">
-                <VehicleCard
-                  vehicle={vehicle}
-                  showOptions={true}
-                  onDelete={() => {
-                    setShowConfirm(true);
-                    setVehicleToDelete(vehicle._id);
-                    setIsSoldVehicle(true);
-                  }}
-                />
-              </div>
+              <SoldVehicleCard
+                vehicle={vehicle}
+                showOptions={true}
+                onDelete={() => {
+                  setShowConfirm(true);
+                  setVehicleToDelete(vehicle._id);
+                  setIsSoldVehicle(true);
+                }}
+              />
             ))}
           </div>
         </>

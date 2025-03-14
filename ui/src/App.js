@@ -22,6 +22,7 @@ import UpdateMe from "./pages/UpdateMe";
 import VerifyEmail from "./pages/VerifyEmail";
 import VerifyEmailUpdate from "./pages/VerifyEmailUpdate";
 import UpdateMyEmail from "./pages/UpdateMyEmail";
+import SoldVehicleDetails from "./pages/SoldVehicleDetails";
 
 function App() {
   return (
@@ -58,6 +59,7 @@ function App() {
           <Route path="/edit/:vehicleId" element={<EditVehicle />} />
           <Route path="/update-me" element={<UpdateMe />} />
           {/* <Route path="/restricted" element={<Restricted />} /> */}
+          <Route path="/sold-vehicle/:id" element={<SoldVehicleDetails />} />
         </Routes>
       </div>
     </Router>

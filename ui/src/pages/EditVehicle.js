@@ -61,6 +61,7 @@ const EditVehicle = () => {
   const [fetchLoading, setFetchLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isUnauthorized, setIsUnauthorized] = useState(false);
   const [successMessage, setSuccessMessage] = useState(null);
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
@@ -79,7 +80,8 @@ const EditVehicle = () => {
         );
         const filteredData = filterFields(response.data.data.vehicle);
         if (user._id !== filteredData.listedBy) {
-          setError("You don't have access to this page.");
+          // setError("You don't have access to this page.");
+          setIsUnauthorized(true);
         }
         delete filteredData.listedBy;
         setVehicleData(filteredData);
@@ -142,13 +144,14 @@ const EditVehicle = () => {
 
   if (fetchLoading) return <div>Loading...</div>;
   if (!vehicleData) return <div>Loading vehicle data...</div>;
+  if (isUnauthorized) return <p>You don't have access to this vehicle.</p>;
 
   return (
     <div className="edit-vehicle-container">
       <h2>Edit Vehicle</h2>
       {/* {successMessage && (
         <div className="success-message">{successMessage}</div>
-      )} */}
+        )} */}
       <form
         onSubmit={handleUpdate}
         className="edit-vehicle-form"
@@ -181,7 +184,7 @@ const EditVehicle = () => {
                 {/* <datalist id="carMakes">
                   <option value="Toyota" />
                   <option value="Honda" />
-                </datalist> */}
+                  </datalist> */}
               </>
             ) : key === "year" ? (
               <>

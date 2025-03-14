@@ -49,3 +49,29 @@ exports.deleteSoldVehicle = catchAsyncError(async (req, res, next) => {
     message: "Sold vehicle deleted successfully",
   });
 });
+
+exports.getSoldVehicle = catchAsyncError(async (req, res, next) => {
+  const userId = req.user.id;
+  const { id } = req.params;
+
+  // Check if the sold vehicle exists
+  const soldVehicle = await SoldVehicle.findById(id);
+
+  if (!soldVehicle) {
+    return next(new AppError("No sold vehicle found with that ID", 404));
+  }
+
+  // Check if the logged-in user is authorized to delete the vehicle
+  if (soldVehicle.listedBy.toString() !== userId) {
+    return next(
+      new AppError("You are not authorized to view this vehicle", 403)
+    );
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      vehicle: soldVehicle,
+    },
+  });
+});
