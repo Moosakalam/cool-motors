@@ -1,6 +1,7 @@
 import "./css/SearchVehicles.css";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { states } from "../utils/data";
 import axios from "axios";
 import VehicleCard from "../utils/VehicleCard";
 import Alert from "../utils/Alert";
@@ -22,44 +23,6 @@ const engineTypes = [
   "H4",
   "H6",
   "rotary",
-];
-const states = [
-  "Andhra Pradesh",
-  "Arunachal Pradesh",
-  "Assam",
-  "Bihar",
-  "Chhattisgarh",
-  "Goa",
-  "Gujarat",
-  "Haryana",
-  "Himachal Pradesh",
-  "Jharkhand",
-  "Karnataka",
-  "Kerala",
-  "Madhya Pradesh",
-  "Maharashtra",
-  "Manipur",
-  "Meghalaya",
-  "Mizoram",
-  "Nagaland",
-  "Odisha",
-  "Punjab",
-  "Rajasthan",
-  "Sikkim",
-  "Tamil Nadu",
-  "Telangana",
-  "Tripura",
-  "Uttar Pradesh",
-  "Uttarakhand",
-  "West Bengal",
-  "Andaman and Nicobar Islands",
-  "Chandigarh",
-  "Dadra and Nagar Haveli and Daman and Diu",
-  "Delhi",
-  "Jammu and Kashmir",
-  "Ladakh",
-  "Lakshadweep",
-  "Puducherry",
 ];
 const sorts = ["priceAsc", "priceDesc", "mileageAsc", "mileageDesc"];
 
@@ -87,6 +50,58 @@ const SearchVehiclesPage = () => {
   const [vehicles, setVehicles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
+  const [pagination, setPagination] = useState({
+    page: 1,
+    totalPages: 1,
+  });
+
+  // const fetchVehicles = async (activeFilters) => {
+  //   if (Object.keys(activeFilters).length === 0) return; // Don't fetch if no filters
+
+  //   setLoading(true);
+  //   try {
+  //     const response = await axios.get(
+  //       "http://localhost:5001/api/v1/vehicles/search",
+  //       {
+  //         params: activeFilters,
+  //         withCredentials: true,
+  //       }
+  //     );
+  //     setVehicles(response.data.data.vehicles);
+  //   } catch (error) {
+  //     console.error("Error fetching vehicles:", error);
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  const fetchVehicles = useCallback(
+    async (activeFilters) => {
+      if (Object.keys(activeFilters).length === 0) return;
+
+      setLoading(true);
+      try {
+        const response = await axios.get(
+          "http://localhost:5001/api/v1/vehicles/search",
+          {
+            params: { ...activeFilters, page: pagination.page }, // Include page parameter
+            withCredentials: true,
+          }
+        );
+
+        setVehicles(response.data.data.vehicles);
+        setPagination({
+          page: response.data.currentPage,
+          totalPages: response.data.totalPages,
+        });
+      } catch (error) {
+        console.error("Error fetching vehicles:", error);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [pagination.page]
+  );
 
   // Parse query parameters from the URL on page load
   useEffect(() => {
@@ -97,7 +112,7 @@ const SearchVehiclesPage = () => {
     }
     setFilters((prev) => ({ ...prev, ...newFilters }));
     fetchVehicles(newFilters);
-  }, [location.search]);
+  }, [location.search, fetchVehicles]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -130,24 +145,11 @@ const SearchVehiclesPage = () => {
     });
   };
 
-  const fetchVehicles = async (activeFilters) => {
-    if (Object.keys(activeFilters).length === 0) return; // Don't fetch if no filters
-
-    setLoading(true);
-    try {
-      const response = await axios.get(
-        "http://localhost:5001/api/v1/vehicles/search",
-        {
-          params: activeFilters,
-          withCredentials: true,
-        }
-      );
-      setVehicles(response.data.data.vehicles);
-    } catch (error) {
-      console.error("Error fetching vehicles:", error);
-    } finally {
-      setLoading(false);
-    }
+  const handlePageChange = (newPage) => {
+    setPagination((prev) => ({ ...prev, page: newPage }));
+    navigate(
+      `/search?${new URLSearchParams({ ...filters, page: newPage }).toString()}`
+    );
   };
 
   return (
@@ -217,14 +219,7 @@ const SearchVehiclesPage = () => {
       <div className="results">
         <h2>Search Results</h2>
         {vehicles.length !== 0 && (
-          <div
-            // style={{
-            //   display: "grid",
-            //   gridTemplateColumns: "repeat(4, 1fr)",
-            //   gap: "20px",
-            // }}
-            className="vehicle-grid"
-          >
+          <div className="vehicle-grid">
             {vehicles.map((vehicle) => (
               <VehicleCard key={vehicle._id} vehicle={vehicle} />
             ))}
@@ -237,6 +232,25 @@ const SearchVehiclesPage = () => {
           onClose={() => setShowAlert(false)}
         />
       )}
+      <div className="pagination">
+        <button
+          disabled={pagination.page <= 1}
+          onClick={() => handlePageChange(pagination.page - 1)}
+          className="pagination-btn"
+        >
+          Previous
+        </button>
+        <span className="pagination-info">
+          Page {pagination.page} of {pagination.totalPages}
+        </span>
+        <button
+          disabled={pagination.page >= pagination.totalPages}
+          onClick={() => handlePageChange(pagination.page + 1)}
+          className="pagination-btn"
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };

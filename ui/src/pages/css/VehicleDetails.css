@@ -114,3 +114,32 @@ html {
   padding: 5px 10px;
   border-radius: 5px;
 }
+
+.vehicle-details-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.vehicle-details-table td {
+  padding: 10px;
+  border: 1px solid #ddd;
+}
+
+.vehicle-details-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.vehicle-details-table td:first-child {
+  font-weight: bold;
+  /* background-color: #f1f1f1; */
+}
+
+.vehicle-details-table a {
+  color: #007bff;
+  text-decoration: none;
+}
+
+.vehicle-details-table a:hover {
+  text-decoration: underline;
+}

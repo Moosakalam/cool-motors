@@ -284,10 +284,32 @@ exports.searchVehicles = catchAsyncError(async (req, res) => {
   if (filters.sort === "mileageDesc") sortBy.odometer = -1;
 
   // const vehicles = await Vehicle.find(searchCriteria).sort(sortBy).explian();
-  const vehicles = await Vehicle.find(searchCriteria).sort(sortBy);
+  // const vehicles = await Vehicle.find(searchCriteria).sort(sortBy);
 
+  // Pagination
+  const page = parseInt(req.query.page) || 1; // Default to page 1
+  const limit = parseInt(req.query.limit) || 28; // Default limit of 10 per page
+  const skip = (page - 1) * limit;
+
+  // Fetch paginated results
+  const totalVehicles = await Vehicle.countDocuments(searchCriteria); // Get total count
+  const vehicles = await Vehicle.find(searchCriteria)
+    .sort(sortBy)
+    .skip(skip)
+    .limit(limit);
+
+  // res.status(200).json({
+  //   status: "success",
+  //   results: vehicles.length,
+  //   data: {
+  //     vehicles,
+  //   },
+  // });
   res.status(200).json({
     status: "success",
+    currentPage: page,
+    totalPages: Math.ceil(totalVehicles / limit),
+    totalResults: totalVehicles,
     results: vehicles.length,
     data: {
       vehicles,

@@ -233,7 +233,7 @@ function VehicleDetails() {
         <h1 style={{ fontSize: "36px", color: "#333", margin: "10px 0" }}>
           ₹{vehicle.price.toLocaleString("en-IN")}
         </h1>
-        <p>
+        {/* <p>
           <strong>Fuel Type:</strong> {vehicle.fuelType}
         </p>
         <p>
@@ -279,10 +279,6 @@ function VehicleDetails() {
             : ""}{" "}
           {vehicle.engineType ? vehicle.engineType : ""}
         </p>
-        {/* <p>
-          <strong>Sellers's Phone Number:</strong>{" "}
-          {seller.phoneNumber ? `+91 ${seller.phoneNumber}` : "--"}
-        </p> */}
         <p>
           {seller.phoneNumber ? (
             // <a
@@ -317,7 +313,116 @@ function VehicleDetails() {
           ) : (
             "Loading seller details..."
           )}
-        </p>
+        </p> */}
+        <table className="vehicle-details-table">
+          <tbody>
+            <tr>
+              <td>
+                <strong>Fuel Type:</strong>
+              </td>
+              <td>{vehicle.fuelType}</td>
+              <td>
+                <strong>Transmission:</strong>
+              </td>
+              <td>{vehicle.transmission}</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Odometer:</strong>
+              </td>
+              <td>{vehicle.odometer} km</td>
+              <td>
+                <strong>No. of Owners:</strong>
+              </td>
+              <td>{vehicle.ownership}</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>State:</strong>
+              </td>
+              <td>{vehicle.state ? vehicle.state : "--"}</td>
+              <td>
+                <strong>Location:</strong>
+              </td>
+              <td>{vehicle.location}</td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Engine:</strong>
+              </td>
+              <td>
+                {!vehicle.engineDisplacement && !vehicle.engineType ? "--" : ""}
+                {vehicle.engineDisplacement
+                  ? `${vehicle.engineDisplacement}L`
+                  : ""}{" "}
+                {vehicle.engineType ? vehicle.engineType : ""}
+              </td>
+              <td>
+                <strong>Date Listed:</strong>
+              </td>
+              <td>
+                {vehicle.createdAt
+                  ? new Date(vehicle.createdAt).toLocaleDateString("en-GB", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })
+                  : "--"}
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <strong>Seller:</strong>
+              </td>
+              <td colSpan="3">
+                {seller ? (
+                  <Link to={`/user/${seller._id}`}>{seller.name}</Link>
+                ) : (
+                  "Loading seller details..."
+                )}
+                {seller && seller.phoneNumber && (
+                  <a
+                    href={
+                      isMobile()
+                        ? `whatsapp://send?phone=${seller.phoneNumber}&text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`
+                        : `https://wa.me/${seller.phoneNumber}?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`
+                    }
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <img
+                      src={whatsApp}
+                      alt="WhatsApp Chat"
+                      style={{
+                        height: "35px" /* Adjust size */,
+                        width: "auto",
+                        objectFit: "contain",
+                        verticalAlign: "middle",
+                        marginLeft: "5px",
+                      }}
+                    />
+                  </a>
+                )}
+              </td>
+            </tr>
+
+            <tr>
+              <td style={{ verticalAlign: "top" }}>
+                <strong>Description:</strong>
+              </td>
+              <td colSpan="3">
+                {vehicle.description
+                  ? vehicle.description.split("\n").map((line, index) => (
+                      <span key={index}>
+                        {line}
+                        <br />
+                      </span>
+                    ))
+                  : "--"}
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       {/* Modal */}
       {isModalOpen && (
