@@ -1,0 +1,67 @@
+/* Centered Settings Box */
+.settings-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f4f4f4;
+}
+
+.settings-box {
+  background: white;
+  padding: 25px;
+  width: 350px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  text-align: center;
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Settings Options */
+.settings-option {
+  font-size: 16px;
+  padding: 12px 0;
+  cursor: pointer;
+  transition: color 0.3s ease;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Last option shouldn't have a border */
+.settings-option:last-child {
+  border-bottom: none;
+}
+
+/* Hover effect */
+.settings-option:hover {
+  color: #007bff;
+}
+
+/* Logout & Delete Styling */
+.logout-text {
+  color: #ff726f;
+  font-weight: bold;
+}
+
+.logout-text:hover {
+  color: #e6605d;
+}
+
+.delete-text {
+  color: #dc3545;
+  font-weight: bold;
+}
+
+.delete-text:hover {
+  color: #b02a37;
+}
+
+/* Error Message */
+.error-message {
+  color: red;
+  text-align: center;
+  margin-top: 20px;
+}

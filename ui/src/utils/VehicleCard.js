@@ -9,7 +9,7 @@ import "./css/VehicleCard.css";
 
 function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
+  // const [isHovered, setIsHovered] = useState(false);
   const [liked, setLiked] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -89,10 +89,10 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
           borderRadius: "10px",
           overflow: "hidden",
           transition: "background-color 0.3s ease",
-          backgroundColor: isHovered ? "rgba(0, 0, 0, 0.1)" : "white",
+          // backgroundColor: isHovered ? "rgba(0, 0, 0, 0.1)" : "white",
         }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        // onMouseEnter={() => setIsHovered(true)}
+        // onMouseLeave={() => setIsHovered(false)}
       >
         <div
           // style={{
@@ -115,7 +115,7 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
               height: "100%",
               objectFit: "cover",
               transition: "opacity 0.3s ease",
-              opacity: isHovered ? 0.7 : 1,
+              // opacity: isHovered ? 0.7 : 1,
             }}
           />
           <img

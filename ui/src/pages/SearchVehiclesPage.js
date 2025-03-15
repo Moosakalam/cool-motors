@@ -218,11 +218,12 @@ const SearchVehiclesPage = () => {
         <h2>Search Results</h2>
         {vehicles.length !== 0 && (
           <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
-              gap: "20px",
-            }}
+            // style={{
+            //   display: "grid",
+            //   gridTemplateColumns: "repeat(4, 1fr)",
+            //   gap: "20px",
+            // }}
+            className="vehicle-grid"
           >
             {vehicles.map((vehicle) => (
               <VehicleCard key={vehicle._id} vehicle={vehicle} />

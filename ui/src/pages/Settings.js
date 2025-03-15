@@ -5,6 +5,7 @@ import { useAuth } from "../AuthContext";
 import Restricted from "../utils/Restricted";
 import Confirmation from "../utils/Confirmation";
 import Alert from "../utils/Alert";
+import "./css/Settings.css";
 
 const Settings = () => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -37,18 +38,6 @@ const Settings = () => {
     fetchUserInfo();
   }, [user]);
 
-  const handleUpdatePassword = () => {
-    navigate("/update-password");
-  };
-
-  const handleUpdateProfile = () => {
-    navigate("/update-me");
-  };
-
-  const handleUpdateEmail = () => {
-    navigate("/update-my-email");
-  };
-
   const handleLogout = async () => {
     // const confirmed = window.confirm("Are you sure you want to log out?");
     setShowConfirm(false);
@@ -66,26 +55,9 @@ const Settings = () => {
     // }
   };
 
-  const handleReviewVehicles = () => {
-    navigate("/admin/review-vehicles");
-  };
-
   const handleDeleteAccount = async () => {
-    // const firstName = user?.name?.split(" ")[0] || "your";
-    // const confirmationText = `delete ${firstName}'s account`;
-    // const userInput = prompt(
-    //   `To confirm account deletion, type: "${confirmationText}"`
-    // );
-
-    // if (userInput !== confirmationText) {
-    //   alert("Account deletion canceled. The input did not match.");
-    //   return;
-    // }
     const password = prompt("Enter your password to confirm account deletion:");
-    if (!password) {
-      // alert("Account deletion canceled. Password is required.");
-      return;
-    }
+    if (!password) return;
 
     try {
       await axios.delete("http://localhost:5001/api/v1/users/deleteMe", {
@@ -96,131 +68,69 @@ const Settings = () => {
         withCredentials: true,
       });
       setShowAlert(true);
-      // alert("Your account has been deleted successfully.");
-      // navigate("/");
-      // window.location.reload();
     } catch (err) {
-      // console.error("Error deleting account:", err);
       alert(
         err.response?.data?.message || "An error occurred. Please try again."
       );
     }
   };
 
-  // useEffect(() => {
   if (!authLoading && !user) {
-    // navigate("/restricted");
     return <Restricted />;
   }
-  // }, [user, authLoading, navigate]);
 
-  if (error) {
-    return <p>{error}</p>;
-  }
+  if (error) return <p className="error-message">{error}</p>;
 
   return (
-    <div style={{ padding: "20px" }}>
-      <h2>Settings</h2>
-      <button
-        onClick={handleUpdatePassword}
-        style={{
-          display: "block",
-          margin: "10px 0",
-          padding: "10px 20px",
-          backgroundColor: "#007bff",
-          color: "#fff",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-        }}
-      >
-        Change Password
-      </button>
-      <button
-        onClick={handleUpdateProfile}
-        style={{
-          display: "block",
-          margin: "10px 0",
-          padding: "10px 20px",
-          backgroundColor: "#007bff",
-          color: "#fff",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-        }}
-      >
-        Update Profile
-      </button>
-      <button
-        onClick={handleUpdateEmail}
-        style={{
-          display: "block",
-          margin: "10px 0",
-          padding: "10px 20px",
-          backgroundColor: "#007bff",
-          color: "#fff",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-        }}
-      >
-        Update Email
-      </button>
-      {isAdmin && (
-        <button
-          onClick={handleReviewVehicles}
-          style={{
-            display: "block",
-            margin: "10px 0",
-            padding: "10px 20px",
-            backgroundColor: "#28a745",
-            color: "#fff",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
+    <div className="settings-container">
+      <div className="settings-box">
+        <h2>Settings</h2>
+        <div
+          className="settings-option"
+          onClick={() => navigate("/update-password")}
         >
-          Review Vehicles (Admin Only)
-        </button>
-      )}
-      <button
-        onClick={() => setShowConfirm(true)}
-        style={{
-          display: "block",
-          margin: "10px 0",
-          padding: "10px 20px",
-          backgroundColor: "#dc3545",
-          color: "#fff",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-        }}
-      >
-        Logout
-      </button>
-      <button
-        onClick={handleDeleteAccount}
-        style={{
-          display: "block",
-          margin: "10px 0",
-          padding: "10px 20px",
-          backgroundColor: "#ff4500",
-          color: "#fff",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-        }}
-      >
-        Delete My Account
-      </button>
+          Change Password
+        </div>
+        <div className="settings-option" onClick={() => navigate("/update-me")}>
+          Update Profile
+        </div>
+        <div
+          className="settings-option"
+          onClick={() => navigate("/update-my-email")}
+        >
+          Update Email
+        </div>
+        {isAdmin && (
+          <div
+            className="settings-option"
+            onClick={() => navigate("/admin/review-vehicles")}
+          >
+            Review Vehicles (Admin)
+          </div>
+        )}
+        <div
+          className="settings-option logout-text"
+          onClick={() => setShowConfirm(true)}
+        >
+          Logout
+        </div>
+        <div
+          className="settings-option delete-text"
+          onClick={handleDeleteAccount}
+        >
+          Delete My Account
+        </div>
+      </div>
+
       {showConfirm && (
         <Confirmation
           message="Are you sure you want to logout?"
           confirmText="Logout"
           onCancel={() => setShowConfirm(false)}
-          onConfirm={() => handleLogout()}
+          onConfirm={handleLogout}
         />
       )}
+
       {showAlert && (
         <Alert
           message="Your account has been deleted successfully."

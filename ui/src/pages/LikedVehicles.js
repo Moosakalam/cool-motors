@@ -34,13 +34,7 @@ function LikedVehicles() {
       {likedVehicles.length === 0 ? (
         <p>No liked vehicles</p>
       ) : (
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(4, 1fr)",
-            gap: "20px",
-          }}
-        >
+        <div className="vehicle-grid">
           {likedVehicles.map((vehicle) => (
             <VehicleCard key={vehicle._id} vehicle={vehicle} />
           ))}

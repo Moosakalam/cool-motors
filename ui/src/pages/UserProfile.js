@@ -41,7 +41,6 @@ function UserProfile() {
 
     if (user) {
       if (user._id === userId) {
-        // Redirect the user to MyProfile if viewing their own profile
         navigate("/my-vehicles");
       }
     }
@@ -52,14 +51,7 @@ function UserProfile() {
       {userData ? (
         <>
           <h2>{userData.name}'s Profile</h2>
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "repeat(4, 1fr)",
-              gap: "20px",
-              marginTop: "20px",
-            }}
-          >
+          <div className="vehicle-grid">
             {listedVehicles.length > 0 ? (
               listedVehicles.map((vehicle) => (
                 <VehicleCard key={vehicle._id} vehicle={vehicle} />
