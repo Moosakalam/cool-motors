@@ -25,6 +25,10 @@ const app = express();
 //     credentials: true,
 //   })
 // );
+const allowedOrigins = [
+  "http://localhost:3000", // Local frontend
+  "https://your-deployed-frontend.com", // Deployed frontend
+];
 app.use(
   cors({
     origin: (origin, callback) => {
