@@ -167,13 +167,13 @@ exports.login = catchAsyncError(async (req, res, next) => {
 });
 
 exports.logout = (req, res, next) => {
-  // res.cookie("jwt", "dummytext", {
-  //   expires: new Date(Date.now() + 10 * 1000),
-  //   httpOnly: true,
-  // });
+  res.cookie("jwt", "dummytext", {
+    expires: new Date(Date.now() + 1000),
+    httpOnly: true,
+  });
 
-  res.clearCookie("jwt");
-  console.log("cookie cleared");
+  // res.clearCookie("jwt");
+  // console.log("cookie cleared");
 
   res.status(200).json({ status: "success" });
 };
