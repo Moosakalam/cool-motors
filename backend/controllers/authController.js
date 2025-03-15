@@ -173,6 +173,7 @@ exports.logout = (req, res, next) => {
   // });
 
   res.clearCookie("jwt");
+  console.log("cookie cleared");
 
   res.status(200).json({ status: "success" });
 };
