@@ -21,9 +21,12 @@ function MyVehicles() {
     if (!user?._id) return;
 
     axios
-      .get(`http://localhost:5001/api/v1/users/${user._id}/vehicles`, {
-        withCredentials: true,
-      })
+      .get(
+        `${process.env.REACT_APP_API_URL}/api/v1/users/${user._id}/vehicles`,
+        {
+          withCredentials: true,
+        }
+      )
       .then((res) => setListedVehicles(res.data.data.vehicles))
       .catch((error) =>
         console.error("Error fetching listed vehicles:", error)
@@ -34,7 +37,7 @@ function MyVehicles() {
     if (!user?._id) return;
 
     axios
-      .get(`http://localhost:5001/api/v1/users/sold-vehicles`, {
+      .get(`${process.env.REACT_APP_API_URL}/api/v1/users/sold-vehicles`, {
         withCredentials: true,
       })
       .then((res) => setSoldVehicles(res.data.data.soldVehicles))
@@ -45,7 +48,7 @@ function MyVehicles() {
   //   setShowConfirm(false);
   //   try {
   //     await axios.delete(
-  //       `http://localhost:5001/api/v1/vehicles/${vehicleToDelete}`,
+  //       `${process.env.REACT_APP_API_URL}/api/v1/vehicles/${vehicleToDelete}`,
   //       {
   //         withCredentials: true,
   //       }
@@ -63,8 +66,8 @@ function MyVehicles() {
     setShowConfirm(false);
     try {
       const endpoint = isSoldVehicle
-        ? `http://localhost:5001/api/v1/sold-vehicles/${vehicleToDelete}`
-        : `http://localhost:5001/api/v1/vehicles/${vehicleToDelete}`;
+        ? `${process.env.REACT_APP_API_URL}/api/v1/sold-vehicles/${vehicleToDelete}`
+        : `${process.env.REACT_APP_API_URL}/api/v1/vehicles/${vehicleToDelete}`;
 
       await axios.delete(endpoint, { withCredentials: true });
 
@@ -87,7 +90,7 @@ function MyVehicles() {
       return;
     try {
       await axios.patch(
-        `http://localhost:5001/api/v1/vehicles/${vehicleId}/sold`,
+        `${process.env.REACT_APP_API_URL}/api/v1/vehicles/${vehicleId}/sold`,
         {},
         { withCredentials: true }
       );

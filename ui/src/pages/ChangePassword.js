@@ -24,7 +24,7 @@ const ChangePassword = () => {
 
     try {
       const response = await axios.patch(
-        "http://localhost:5001/api/v1/users/changePassword",
+        `${process.env.REACT_APP_API_URL}/api/v1/users/changePassword`,
         {
           currentPassword,
           password: newPassword,

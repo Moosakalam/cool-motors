@@ -18,7 +18,7 @@ function VehicleCard({ vehicle }) {
       try {
         // Check if the vehicle is liked using the new API endpoint
         const response = await axios.get(
-          `http://localhost:5001/api/v1/vehicles/${vehicle._id}/likes/is-liked`,
+          `${process.env.REACT_APP_API_URL}/api/v1/vehicles/${vehicle._id}/likes/is-liked`,
           {
             withCredentials: true,
           }
@@ -44,14 +44,14 @@ function VehicleCard({ vehicle }) {
     try {
       if (liked) {
         await axios.delete(
-          `http://localhost:5001/api/v1/vehicles/${vehicle._id}/likes`,
+          `${process.env.REACT_APP_API_URL}/api/v1/vehicles/${vehicle._id}/likes`,
           {
             withCredentials: true,
           }
         );
       } else {
         await axios.post(
-          `http://localhost:5001/api/v1/vehicles/${vehicle._id}/likes`,
+          `${process.env.REACT_APP_API_URL}/api/v1/vehicles/${vehicle._id}/likes`,
           {},
           {
             withCredentials: true,

@@ -108,7 +108,7 @@ function ListVehicle() {
       }
 
       await axios.post(
-        "http://localhost:5001/api/v1/pending-vehicles/list",
+        `${process.env.REACT_APP_API_URL}/api/v1/pending-vehicles/list`,
         formDataWithFiles,
         {
           withCredentials: true,

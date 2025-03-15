@@ -26,7 +26,7 @@ const UpdateMe = () => {
 
     try {
       const response = await axios.get(
-        `http://localhost:5001/api/v1/users/${user._id}`,
+        `${process.env.REACT_APP_API_URL}/api/v1/users/${user._id}`,
         { withCredentials: true }
       );
 
@@ -80,7 +80,7 @@ const UpdateMe = () => {
       }
 
       await axios.patch(
-        "http://localhost:5001/api/v1/users/updateMe",
+        `${process.env.REACT_APP_API_URL}/api/v1/users/updateMe`,
         updatedData,
         { withCredentials: true }
       );

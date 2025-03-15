@@ -37,9 +37,13 @@ function Signup() {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post("http://localhost:5001/api/v1/users/signup", formData, {
-        withCredentials: true,
-      });
+      await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/v1/users/signup`,
+        formData,
+        {
+          withCredentials: true,
+        }
+      );
       setSuccess("Signup successful!");
       setFormData({
         name: "",

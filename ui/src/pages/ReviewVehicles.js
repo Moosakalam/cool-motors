@@ -31,7 +31,7 @@ function ReviewVehicles() {
     try {
       // Fetch vehicle details
       const response = await axios.get(
-        "http://localhost:5001/api/v1/pending-vehicles/oldest",
+        `${process.env.REACT_APP_API_URL}/api/v1/pending-vehicles/oldest`,
         {
           withCredentials: true,
         }
@@ -47,7 +47,7 @@ function ReviewVehicles() {
       // Fetch seller details if available
       if (fetchedVehicle.listedBy) {
         const sellerResponse = await axios.get(
-          `http://localhost:5001/api/v1/users/${fetchedVehicle.listedBy}`,
+          `${process.env.REACT_APP_API_URL}/api/v1/users/${fetchedVehicle.listedBy}`,
           {
             withCredentials: true,
           }
@@ -72,7 +72,7 @@ function ReviewVehicles() {
     setShowConfirm(false);
     try {
       await axios.post(
-        `http://localhost:5001/api/v1/pending-vehicles/${vehicle._id}/approve`,
+        `${process.env.REACT_APP_API_URL}/api/v1/pending-vehicles/${vehicle._id}/approve`,
         {},
         {
           withCredentials: true,
@@ -92,7 +92,7 @@ function ReviewVehicles() {
     setShowConfirm(false);
     try {
       await axios.delete(
-        `http://localhost:5001/api/v1/pending-vehicles/${vehicle._id}/disapprove`,
+        `${process.env.REACT_APP_API_URL}/api/v1/pending-vehicles/${vehicle._id}/disapprove`,
         {
           withCredentials: true,
         }

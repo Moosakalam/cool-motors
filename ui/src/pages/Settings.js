@@ -23,7 +23,7 @@ const Settings = () => {
 
       try {
         const response = await axios.get(
-          `http://localhost:5001/api/v1/users/${userId}`,
+          `${process.env.REACT_APP_API_URL}/api/v1/users/${userId}`,
           {
             withCredentials: true,
           }
@@ -43,7 +43,7 @@ const Settings = () => {
     setShowConfirm(false);
     // if (confirmed) {
     try {
-      await axios.get("http://localhost:5001/api/v1/users/logout", {
+      await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/users/logout`, {
         withCredentials: true,
       });
 
@@ -60,11 +60,14 @@ const Settings = () => {
     if (!password) return;
 
     try {
-      await axios.delete("http://localhost:5001/api/v1/users/deleteMe", {
-        withCredentials: true,
-        data: { password }, // Send password in request body
-      });
-      await axios.get("http://localhost:5001/api/v1/users/logout", {
+      await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/v1/users/deleteMe`,
+        {
+          withCredentials: true,
+          data: { password }, // Send password in request body
+        }
+      );
+      await axios.get(`${process.env.REACT_APP_API_URL}/api/v1/users/logout`, {
         withCredentials: true,
       });
       setShowAlert(true);

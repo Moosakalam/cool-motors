@@ -73,7 +73,7 @@ const EditVehicle = () => {
       setFetchLoading(true);
       try {
         const response = await axios.get(
-          `http://localhost:5001/api/v1/vehicles/${vehicleId}`,
+          `${process.env.REACT_APP_API_URL}/api/v1/vehicles/${vehicleId}`,
           {
             withCredentials: true,
           }
@@ -119,7 +119,7 @@ const EditVehicle = () => {
       }
 
       await axios.patch(
-        `http://localhost:5001/api/v1/vehicles/${vehicleId}`,
+        `${process.env.REACT_APP_API_URL}/api/v1/vehicles/${vehicleId}`,
         updatedData,
         {
           withCredentials: true,

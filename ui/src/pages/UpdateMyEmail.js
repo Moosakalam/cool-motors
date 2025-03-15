@@ -34,7 +34,7 @@ const UpdateMyEmail = () => {
     setLoading(true);
     try {
       await axios.patch(
-        "http://localhost:5001/api/v1/users/update-email",
+        `${process.env.REACT_APP_API_URL}/api/v1/users/update-email`,
         { email },
         { withCredentials: true }
       );

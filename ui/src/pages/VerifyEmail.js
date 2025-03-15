@@ -12,7 +12,7 @@ const VerifyEmail = () => {
     const verifyEmail = async () => {
       try {
         await axios.get(
-          `http://localhost:5001/api/v1/users/verify-email/${verificationToken}`,
+          `${process.env.REACT_APP_API_URL}/api/v1/users/verify-email/${verificationToken}`,
           {
             withCredentials: true,
           }

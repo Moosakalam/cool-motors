@@ -15,7 +15,7 @@ function UserProfile() {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5001/api/v1/users/${userId}`,
+          `${process.env.REACT_APP_API_URL}/api/v1/users/${userId}`,
           { withCredentials: true }
         );
         setUserData(response.data.data.user);
@@ -27,7 +27,7 @@ function UserProfile() {
     const fetchListedVehicles = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5001/api/v1/users/${userId}/vehicles`,
+          `${process.env.REACT_APP_API_URL}/api/v1/users/${userId}/vehicles`,
           { withCredentials: true }
         );
         setListedVehicles(response.data.data.vehicles);

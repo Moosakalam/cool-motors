@@ -27,7 +27,7 @@ function VehicleDetails() {
       try {
         // Fetch vehicle details
         const vehicleResponse = await axios.get(
-          `http://localhost:5001/api/v1/vehicles/${id}`,
+          `${process.env.REACT_APP_API_URL}/api/v1/vehicles/${id}`,
           {
             withCredentials: true,
           }
@@ -37,7 +37,7 @@ function VehicleDetails() {
         // Fetch seller details if available
         if (fetchedVehicle.listedBy) {
           const sellerResponse = await axios.get(
-            `http://localhost:5001/api/v1/users/${fetchedVehicle.listedBy}`,
+            `${process.env.REACT_APP_API_URL}/api/v1/users/${fetchedVehicle.listedBy}`,
             {
               withCredentials: true,
             }
@@ -59,7 +59,7 @@ function VehicleDetails() {
       try {
         // Check if the vehicle is liked using the new API endpoint
         const response = await axios.get(
-          `http://localhost:5001/api/v1/vehicles/${vehicle._id}/likes/is-liked`,
+          `${process.env.REACT_APP_API_URL}/api/v1/vehicles/${vehicle._id}/likes/is-liked`,
           {
             withCredentials: true,
           }
@@ -82,14 +82,14 @@ function VehicleDetails() {
     try {
       if (liked) {
         await axios.delete(
-          `http://localhost:5001/api/v1/vehicles/${id}/likes`,
+          `${process.env.REACT_APP_API_URL}/api/v1/vehicles/${id}/likes`,
           {
             withCredentials: true,
           }
         );
       } else {
         await axios.post(
-          `http://localhost:5001/api/v1/vehicles/${id}/likes`,
+          `${process.env.REACT_APP_API_URL}/api/v1/vehicles/${id}/likes`,
           {},
           {
             withCredentials: true,

@@ -14,7 +14,7 @@ function LikedVehicles() {
     if (!user?._id) return;
 
     axios
-      .get(`http://localhost:5001/api/v1/users/${user._id}/likes`, {
+      .get(`${process.env.REACT_APP_API_URL}/api/v1/users/${user._id}/likes`, {
         withCredentials: true,
       })
       .then((res) => setLikedVehicles(res.data.data.likedVehicles))

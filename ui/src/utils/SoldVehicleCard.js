@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useAuth } from "../AuthContext";
-import axios from "axios";
+// import { useNavigate, useLocation } from "react-router-dom";
+// import { useAuth } from "../AuthContext";
+// import axios from "axios";
 import moreIcon from "./images/more.png";
 
 function SoldVehicleCard({ vehicle, showOptions, onDelete }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
-  const { user } = useAuth();
-  const navigate = useNavigate();
-  const location = useLocation();
+  // const { user } = useAuth();
+  // const navigate = useNavigate();
+  // const location = useLocation();
 
   useEffect(() => {
     const handleClickOutside = (event) => {

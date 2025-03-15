@@ -22,7 +22,7 @@ function Login() {
     setLoading(true);
     try {
       await axios.post(
-        "http://localhost:5001/api/v1/users/login",
+        `${process.env.REACT_APP_API_URL}/api/v1/users/login`,
         { email, password },
         { withCredentials: true }
       );

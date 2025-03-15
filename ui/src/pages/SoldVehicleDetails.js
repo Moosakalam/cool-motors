@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import "./css/VehicleDetails.css"; // Import the CSS for the modal and blur effect
 import { useAuth } from "../AuthContext";
@@ -25,7 +25,7 @@ function SoldVehicleDetails() {
       try {
         // Fetch vehicle details
         const vehicleResponse = await axios.get(
-          `http://localhost:5001/api/v1/sold-vehicles/${id}`,
+          `${process.env.REACT_APP_API_URL}/api/v1/sold-vehicles/${id}`,
           {
             withCredentials: true,
           }

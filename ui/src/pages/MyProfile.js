@@ -23,15 +23,21 @@ function MyProfile() {
     const fetchUserDetails = async () => {
       try {
         const [userRes, listedRes, likedRes] = await Promise.all([
-          axios.get(`http://localhost:5001/api/v1/users/${userId}`, {
+          axios.get(`${process.env.REACT_APP_API_URL}/api/v1/users/${userId}`, {
             withCredentials: true,
           }),
-          axios.get(`http://localhost:5001/api/v1/users/${userId}/vehicles`, {
-            withCredentials: true,
-          }),
-          axios.get(`http://localhost:5001/api/v1/users/${userId}/likes`, {
-            withCredentials: true,
-          }),
+          axios.get(
+            `${process.env.REACT_APP_API_URL}/api/v1/users/${userId}/vehicles`,
+            {
+              withCredentials: true,
+            }
+          ),
+          axios.get(
+            `${process.env.REACT_APP_API_URL}/api/v1/users/${userId}/likes`,
+            {
+              withCredentials: true,
+            }
+          ),
         ]);
 
         setUsername(userRes.data.data.user.name);
@@ -47,9 +53,12 @@ function MyProfile() {
 
   const handleDelete = async (vehicleId) => {
     try {
-      await axios.delete(`http://localhost:5001/api/v1/vehicles/${vehicleId}`, {
-        withCredentials: true,
-      });
+      await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/v1/vehicles/${vehicleId}`,
+        {
+          withCredentials: true,
+        }
+      );
       setListedVehicles((prevVehicles) =>
         prevVehicles.filter((vehicle) => vehicle._id !== vehicleId)
       );

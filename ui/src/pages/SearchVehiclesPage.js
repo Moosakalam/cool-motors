@@ -61,7 +61,7 @@ const SearchVehiclesPage = () => {
   //   setLoading(true);
   //   try {
   //     const response = await axios.get(
-  //       "http://localhost:5001/api/v1/vehicles/search",
+  //       `${process.env.REACT_APP_API_URL}/api/v1/vehicles/search`,
   //       {
   //         params: activeFilters,
   //         withCredentials: true,
@@ -82,7 +82,7 @@ const SearchVehiclesPage = () => {
       setLoading(true);
       try {
         const response = await axios.get(
-          "http://localhost:5001/api/v1/vehicles/search",
+          `${process.env.REACT_APP_API_URL}/api/v1/vehicles/search`,
           {
             params: { ...activeFilters, page: pagination.page }, // Include page parameter
             withCredentials: true,
