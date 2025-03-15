@@ -26,6 +26,7 @@ const createAndSendToken = (user, statusCode, res) => {
   // Set 'secure' only in production (so it works on localhost)
   if (process.env.NODE_ENV === "production") {
     cookieOptions.secure = true; // Cookies work only over HTTPS
+    cookieOptions.sameSite = "None";
     console.log("secure set to true");
   } else {
     cookieOptions.secure = false; // Allow HTTP for localhost development
