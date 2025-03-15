@@ -32,6 +32,9 @@ const createAndSendToken = (user, statusCode, res) => {
   }
   res.cookie("jwt", token, cookieOptions);
 
+  // ✅ Debugging: Check if the cookie is being set
+  console.log("Set-Cookie header:", res.getHeaders()["set-cookie"]);
+
   user.password = undefined;
 
   res.status(statusCode).json({
