@@ -22,12 +22,12 @@ const createAndSendToken = (user, statusCode, res) => {
     httpOnly: true,
   };
 
-  // // Set 'secure' only in production (so it works on localhost)
-  // if (process.env.NODE_ENV === "production") {
-  //   cookieOptions.secure = true; // Cookies work only over HTTPS
-  // } else {
-  //   cookieOptions.secure = false; // Allow HTTP for localhost development
-  // }
+  // Set 'secure' only in production (so it works on localhost)
+  if (process.env.NODE_ENV === "production") {
+    cookieOptions.secure = true; // Cookies work only over HTTPS
+  } else {
+    cookieOptions.secure = false; // Allow HTTP for localhost development
+  }
   res.cookie("jwt", token, cookieOptions);
 
   user.password = undefined;
