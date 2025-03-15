@@ -2,14 +2,12 @@ const express = require("express");
 const path = require("path");
 const morgan = require("morgan");
 const cors = require("cors");
-const multer = require("multer");
-const { S3Client } = require("@aws-sdk/client-s3");
 const rateLimit = require("express-rate-limit");
 const helmet = require("helmet");
 const mongoSanitize = require("express-mongo-sanitize");
 const xss = require("xss-clean");
 const cookieParser = require("cookie-parser");
-// const hpp = require("hpp");
+const hpp = require("hpp");
 
 const vehicleRouter = require("./routes/vehicleRoutes");
 const pendingVehicleRouter = require("./routes/pendingVehicleRoutes");
@@ -21,9 +19,21 @@ const errorHandler = require("./controllers/errorController");
 
 const app = express();
 
+// app.use(
+//   cors({
+//     origin: "http://localhost:3000",
+//     credentials: true,
+//   })
+// );
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
@@ -44,8 +54,8 @@ app.use(mongoSanitize());
 //data sanitization against xss
 app.use(xss());
 
-// //prevent parameter pollution
-// app.use(hpp());
+//prevent parameter pollution
+app.use(hpp());
 
 //development logging
 if (process.env.NODE_ENV === "development") {
