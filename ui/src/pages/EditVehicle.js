@@ -126,7 +126,6 @@ const EditVehicle = () => {
         }
       );
       setSuccessMessage("Vehicle updated successfully!");
-      // setTimeout(() => navigate("/my-vehicles"), 2000);
       setShowAlert(true);
     } catch (err) {
       setError(err.response?.data?.message || "Failed to update vehicle");
