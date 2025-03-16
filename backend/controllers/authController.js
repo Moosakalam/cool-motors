@@ -1,6 +1,7 @@
 const { promisify } = require("util");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
+const { serialize } = require("cookie");
 const User = require("../models/userModel");
 const catchAsyncError = require("../utils/catchAsyncError");
 const AppError = require("../utils/appError");
@@ -15,26 +16,35 @@ const signToken = (id) => {
 
 const createAndSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
-  const cookieOptions = {
-    expires: new Date(
-      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
-    ),
-    // sameSite: "None",
-    httpOnly: true,
-  };
+  // const cookieOptions = {
+  //   expires: new Date(
+  //     Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+  //   ),
+  //   // sameSite: "None",
+  //   httpOnly: true,
+  // };
 
   // Set 'secure' only in production (so it works on localhost)
-  if (process.env.NODE_ENV === "production") {
-    cookieOptions.secure = true; // Cookies work only over HTTPS
-    cookieOptions.sameSite = "None";
-    console.log("secure set to true");
-  } else {
-    cookieOptions.secure = false; // Allow HTTP for localhost development
-  }
-  res.cookie("jwt", token, cookieOptions);
+  // if (process.env.NODE_ENV === "production") {
+  //   cookieOptions.secure = true; // Cookies work only over HTTPS
+  //   cookieOptions.sameSite = "None";
+  //   console.log("secure set to true");
+  // } else {
+  //   cookieOptions.secure = false; // Allow HTTP for localhost development
+  // }
+  // res.cookie("jwt", token, cookieOptions);
 
   // ✅ Debugging: Check if the cookie is being set
-  // console.log("Set-Cookie header:", res.getHeaders()["set-cookie"]);
+
+  const serialized = serialize("jwt", token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 60 * 60 * 24 * process.env.JWT_COOKIE_EXPIRES_IN,
+    path: "/",
+  });
+  res.setHeader("Set-Cookie", serialized);
+  console.log("Set-Cookie header:", res.getHeaders()["set-cookie"]);
 
   user.password = undefined;
 
@@ -168,10 +178,19 @@ exports.login = catchAsyncError(async (req, res, next) => {
 });
 
 exports.logout = (req, res, next) => {
-  res.cookie("jwt", "dummytext", {
-    expires: new Date(Date.now() + 1000),
+  // res.cookie("jwt", "dummytext", {
+  //   expires: new Date(Date.now() + 1000),
+  //   httpOnly: true,
+  // });
+
+  const serialized = serialize("jwt", null, {
     httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: -1,
+    path: "/",
   });
+  res.setHeader("Set-Cookie", serialized);
 
   // res.clearCookie("jwt");
   // console.log("cookie cleared");
