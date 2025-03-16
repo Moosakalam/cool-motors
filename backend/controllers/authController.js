@@ -39,7 +39,7 @@ const createAndSendToken = (user, statusCode, res) => {
   const serialized = serialize("jwt", token, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    sameSite: "none",
     maxAge: 60 * 60 * 24 * process.env.JWT_COOKIE_EXPIRES_IN,
     path: "/",
   });
@@ -186,7 +186,7 @@ exports.logout = (req, res, next) => {
   const serialized = serialize("jwt", null, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "strict",
+    sameSite: "none",
     maxAge: -1,
     path: "/",
   });
