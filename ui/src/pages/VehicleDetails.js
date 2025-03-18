@@ -21,6 +21,16 @@ function VehicleDetails() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const location = useLocation();
+  const [isMobileScreen, setIsMobileScreen] = useState(window.innerWidth < 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobileScreen(window.innerWidth < 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchVehicleDetails = async () => {
@@ -74,7 +84,7 @@ function VehicleDetails() {
 
   const handleLikeToggle = async () => {
     if (!user) {
-      if (window.confirm("Login to like this vehicle?")) {
+      if (window.confirm("Do you want to Login to like this vehicle?")) {
         navigate(`/login?redirect=${encodeURIComponent(location.pathname)}`);
       }
       return;
@@ -170,7 +180,7 @@ function VehicleDetails() {
             style={{
               objectFit: "contain",
             }}
-            onClick={openImageModal} // Open modal on click
+            onClick={openImageModal}
           />
           <button onClick={handleLikeToggle} className="like-button">
             <img
@@ -191,18 +201,7 @@ function VehicleDetails() {
               src={left}
               alt="Previuos"
               onClick={prevImage}
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "10px",
-                transform: "translateY(-50%)", // Centers it vertically
-                height: "3rem", // Reduce size
-                width: "3rem",
-                cursor: "pointer",
-                opacity: 0.7,
-                background: "#fff",
-              }}
-              className="nav-arrow left-arrow"
+              className="img-nav-button left"
             />
           )}
 
@@ -212,17 +211,7 @@ function VehicleDetails() {
               src={right}
               alt="Next"
               onClick={nextImage}
-              style={{
-                position: "absolute",
-                top: "50%",
-                right: "10px",
-                transform: "translateY(-50%)", // Centers it vertically
-                height: "3rem", // Reduce size
-                width: "3rem",
-                cursor: "pointer",
-                opacity: 0.7,
-                background: "#fff",
-              }}
+              className="img-nav-button right"
             />
           )}
         </div>
@@ -233,194 +222,231 @@ function VehicleDetails() {
         <h1 style={{ fontSize: "36px", color: "#333", margin: "10px 0" }}>
           ₹{vehicle.price.toLocaleString("en-IN")}
         </h1>
-        {/* <p>
-          <strong>Fuel Type:</strong> {vehicle.fuelType}
-        </p>
-        <p>
-          <strong>Transmission:</strong> {vehicle.transmission}
-        </p>
-        <p>
-          <strong>Odometer:</strong> {vehicle.odometer} km
-        </p>
-        <p>
-          <strong>No. of Owners:</strong> {vehicle.ownership}
-        </p>
-        <p>
-          <strong>State:</strong> {vehicle.state ? vehicle.state : "--"}
-        </p>
-        <p>
-          <strong>Location:</strong> {vehicle.location}
-        </p>
-        <p>
-          <strong>Description:</strong>
-          <br />
-          {vehicle.description
-            ? vehicle.description.split("\n").map((line, index) => (
-                <span key={index}>
-                  {line}
-                  <br />
-                </span>
-              ))
-            : "--"}
-        </p>
-        <p>
-          <strong>Date Listed:</strong>{" "}
-          {new Date(vehicle.createdAt).toLocaleDateString("en-GB", {
-            day: "numeric",
-            month: "long",
-            year: "numeric",
-          })}
-        </p>
-        <p>
-          <strong>Engine:</strong>{" "}
-          {!vehicle.engineDisplacement && !vehicle.engineType ? "--" : ""}
-          {vehicle.engineDisplacement
-            ? `${vehicle.engineDisplacement}L`
-            : ""}{" "}
-          {vehicle.engineType ? vehicle.engineType : ""}
-        </p>
-        <p>
-          {seller.phoneNumber ? (
-            // <a
-            //   // href={`https://wa.me/${seller.phoneNumber}?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`}
-            //   href={`whatsapp://send?phone=${seller.phoneNumber}&text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`}
-            //   target="_blank"
-            //   rel="noopener noreferrer"
-            // >
-            <a
-              href={
-                isMobile()
-                  ? `whatsapp://send?phone=${seller.phoneNumber}&text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`
-                  : `https://wa.me/${seller.phoneNumber}?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`
-              }
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <img
-                src={whatsApp}
-                alt="WhatsApp Chat"
-                style={{ height: "50px", width: "150px", objectFit: "contain" }}
-              ></img>
-            </a>
-          ) : (
-            ""
-          )}
-        </p>
-        <p>
-          <strong>Seller:</strong>{" "}
-          {seller ? (
-            <Link to={`/user/${seller._id}`}>{seller.name}</Link>
-          ) : (
-            "Loading seller details..."
-          )}
-        </p> */}
         <table className="vehicle-details-table">
           <tbody>
-            <tr>
-              <td>
-                <strong>Fuel Type:</strong>
-              </td>
-              <td>{vehicle.fuelType}</td>
-              <td>
-                <strong>Transmission:</strong>
-              </td>
-              <td>{vehicle.transmission}</td>
-            </tr>
-            <tr>
-              <td>
-                <strong>Odometer:</strong>
-              </td>
-              <td>{vehicle.odometer} km</td>
-              <td>
-                <strong>No. of Owners:</strong>
-              </td>
-              <td>{vehicle.ownership}</td>
-            </tr>
-            <tr>
-              <td>
-                <strong>State:</strong>
-              </td>
-              <td>{vehicle.state ? vehicle.state : "--"}</td>
-              <td>
-                <strong>Location:</strong>
-              </td>
-              <td>{vehicle.location}</td>
-            </tr>
-            <tr>
-              <td>
-                <strong>Engine:</strong>
-              </td>
-              <td>
-                {!vehicle.engineDisplacement && !vehicle.engineType ? "--" : ""}
-                {vehicle.engineDisplacement
-                  ? `${vehicle.engineDisplacement}L`
-                  : ""}{" "}
-                {vehicle.engineType ? vehicle.engineType : ""}
-              </td>
-              <td>
-                <strong>Date Listed:</strong>
-              </td>
-              <td>
-                {vehicle.createdAt
-                  ? new Date(vehicle.createdAt).toLocaleDateString("en-GB", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })
-                  : "--"}
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <strong>Seller:</strong>
-              </td>
-              <td colSpan="3">
-                {seller ? (
-                  <Link to={`/user/${seller._id}`}>{seller.name}</Link>
-                ) : (
-                  "Loading seller details..."
-                )}
-                {seller && seller.phoneNumber && (
-                  <a
-                    href={
-                      isMobile()
-                        ? `whatsapp://send?phone=${seller.phoneNumber}&text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`
-                        : `https://wa.me/${seller.phoneNumber}?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`
-                    }
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <img
-                      src={whatsApp}
-                      alt="WhatsApp Chat"
-                      style={{
-                        height: "35px" /* Adjust size */,
-                        width: "auto",
-                        objectFit: "contain",
-                        verticalAlign: "middle",
-                        marginLeft: "5px",
-                      }}
-                    />
-                  </a>
-                )}
-              </td>
-            </tr>
-
-            <tr>
-              <td style={{ verticalAlign: "top" }}>
-                <strong>Description:</strong>
-              </td>
-              <td colSpan="3">
-                {vehicle.description
-                  ? vehicle.description.split("\n").map((line, index) => (
-                      <span key={index}>
-                        {line}
-                        <br />
-                      </span>
-                    ))
-                  : "--"}
-              </td>
-            </tr>
+            {isMobileScreen ? (
+              // Mobile View: 2 Columns (Property | Value)
+              <>
+                <tr>
+                  <td>
+                    <strong>Fuel Type:</strong>
+                  </td>
+                  <td>{vehicle.fuelType}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Transmission:</strong>
+                  </td>
+                  <td>{vehicle.transmission}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Odometer:</strong>
+                  </td>
+                  <td>{vehicle.odometer} km</td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>No. of Owners:</strong>
+                  </td>
+                  <td>{vehicle.ownership}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>State:</strong>
+                  </td>
+                  <td>{vehicle.state ? vehicle.state : "--"}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Location:</strong>
+                  </td>
+                  <td>{vehicle.location}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Engine:</strong>
+                  </td>
+                  <td>
+                    {!vehicle.engineDisplacement && !vehicle.engineType
+                      ? "--"
+                      : ""}
+                    {vehicle.engineDisplacement
+                      ? `${vehicle.engineDisplacement}L`
+                      : ""}{" "}
+                    {vehicle.engineType ? vehicle.engineType : ""}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Date Listed:</strong>
+                  </td>
+                  <td>
+                    {vehicle.createdAt
+                      ? new Date(vehicle.createdAt).toLocaleDateString(
+                          "en-GB",
+                          {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          }
+                        )
+                      : "--"}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Seller:</strong>
+                  </td>
+                  <td>
+                    {seller ? (
+                      <Link to={`/user/${seller._id}`}>{seller.name}</Link>
+                    ) : (
+                      "Loading seller details..."
+                    )}
+                    {seller && seller.phoneNumber && (
+                      <a
+                        href={
+                          isMobile()
+                            ? `whatsapp://send?phone=${seller.phoneNumber}&text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`
+                            : `https://wa.me/${seller.phoneNumber}?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <img
+                          src={whatsApp}
+                          alt="WhatsApp Chat"
+                          className="whatsapp-icon"
+                        />
+                      </a>
+                    )}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Description:</strong>
+                  </td>
+                  <td>
+                    {vehicle.description
+                      ? vehicle.description.split("\n").map((line, index) => (
+                          <span key={index}>
+                            {line}
+                            <br />
+                          </span>
+                        ))
+                      : "--"}
+                  </td>
+                </tr>
+              </>
+            ) : (
+              // Desktop View: 4 Columns (Property | Value | Property | Value)
+              <>
+                <tr>
+                  <td>
+                    <strong>Fuel Type:</strong>
+                  </td>
+                  <td>{vehicle.fuelType}</td>
+                  <td>
+                    <strong>Transmission:</strong>
+                  </td>
+                  <td>{vehicle.transmission}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Odometer:</strong>
+                  </td>
+                  <td>{vehicle.odometer} km</td>
+                  <td>
+                    <strong>No. of Owners:</strong>
+                  </td>
+                  <td>{vehicle.ownership}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>State:</strong>
+                  </td>
+                  <td>{vehicle.state ? vehicle.state : "--"}</td>
+                  <td>
+                    <strong>Location:</strong>
+                  </td>
+                  <td>{vehicle.location}</td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Engine:</strong>
+                  </td>
+                  <td>
+                    {!vehicle.engineDisplacement && !vehicle.engineType
+                      ? "--"
+                      : ""}
+                    {vehicle.engineDisplacement
+                      ? `${vehicle.engineDisplacement}L`
+                      : ""}{" "}
+                    {vehicle.engineType ? vehicle.engineType : ""}
+                  </td>
+                  <td>
+                    <strong>Date Listed:</strong>
+                  </td>
+                  <td>
+                    {vehicle.createdAt
+                      ? new Date(vehicle.createdAt).toLocaleDateString(
+                          "en-GB",
+                          {
+                            day: "numeric",
+                            month: "long",
+                            year: "numeric",
+                          }
+                        )
+                      : "--"}
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <strong>Seller:</strong>
+                  </td>
+                  <td colSpan="3">
+                    {seller ? (
+                      <Link to={`/user/${seller._id}`}>{seller.name}</Link>
+                    ) : (
+                      "Loading seller details..."
+                    )}
+                    {seller && seller.phoneNumber && (
+                      <a
+                        href={
+                          isMobile()
+                            ? `whatsapp://send?phone=${seller.phoneNumber}&text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`
+                            : `https://wa.me/${seller.phoneNumber}?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`
+                        }
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <img
+                          src={whatsApp}
+                          alt="WhatsApp Chat"
+                          className="whatsapp-icon"
+                        />
+                      </a>
+                    )}
+                  </td>
+                </tr>
+                <tr>
+                  <td style={{ verticalAlign: "top" }}>
+                    <strong>Description:</strong>
+                  </td>
+                  <td colSpan="3">
+                    {vehicle.description
+                      ? vehicle.description.split("\n").map((line, index) => (
+                          <span key={index}>
+                            {line}
+                            <br />
+                          </span>
+                        ))
+                      : "--"}
+                  </td>
+                </tr>
+              </>
+            )}
           </tbody>
         </table>
       </div>
@@ -441,29 +467,13 @@ function VehicleDetails() {
               src={left}
               alt="Previuos"
               onClick={prevImage}
-              style={{
-                position: "absolute",
-                top: "50%",
-                left: "10px",
-                transform: "translateY(-50%)", // Centers it vertically
-                height: "3rem", // Reduce size
-                width: "3rem",
-                cursor: "pointer",
-                opacity: 0.7,
-                background: "#fff",
-                borderRadius: "10px",
-              }}
+              className="img-nav-button left"
             />
           )}
           <img
             className="modal-content"
             src={vehicle.images[currentImageIndex]}
             alt={`${vehicle.make} ${vehicle.model}`}
-            style={{
-              maxWidth: "90%",
-              maxHeight: "90%",
-              // objectFit: "contain",
-            }}
           />
           {/* Next Button */}
           {vehicle.images?.length > 1 && (
@@ -471,18 +481,7 @@ function VehicleDetails() {
               src={right}
               alt="Next"
               onClick={nextImage}
-              style={{
-                position: "absolute",
-                top: "50%",
-                right: "10px",
-                transform: "translateY(-50%)", // Centers it vertically
-                height: "3rem", // Reduce size
-                width: "3rem",
-                cursor: "pointer",
-                opacity: 0.7,
-                background: "#fff",
-                borderRadius: "10px",
-              }}
+              className="img-nav-button right"
             />
           )}
         </div>

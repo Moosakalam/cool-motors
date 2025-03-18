@@ -49,7 +49,7 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
     e.stopPropagation();
 
     if (!user) {
-      if (window.confirm("Login to like this vehicle?")) {
+      if (window.confirm("Do you want to Login to like this vehicle?")) {
         navigate(`/login?redirect=${encodeURIComponent(location.pathname)}`);
       }
       return;

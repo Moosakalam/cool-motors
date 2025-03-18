@@ -190,14 +190,7 @@ function ReviewVehicles() {
               vehicle.images?.[currentImageIndex] || "/default-placeholder.jpg"
             }
             alt={`${vehicle.make} ${vehicle.model}`}
-            style={{
-              width: "100%",
-              height: "400px",
-              objectFit: "contain",
-              borderRadius: "10px",
-              cursor: "pointer", // Add pointer to indicate clickable
-              backgroundColor: "ThreeDDarkShadow",
-            }}
+            className="vehicle-image"
             onClick={openImageModal} // Open modal on click
           />
           {

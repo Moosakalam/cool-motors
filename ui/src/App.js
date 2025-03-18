@@ -23,44 +23,48 @@ import VerifyEmail from "./pages/VerifyEmail";
 import VerifyEmailUpdate from "./pages/VerifyEmailUpdate";
 import UpdateMyEmail from "./pages/UpdateMyEmail";
 import SoldVehicleDetails from "./pages/SoldVehicleDetails";
+import Footer from "./utils/Footer";
 
 function App() {
   return (
     <Router>
       <div className="App">
         <Navbar /> {/* Navbar will be rendered on all pages */}
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/user/:userId" element={<UserProfile />} />
-          <Route path="/my-vehicles" element={<MyVehicles />} />
-          <Route path="/liked-vehicles" element={<LikedVehicles />} />
-          <Route path="/list" element={<ListVehicle />} />
-          <Route path="/vehicle/:id" element={<VehicleDetails />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
-          <Route path="/search" element={<SearchVehiclesPage />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route
-            path="/reset-password/:resetToken"
-            element={<ResetPassword />}
-          />
-          <Route
-            path="/verify-email/:verificationToken"
-            element={<VerifyEmail />}
-          />
-          <Route path="/update-my-email" element={<UpdateMyEmail />} />
-          <Route
-            path="/verify-email-update/:verificationToken"
-            element={<VerifyEmailUpdate />}
-          />
-          <Route path="/settings" element={<Settings />} />
-          <Route path="/update-password" element={<ChangePassword />} />
-          <Route path="/admin/review-vehicles" element={<ReviewVehicles />} />
-          <Route path="/edit/:vehicleId" element={<EditVehicle />} />
-          <Route path="/update-me" element={<UpdateMe />} />
-          {/* <Route path="/restricted" element={<Restricted />} /> */}
-          <Route path="/sold-vehicle/:id" element={<SoldVehicleDetails />} />
-        </Routes>
+        <div className="main-content">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/user/:userId" element={<UserProfile />} />
+            <Route path="/my-vehicles" element={<MyVehicles />} />
+            <Route path="/liked-vehicles" element={<LikedVehicles />} />
+            <Route path="/list" element={<ListVehicle />} />
+            <Route path="/vehicle/:id" element={<VehicleDetails />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route path="/search" element={<SearchVehiclesPage />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route
+              path="/reset-password/:resetToken"
+              element={<ResetPassword />}
+            />
+            <Route
+              path="/verify-email/:verificationToken"
+              element={<VerifyEmail />}
+            />
+            <Route path="/update-my-email" element={<UpdateMyEmail />} />
+            <Route
+              path="/verify-email-update/:verificationToken"
+              element={<VerifyEmailUpdate />}
+            />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/update-password" element={<ChangePassword />} />
+            <Route path="/admin/review-vehicles" element={<ReviewVehicles />} />
+            <Route path="/edit/:vehicleId" element={<EditVehicle />} />
+            <Route path="/update-me" element={<UpdateMe />} />
+            {/* <Route path="/restricted" element={<Restricted />} /> */}
+            <Route path="/sold-vehicle/:id" element={<SoldVehicleDetails />} />
+          </Routes>
+        </div>
+        <Footer />
       </div>
     </Router>
   );
