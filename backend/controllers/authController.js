@@ -235,14 +235,52 @@ exports.protect = catchAsyncError(async (req, res, next) => {
   req.user = currentUser;
 
   next();
-  // res.status(200).json({
-  //   status: "success",
-  // });
+});
+
+exports.checkIsLoggedIn = catchAsyncError(async (req, res, next) => {
+  // console.log("protecting for", req.originalUrl);
+  //Get token and check if it exits:
+  let token;
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.startsWith("Bearer")
+  ) {
+    token = req.headers.authorization.split(" ")[1];
+  } else if (req.cookies.jwt) {
+    token = req.cookies.jwt;
+  }
+  // console.log(token);
+
+  if (!token) {
+    return next();
+  }
+
+  //verification of token:
+  const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+
+  //check if the user of the token still exists:
+  const currentUser = await User.findById(decoded.id);
+  if (!currentUser) {
+    return next();
+  }
+
+  if (currentUser.changedPasswordAfter(decoded.iat)) {
+    return next();
+  }
+
+  //Grant access to the protected route
+  req.user = currentUser;
+
+  next();
 });
 
 exports.isLoggedIn = catchAsyncError(async (req, res, next) => {
   if (!req.user) {
-    return next(new AppError("Not Logged In", 401));
+    // return next(new AppError("Not Logged In", 401));
+    return res.status(200).json({
+      status: "success",
+      user: null, // Instead of an error, return null
+    });
   }
   res.status(200).json({
     status: "success",

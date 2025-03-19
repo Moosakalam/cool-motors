@@ -11,7 +11,11 @@ const router = express.Router();
 //routes for likes(like POST /vehicles/:vehicleId/likes for liking a vehicle):
 router.use("/:userId/likes", likeRouter);
 
-router.get("/isLoggedIn", authController.protect, authController.isLoggedIn);
+router.get(
+  "/isLoggedIn",
+  authController.checkIsLoggedIn,
+  authController.isLoggedIn
+);
 
 router.post("/signup", authController.signup);
 router.get("/verify-email/:token", authController.verifyEmail);
