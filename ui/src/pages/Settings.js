@@ -47,7 +47,7 @@ const Settings = () => {
         withCredentials: true,
       });
 
-      alert("logged out");
+      // alert("logged out");
       navigate("/");
       window.location.reload();
     } catch (error) {

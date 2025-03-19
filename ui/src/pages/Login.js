@@ -28,7 +28,7 @@ function Login() {
       );
       const redirectTo =
         new URLSearchParams(location.search).get("redirect") || "/";
-      alert("logged in");
+      // alert("logged in");
       navigate(redirectTo);
       window.location.reload(); // Refresh after login
     } catch (err) {
