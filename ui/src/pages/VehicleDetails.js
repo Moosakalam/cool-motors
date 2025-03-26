@@ -8,7 +8,7 @@ import right from "../utils/images/right.png";
 import whatsApp from "../utils/images/WhatsAppButton.png";
 import heart from "../utils/images/heart.png";
 import fullHeart from "../utils/images/full-heart.png";
-import { isMobile } from "../utils/jwtDecode";
+import { isMobile } from "../utils/tools";
 
 function VehicleDetails() {
   const { id } = useParams(); // Vehicle ID from URL

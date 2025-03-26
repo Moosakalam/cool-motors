@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import "./css/Footer.css"; // Create this CSS file for styling
+import { isMobile } from "./tools";
+import whatsApp from "./images/WhatsAppButtonWhiteLarge.png";
 
 const Footer = () => {
   return (
@@ -8,8 +10,27 @@ const Footer = () => {
       <div className="footer-content">
         <div className="footer-section">
           <h3>Contact Us</h3>
-          <p>Email: kamranmohammed400@gmail.com</p>
-          <p>Phone: +91 97035 88400</p>
+          {/* <p>Have any feedback or suggestions? We'd love to hear from you!</p> */}
+          <p>
+            Email: <strong>kamranmohammed400@gmail.com</strong>
+          </p>
+          <p>
+            Phone: <strong>+91 97035 88400</strong>
+          </p>
+          <a
+            href={
+              isMobile()
+                ? `whatsapp://send?phone=+919703588400&text=I%have%20some%20feedback/suggestions`
+                : `https://wa.me/+919703588400?text=I%20have%20some%20feedback/suggestions`
+            }
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <img src={whatsApp} alt="WhatsApp Chat" className="whatsapp-icon" />
+          </a>
+          <p className="footer-feedback-note">
+            We’d love to hear your feedback or suggestions!
+          </p>
           {/* <p>Address: 123, Main Street, City, Country</p> */}
         </div>
 
@@ -29,7 +50,7 @@ const Footer = () => {
           </Link>
         </div>
 
-        <div className="footer-section">
+        {/* <div className="footer-section">
           <h3>Follow Us</h3>
           <a
             href="https://facebook.com"
@@ -55,12 +76,12 @@ const Footer = () => {
           >
             Instagram
           </a>
-        </div>
+        </div> */}
       </div>
 
-      <div className="footer-bottom">
+      {/* <div className="footer-bottom">
         <p>© {new Date().getFullYear()} Cool Motors. All Rights Reserved.</p>
-      </div>
+      </div> */}
     </footer>
   );
 };
