@@ -1,26 +1,26 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { useParams, Link, useNavigate, useLocation } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./css/VehicleDetails.css"; // Import the CSS for the modal and blur effect
 import { useAuth } from "../AuthContext";
+import Restricted from "../utils/Restricted";
 import left from "../utils/images/left.png";
 import right from "../utils/images/right.png";
-import whatsApp from "../utils/images/WhatsAppButton.png";
-import heart from "../utils/images/heart.png";
-import fullHeart from "../utils/images/full-heart.png";
-import { isMobile } from "../utils/jwtDecode";
+import Confirmation from "../utils/Confirmation";
 
-function VehicleDetails() {
+function PendingVehicle() {
   const { id } = useParams(); // Vehicle ID from URL
   const [vehicle, setVehicle] = useState(null);
   const [seller, setSeller] = useState(null);
-  const [liked, setLiked] = useState(false); // State for like status
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [fetchLoading, setFetchLoading] = useState(false);
+  const [error, setError] = useState(null);
   const [currentImageIndex, setCurrentImageIndex] = useState(0); // State for the current image index
   const [isModalOpen, setIsModalOpen] = useState(false); // State for modal visibility
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [decision, setDecision] = useState("");
   const navigate = useNavigate();
-  const { user } = useAuth();
-  const location = useLocation();
+  const { user, loading: authLoading } = useAuth();
   const [isMobileScreen, setIsMobileScreen] = useState(window.innerWidth < 768);
 
   useEffect(() => {
@@ -33,15 +33,21 @@ function VehicleDetails() {
   }, []);
 
   useEffect(() => {
-    const fetchVehicleDetails = async () => {
+    const fetchVehicle = async () => {
+      setFetchLoading(true);
       try {
         // Fetch vehicle details
         const vehicleResponse = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/v1/vehicles/${id}`,
+          `${process.env.REACT_APP_API_URL}/api/v1/pending-vehicles/${id}`,
           {
             withCredentials: true,
           }
         );
+        if (!vehicleResponse.data.data.vehicle) {
+          setError("No pending vehicles");
+          setFetchLoading(false);
+          return;
+        }
         const fetchedVehicle = vehicleResponse.data.data.vehicle;
         setVehicle(fetchedVehicle);
         // Fetch seller details if available
@@ -55,60 +61,87 @@ function VehicleDetails() {
           setSeller(sellerResponse.data.data.user);
         }
       } catch (error) {
+        if (error.response.status === 403) {
+          setError("You don't have access to this page");
+          setFetchLoading(false);
+          return;
+        }
+        setError("Failed to fetch vehicle");
         console.error("Error fetching vehicle or seller details:", error);
       } finally {
-        setLoading(false);
+        setFetchLoading(false);
       }
     };
-    fetchVehicleDetails();
+    fetchVehicle();
   }, [id]);
 
-  useEffect(() => {
-    const checkIfVehicleLiked = async () => {
-      if (!vehicle || !vehicle._id || !user) return; // Exit if no vehicle ID or user is available
-      try {
-        // Check if the vehicle is liked using the new API endpoint
-        const response = await axios.get(
-          `${process.env.REACT_APP_API_URL}/api/v1/vehicles/${vehicle._id}/likes/is-liked`,
-          {
-            withCredentials: true,
-          }
-        );
-        setLiked(response.data.data.isLiked);
-      } catch (error) {
-        console.error("Error checking if vehicle is liked:", error);
-      }
-    };
-    checkIfVehicleLiked();
-  }, [vehicle, user]);
-
-  const handleLikeToggle = async () => {
-    if (!user) {
-      if (window.confirm("Do you want to Login to like this vehicle?")) {
-        navigate(`/login?redirect=${encodeURIComponent(location.pathname)}`);
-      }
-      return;
-    }
+  const getNextPendingVehicleId = async () => {
     try {
-      if (liked) {
-        await axios.delete(
-          `${process.env.REACT_APP_API_URL}/api/v1/vehicles/${id}/likes`,
-          {
-            withCredentials: true,
-          }
-        );
+      const response = await axios.get(
+        `${process.env.REACT_APP_API_URL}/api/v1/pending-vehicles/${id}/next`,
+        {
+          withCredentials: true,
+        }
+      );
+      return response.data?.data?.nextVehicle?._id || null;
+    } catch (err) {
+      console.error("Error fetching next pending vehicle:", err);
+      return null;
+    }
+  };
+
+  const handleApprove = async () => {
+    if (!vehicle) return;
+    setLoading(true);
+    setShowConfirm(false);
+
+    const nextVehicleId = await getNextPendingVehicleId();
+
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/v1/pending-vehicles/${vehicle._id}/approve`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+      //   fetchVehicle(); // Fetch next vehicle after approval
+      if (nextVehicleId) {
+        navigate(`/admin/pending-vehicle/${nextVehicleId}`);
       } else {
-        await axios.post(
-          `${process.env.REACT_APP_API_URL}/api/v1/vehicles/${id}/likes`,
-          {},
-          {
-            withCredentials: true,
-          }
-        );
+        navigate("/admin/no-pending-vehicles"); // Fallback if no more pending vehicles exist
       }
-      setLiked(!liked);
-    } catch (error) {
-      console.error("Error updating like status:", error);
+    } catch (err) {
+      setError(err.response?.data?.message || "Failed to approve vehicle");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDisapprove = async () => {
+    if (!vehicle) return;
+    setLoading(true);
+    setShowConfirm(false);
+
+    const nextVehicleId = await getNextPendingVehicleId();
+
+    try {
+      await axios.delete(
+        `${process.env.REACT_APP_API_URL}/api/v1/pending-vehicles/${vehicle._id}/disapprove`,
+        {
+          withCredentials: true,
+        }
+      );
+      //   fetchVehicle(); // Fetch next vehicle after disapproval
+      if (nextVehicleId) {
+        navigate(`/admin/pending-vehicle/${nextVehicleId}`);
+      } else {
+        navigate("/admin/no-pending-vehicles"); // Fallback if no more pending vehicles exist
+      }
+    } catch (err) {
+      setError("Failed to disapprove vehicle");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -155,8 +188,20 @@ function VehicleDetails() {
     };
   }, [isModalOpen, nextImage, prevImage]);
 
-  if (loading) {
+  if (!authLoading && !user) {
+    return <Restricted />;
+  }
+
+  if (fetchLoading) {
     return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return (
+      <div>
+        <h2 align="center">{error}</h2>
+      </div>
+    );
   }
 
   if (!vehicle) {
@@ -167,6 +212,11 @@ function VehicleDetails() {
     <div>
       <div
         className={`vehicle-details ${isModalOpen ? "blur-background" : ""}`}
+        style={{
+          pointerEvents: loading ? "none" : "auto",
+          opacity: loading ? 0.6 : 1,
+          backgroundColor: "#a9f2b9",
+        }}
       >
         <div className="image-container">
           <img
@@ -182,14 +232,6 @@ function VehicleDetails() {
             }}
             onClick={openImageModal}
           />
-          <button onClick={handleLikeToggle} className="like-button">
-            <img
-              src={liked ? fullHeart : heart}
-              alt="Like"
-              // className="heart-icon"
-              style={{ width: "30px", height: "30px" }}
-            />
-          </button>
           {
             <div className="image-counter">
               {currentImageIndex + 1}/{vehicle.images.length}
@@ -304,40 +346,6 @@ function VehicleDetails() {
                     ) : (
                       "Loading seller details..."
                     )}
-                    {/* {seller && seller.phoneNumber && (
-                      <a
-                        href={
-                          isMobile()
-                            ? `whatsapp://send?phone=${seller.phoneNumber}&text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`
-                            : `https://wa.me/${seller.phoneNumber}?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <img
-                          src={whatsApp}
-                          alt="WhatsApp Chat"
-                          className="whatsapp-icon"
-                        />
-                      </a>
-                    )} */}
-                    {seller && seller.phoneNumber && (
-                      <a
-                        href={
-                          isMobile()
-                            ? `whatsapp://send?phone=${seller.phoneNumber}&text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})%0A${window.location.origin}/vehicle/${vehicle._id}`
-                            : `https://wa.me/${seller.phoneNumber}?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})%0A${window.location.origin}/vehicle/${vehicle._id}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <img
-                          src={whatsApp}
-                          alt="WhatsApp Chat"
-                          className="whatsapp-icon"
-                        />
-                      </a>
-                    )}
                   </td>
                 </tr>
                 <tr>
@@ -428,40 +436,6 @@ function VehicleDetails() {
                     ) : (
                       "Loading seller details..."
                     )}
-                    {/* {seller && seller.phoneNumber && (
-                      <a
-                        href={
-                          isMobile()
-                            ? `whatsapp://send?phone=${seller.phoneNumber}&text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`
-                            : `https://wa.me/${seller.phoneNumber}?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <img
-                          src={whatsApp}
-                          alt="WhatsApp Chat"
-                          className="whatsapp-icon"
-                        />
-                      </a>
-                    )} */}
-                    {seller && seller.phoneNumber && (
-                      <a
-                        href={
-                          isMobile()
-                            ? `whatsapp://send?phone=${seller.phoneNumber}&text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})%0A${window.location.origin}/vehicle/${vehicle._id}`
-                            : `https://wa.me/${seller.phoneNumber}?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})%0A${window.location.origin}/vehicle/${vehicle._id}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <img
-                          src={whatsApp}
-                          alt="WhatsApp Chat"
-                          className="whatsapp-icon"
-                        />
-                      </a>
-                    )}
                   </td>
                 </tr>
                 <tr>
@@ -483,6 +457,28 @@ function VehicleDetails() {
             )}
           </tbody>
         </table>
+        <div className="action-buttons">
+          <button
+            onClick={() => {
+              setShowConfirm(true);
+              setDecision("approve");
+            }}
+            className="approve-btn"
+            disabled={loading}
+          >
+            {loading ? "Loading" : "Approve"}
+          </button>
+          <button
+            onClick={() => {
+              setShowConfirm(true);
+              setDecision("disapprove");
+            }}
+            className="disapprove-btn"
+            disabled={loading}
+          >
+            {loading ? "Loading" : "Disapprove"}
+          </button>
+        </div>
       </div>
       {/* Modal */}
       {isModalOpen && (
@@ -520,8 +516,18 @@ function VehicleDetails() {
           )}
         </div>
       )}
+      {showConfirm && (
+        <Confirmation
+          message={`Are you sure you want to ${decision} this vehicle?`}
+          confirmText="Yes"
+          onCancel={() => setShowConfirm(false)}
+          onConfirm={() => {
+            decision === "approve" ? handleApprove() : handleDisapprove();
+          }}
+        />
+      )}
     </div>
   );
 }
 
-export default VehicleDetails;
+export default PendingVehicle;

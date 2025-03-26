@@ -2,11 +2,9 @@ import React, { useState, useEffect } from "react";
 // import { useNavigate, useLocation } from "react-router-dom";
 // import { useAuth } from "../AuthContext";
 // import axios from "axios";
-import moreIcon from "./images/more.png";
 
-function SoldVehicleCard({ vehicle, showOptions, onDelete }) {
+function PendingVehicleCard({ vehicle, showOptions, onDelete }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   // const { user } = useAuth();
   // const navigate = useNavigate();
   // const location = useLocation();
@@ -26,7 +24,7 @@ function SoldVehicleCard({ vehicle, showOptions, onDelete }) {
 
   return (
     <a
-      href={`/sold-vehicle/${vehicle._id}`}
+      href={`/admin/pending-vehicle/${vehicle._id}`}
       target="_blank"
       rel="noopener noreferrer"
       style={{ textDecoration: "none", color: "inherit" }}
@@ -40,11 +38,10 @@ function SoldVehicleCard({ vehicle, showOptions, onDelete }) {
           borderRadius: "10px",
           overflow: "hidden",
           transition: "background-color 0.3s ease",
-          opacity: "0.6",
-          filter: "grayscale(50%)",
+          backgroundColor: "white",
+          //   opacity: "0.6",
+          //   filter: "grayscale(50%)",
         }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
       >
         <div
           style={{
@@ -66,69 +63,9 @@ function SoldVehicleCard({ vehicle, showOptions, onDelete }) {
               height: "100%",
               objectFit: "cover",
               transition: "opacity 0.3s ease",
+              // opacity: isHovered ? 0.7 : 1,
             }}
           />
-          {showOptions && (
-            <div
-              className="vehicle-card-options"
-              style={{
-                position: "absolute",
-                top: "5px",
-                right: "5px",
-                background: "rgba(255, 255, 255, 0.8)",
-                borderRadius: "5px",
-                padding: "5px",
-                cursor: "pointer",
-              }}
-              onClick={(e) => {
-                e.stopPropagation();
-                e.preventDefault();
-                setMenuOpen(!menuOpen);
-              }}
-            >
-              <img
-                src={moreIcon}
-                alt="Options"
-                style={{ width: "20px", height: "20px" }}
-              />
-              {menuOpen && (
-                <div
-                  style={{
-                    position: "absolute",
-                    top: "25px",
-                    right: "0",
-                    background: "white",
-                    boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-                    borderRadius: "5px",
-                    overflow: "hidden",
-                    minWidth: "95px",
-                    zIndex: 10,
-                    width: "auto",
-                  }}
-                >
-                  {onDelete ? (
-                    <button
-                      onClick={onDelete}
-                      style={{
-                        display: "block",
-                        padding: "8px 12px",
-                        width: "100%",
-                        border: "none",
-                        background: "transparent",
-                        cursor: "pointer",
-                        textAlign: "left",
-                        color: "red",
-                      }}
-                    >
-                      Delete
-                    </button>
-                  ) : (
-                    <></>
-                  )}
-                </div>
-              )}
-            </div>
-          )}
         </div>
 
         <div style={{ padding: "10px", position: "relative" }}>
@@ -185,4 +122,4 @@ function SoldVehicleCard({ vehicle, showOptions, onDelete }) {
   );
 }
 
-export default SoldVehicleCard;
+export default PendingVehicleCard;

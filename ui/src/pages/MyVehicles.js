@@ -95,14 +95,15 @@ function MyVehicles() {
         { withCredentials: true }
       );
 
-      setListedVehicles((prev) =>
-        prev.filter((vehicle) => vehicle._id !== vehicleId)
-      );
+      // setListedVehicles((prev) =>
+      //   prev.filter((vehicle) => vehicle._id !== vehicleId)
+      // );
 
-      const soldVehicle = listedVehicles.find((v) => v._id === vehicleId);
-      if (soldVehicle) {
-        setSoldVehicles((prev) => [...prev, soldVehicle]);
-      }
+      // const soldVehicle = listedVehicles.find((v) => v._id === vehicleId);
+      // if (soldVehicle) {
+      //   setSoldVehicles((prev) => [...prev, soldVehicle]);
+      // }
+      window.location.reload();
     } catch (error) {
       console.error("Error marking vehicle as sold:", error);
     }

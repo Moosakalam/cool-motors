@@ -24,6 +24,9 @@ import VerifyEmailUpdate from "./pages/VerifyEmailUpdate";
 import UpdateMyEmail from "./pages/UpdateMyEmail";
 import SoldVehicleDetails from "./pages/SoldVehicleDetails";
 import Footer from "./utils/Footer";
+import PendingVehiclesList from "./pages/PendingVehiclesList";
+import PendingVehicle from "./pages/PendingVehicle";
+import NoMorePendingVehicles from "./pages/NoMorePendingVehicles";
 
 function App() {
   return (
@@ -58,6 +61,18 @@ function App() {
             <Route path="/settings" element={<Settings />} />
             <Route path="/update-password" element={<ChangePassword />} />
             <Route path="/admin/review-vehicles" element={<ReviewVehicles />} />
+            <Route
+              path="/admin/pending-vehicles-list"
+              element={<PendingVehiclesList />}
+            />
+            <Route
+              path="/admin/pending-vehicle/:id"
+              element={<PendingVehicle />}
+            />
+            <Route
+              path="/admin/no-pending-vehicles"
+              element={<NoMorePendingVehicles />}
+            />
             <Route path="/edit/:vehicleId" element={<EditVehicle />} />
             <Route path="/update-me" element={<UpdateMe />} />
             {/* <Route path="/restricted" element={<Restricted />} /> */}

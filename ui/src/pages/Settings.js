@@ -107,7 +107,7 @@ const Settings = () => {
         {isAdmin && (
           <div
             className="settings-option"
-            onClick={() => navigate("/admin/review-vehicles")}
+            onClick={() => navigate("/admin/pending-vehicles-list")}
           >
             Review Vehicles (Admin)
           </div>

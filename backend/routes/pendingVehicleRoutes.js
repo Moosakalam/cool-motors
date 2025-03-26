@@ -10,6 +10,27 @@ const upload = multer({ storage }); // Accept up to 20 images
 const router = express.Router();
 
 router.get(
+  "/",
+  authController.protect,
+  authController.restrictTo("admin"),
+  pendingVehicleController.getPendingVehicles
+);
+
+router.get(
+  "/:id",
+  authController.protect,
+  authController.restrictTo("admin"),
+  pendingVehicleController.getPendingVehicle
+);
+
+router.get(
+  "/:id/next",
+  authController.protect,
+  authController.restrictTo("admin"),
+  pendingVehicleController.getNextPendingVehicle
+);
+
+router.get(
   "/random",
   authController.protect,
   authController.restrictTo("admin"),

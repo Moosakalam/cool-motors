@@ -200,13 +200,6 @@ exports.disapproveVehicle = catchAsyncError(async (req, res, next) => {
 exports.getRandomVehicle = catchAsyncError(async (req, res, next) => {
   const vehicle = await PendingVehicle.aggregate([{ $sample: { size: 1 } }]); // Get one random vehicle
 
-  // if (!vehicle || vehicle.length === 0) {
-  //   return res.status(404).json({
-  //     status: "fail",
-  //     message: "No vehicles found",
-  //   });
-  // }
-
   res.status(200).json({
     status: "success",
     data: {
@@ -218,17 +211,73 @@ exports.getRandomVehicle = catchAsyncError(async (req, res, next) => {
 exports.getOldestPendingVehicle = catchAsyncError(async (req, res, next) => {
   const vehicle = await PendingVehicle.findOne().sort({ createdAt: 1 }); // Get the oldest added vehicle
 
-  // if (!vehicle) {
-  //   return res.status(404).json({
-  //     status: "fail",
-  //     message: "No pending vehicles found",
-  //   });
-  // }
-
   res.status(200).json({
     status: "success",
     data: {
       vehicle, // Return the oldest vehicle
+    },
+  });
+});
+
+exports.getPendingVehicles = catchAsyncError(async (req, res, next) => {
+  const page = parseInt(req.query.page) || 1; // Default to page 1
+  const limit = parseInt(req.query.limit) || 10; // Default to 10 per page
+  const skip = (page - 1) * limit;
+
+  const total = await PendingVehicle.countDocuments();
+  const vehicles = await PendingVehicle.find()
+    .sort({ createdAt: 1 }) // Oldest first
+    .skip(skip)
+    .limit(limit);
+
+  res.status(200).json({
+    status: "success",
+    results: vehicles.length,
+    totalPages: Math.ceil(total / limit),
+    currentPage: page,
+    data: { vehicles },
+  });
+});
+
+exports.getPendingVehicle = catchAsyncError(async (req, res, next) => {
+  const vehicleId = req.params.id;
+
+  const vehicle = await PendingVehicle.findById(vehicleId);
+
+  if (!vehicle) {
+    return next(new AppError("No pending-vehicle found with that ID", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      vehicle,
+    },
+  });
+});
+
+exports.getNextPendingVehicle = catchAsyncError(async (req, res, next) => {
+  const vehicleId = req.params.id;
+
+  // Fetch the current vehicle
+  const currentVehicle = await PendingVehicle.findById(vehicleId);
+  if (!currentVehicle) {
+    return next(new AppError("No pending vehicle found with that ID", 404));
+  }
+
+  // Fetch the next vehicle that was created after the current one
+  const nextVehicle = await PendingVehicle.findOne({
+    createdAt: { $gt: currentVehicle.createdAt }, // Get the next vehicle based on createdAt timestamp
+  }).sort({ createdAt: 1 }); // Sort in ascending order to get the earliest next one
+
+  if (!nextVehicle) {
+    return next(new AppError("No next pending-vehicle found", 404));
+  }
+
+  res.status(200).json({
+    status: "success",
+    data: {
+      nextVehicle,
     },
   });
 });

@@ -44,7 +44,7 @@ const createAndSendToken = (user, statusCode, res) => {
     path: "/",
   });
   res.setHeader("Set-Cookie", serialized);
-  console.log("Set-Cookie header:", res.getHeaders()["set-cookie"]);
+  // console.log("Set-Cookie header:", res.getHeaders()["set-cookie"]);
 
   user.password = undefined;
 

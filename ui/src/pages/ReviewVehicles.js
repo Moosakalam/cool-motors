@@ -143,12 +143,9 @@ function ReviewVehicles() {
     }
   }, [isModalOpen, nextImage, prevImage]);
 
-  // useEffect(() => {
   if (!authLoading && !user) {
-    // navigate("/restricted");
     return <Restricted />;
   }
-  // }, [user, authLoading, navigate]);
 
   if (error) {
     return (

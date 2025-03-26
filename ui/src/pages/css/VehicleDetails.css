@@ -120,6 +120,10 @@
   background-color: #f9f9f9;
 }
 
+.vehicle-details-table tr:nth-child(odd) {
+  background-color: white;
+}
+
 .vehicle-details-table strong {
   color: #333;
 }
