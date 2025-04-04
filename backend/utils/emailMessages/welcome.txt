@@ -1,12 +1,12 @@
 Hi {{firstName}},
 
-Welcome to Cool Motors! We’re excited to have you onboard.
+Welcome to Auto Finds! We’re excited to have you onboard.
 
 To get started, click the link below:
 {{url}}
 
-If you did not sign up for Cool Motors, please ignore this email.
+If you did not sign up for Auto Finds, please ignore this email.
 
 Best regards,  
 Kamran Mohammed  
-Cool Motors Team
+Auto Finds Team

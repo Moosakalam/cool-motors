@@ -79,9 +79,9 @@ const Footer = () => {
         </div> */}
       </div>
 
-      {/* <div className="footer-bottom">
-        <p>© {new Date().getFullYear()} Cool Motors. All Rights Reserved.</p>
-      </div> */}
+      <div className="footer-bottom">
+        <p>© {new Date().getFullYear()} Auto Finds. All Rights Reserved.</p>
+      </div>
     </footer>
   );
 };
