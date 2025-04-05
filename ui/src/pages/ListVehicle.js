@@ -62,10 +62,10 @@ function ListVehicle() {
   const fuelTypes = ["petrol", "diesel", "electric", "hybrid", "CNG", "LPG"];
   const transmissions = ["manual", "automatic"];
   const engineTypes = [
-    "I3",
-    "I4",
-    "I5",
-    "I6",
+    "I3 (Inline 3)",
+    "I4 (Inline 4)",
+    "I5 (Inline 5)",
+    "I6 (Inline 6)",
     "V6",
     "V8",
     "V10",
@@ -73,8 +73,8 @@ function ListVehicle() {
     "V16",
     "W12",
     "W16",
-    "H4",
-    "H6",
+    "H4 (Flat 4)",
+    "H6 (Flat 6)",
     "Rotary",
   ];
   const ownerships = Array.from({ length: 10 }, (_, i) => i + 1);

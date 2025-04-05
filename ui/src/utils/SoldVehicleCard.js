@@ -6,7 +6,6 @@ import moreIcon from "./images/more.png";
 
 function SoldVehicleCard({ vehicle, showOptions, onDelete }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
   // const { user } = useAuth();
   // const navigate = useNavigate();
   // const location = useLocation();
@@ -43,8 +42,6 @@ function SoldVehicleCard({ vehicle, showOptions, onDelete }) {
           opacity: "0.6",
           filter: "grayscale(50%)",
         }}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
       >
         <div
           style={{

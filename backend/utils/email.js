@@ -59,6 +59,7 @@ module.exports = class Email {
 
     //create a transport and send the email
     await this.newTransport().sendMail(mailOptions);
+    // console.log("hilo");
   }
 
   async sendWelcome() {
@@ -93,5 +94,12 @@ module.exports = class Email {
 
   async sendDisapprovalEmail() {
     await this.send("disapproval", "Your vehicle listing has been disapproved");
+  }
+
+  async sendAdminNotificationEmail() {
+    await this.send(
+      "adminNotification",
+      "A new vehicle has been submitted for approval"
+    );
   }
 };
