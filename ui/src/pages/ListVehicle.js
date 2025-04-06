@@ -379,6 +379,9 @@ function ListVehicle() {
             required
             accept="image/*" // Accept only image files
           />
+          <small style={{ display: "block", marginTop: "5px", color: "#666" }}>
+            The first selected image will be used as the cover photo.
+          </small>
         </div>
         {/*------------------------------------------------------------ */}
         {/* <button type="submit" className="submit-button">
