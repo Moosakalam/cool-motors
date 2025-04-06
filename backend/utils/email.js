@@ -13,14 +13,8 @@ module.exports = class Email {
 
   newTransport() {
     if (process.env.NODE_ENV === "production") {
-      //sendgrid
-      // return nodemailer.createTransport({
-      //   service: "SendGrid",
-      //   auth: {
-      //     user: process.env.SENDGRID_USERNAME,
-      //     pass: process.env.SENDGRID_APIKEY,
-      //   },
-      // });
+      // console.log("sendgrid email sending");
+
       return nodemailer.createTransport(
         nodemailerSendgrid({
           apiKey: process.env.SENDGRID_APIKEY,
@@ -28,6 +22,7 @@ module.exports = class Email {
       );
     }
 
+    // console.log("mailtrap email sending");
     return nodemailer.createTransport({
       host: process.env.EMAIL_HOST,
       port: process.env.EMAIL_PORT,
@@ -59,7 +54,6 @@ module.exports = class Email {
 
     //create a transport and send the email
     await this.newTransport().sendMail(mailOptions);
-    // console.log("hilo");
   }
 
   async sendWelcome() {

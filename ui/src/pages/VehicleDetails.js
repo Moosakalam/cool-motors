@@ -215,10 +215,19 @@ function VehicleDetails() {
             />
           )}
         </div>
-        <h2 style={{ fontSize: "32px", marginTop: "20px" }}>
+        <h2
+          style={{ fontSize: "28px", marginTop: "20px", marginBottom: "10px" }}
+        >
           {vehicle.year} {vehicle.make} {vehicle.model}
+          {vehicle.variant && (
+            <span
+              style={{ fontSize: "20px", color: "#555", marginLeft: "6px" }}
+            >
+              ({vehicle.variant})
+            </span>
+          )}
         </h2>
-        <p>{vehicle.variant ? vehicle.variant : ""}</p>
+        {/* <p>{vehicle.variant ? vehicle.variant : ""}</p> */}
         <h1 style={{ fontSize: "36px", color: "#333", margin: "10px 0" }}>
           ₹{vehicle.price.toLocaleString("en-IN")}
         </h1>

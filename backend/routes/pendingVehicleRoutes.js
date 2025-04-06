@@ -2,6 +2,7 @@ const express = require("express");
 const pendingVehicleController = require("../controllers/pendingVehicleController");
 const authController = require("../controllers/authController");
 const multer = require("multer");
+const handleMulterErrors = require("../utils/multerMiddleware");
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage }); // Accept up to 20 images
@@ -46,8 +47,9 @@ router.get(
 
 router.post(
   "/list",
-  upload.array("images", 20), //add an error for more than 20
+  // upload.array("images", 20),
   authController.protect,
+  handleMulterErrors,
   pendingVehicleController.listVehicle
 );
 

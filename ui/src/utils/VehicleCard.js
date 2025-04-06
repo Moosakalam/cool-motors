@@ -94,15 +94,7 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
         // onMouseEnter={() => setIsHovered(true)}
         // onMouseLeave={() => setIsHovered(false)}
       >
-        <div
-          // style={{
-          //   width: "100%",
-          //   height: "200px",
-          //   overflow: "hidden",
-          //   position: "relative",
-          // }}
-          className="vehicle-card-image"
-        >
+        <div className="vehicle-card-image">
           <img
             src={
               vehicle.images && vehicle.images.length > 0
@@ -111,9 +103,6 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
             }
             alt={`${vehicle.make} ${vehicle.model}`}
             style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
               transition: "opacity 0.3s ease",
               // opacity: isHovered ? 0.7 : 1,
             }}

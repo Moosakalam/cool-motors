@@ -6,6 +6,7 @@ const User = require("../models/userModel");
 const Email = require("../utils/email");
 const crypto = require("crypto");
 const { deleteS3Images } = require("../utils/tools");
+const sharp = require("sharp");
 
 const generateFileName = (bytes = 32) =>
   crypto.randomBytes(bytes).toString("hex");
@@ -55,17 +56,22 @@ exports.listVehicle = catchAsyncError(async (req, res, next) => {
   // Loop through the files and upload each one to S3
   for (const file of files) {
     const fileName = generateFileName();
+
+    // Compress and convert image to JPEG
+    const resizedBuffer = await sharp(file.buffer)
+      // .resize({ width: 1200 }) // resize to 1200px width (optional)
+      .jpeg({ quality: 80 }) // compress to 80% quality
+      .toBuffer();
+
     const uploadParams = {
       Bucket: bucketName,
-      Body: file.buffer,
+      Body: resizedBuffer,
       Key: fileName,
-      ContentType: file.mimetype,
+      ContentType: "image/jpeg", // Always JPEG after compression
     };
 
-    // Send the upload to S3
     await s3Client.send(new PutObjectCommand(uploadParams));
 
-    // Push the uploaded image URL to the array
     const imageUrl = `https://images-cool-motors.s3.eu-north-1.amazonaws.com/${fileName}`;
     imageUrls.push(imageUrl);
   }

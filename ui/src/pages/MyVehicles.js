@@ -15,52 +15,63 @@ function MyVehicles() {
   const [soldVehicles, setSoldVehicles] = useState([]);
   const [isSoldVehicle, setIsSoldVehicle] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!user?._id) return;
-
-    axios
-      .get(
-        `${process.env.REACT_APP_API_URL}/api/v1/users/${user._id}/vehicles`,
-        {
-          withCredentials: true,
-        }
-      )
-      .then((res) => setListedVehicles(res.data.data.vehicles))
-      .catch((error) =>
-        console.error("Error fetching listed vehicles:", error)
-      );
-  }, [user]);
-
-  useEffect(() => {
-    if (!user?._id) return;
-
-    axios
-      .get(`${process.env.REACT_APP_API_URL}/api/v1/users/sold-vehicles`, {
-        withCredentials: true,
-      })
-      .then((res) => setSoldVehicles(res.data.data.soldVehicles))
-      .catch((error) => console.error("Error fetching sold vehicles:", error));
-  }, [user]);
-
-  // const handleDelete = async () => {
-  //   setShowConfirm(false);
-  //   try {
-  //     await axios.delete(
-  //       `${process.env.REACT_APP_API_URL}/api/v1/vehicles/${vehicleToDelete}`,
+  // useEffect(() => {
+  //   if (!user?._id) return;
+  //   setLoading(true);
+  //   axios
+  //     .get(
+  //       `${process.env.REACT_APP_API_URL}/api/v1/users/${user._id}/vehicles`,
   //       {
   //         withCredentials: true,
   //       }
-  //     );
-  //     setListedVehicles((prev) =>
-  //       prev.filter((vehicle) => vehicle._id !== vehicleToDelete)
-  //     );
-  //     setShowConfirm(false);
-  //   } catch (error) {
-  //     console.error("Error deleting vehicle:", error);
-  //   }
-  // };
+  //     )
+  //     .then((res) => setListedVehicles(res.data.data.vehicles))
+  //     .catch((error) => console.error("Error fetching listed vehicles:", error))
+  //     .finally(() => setLoading(false));
+  // }, [user]);
+
+  // useEffect(() => {
+  //   if (!user?._id) return;
+  //   setLoading(true);
+  //   axios
+  //     .get(`${process.env.REACT_APP_API_URL}/api/v1/users/sold-vehicles`, {
+  //       withCredentials: true,
+  //     })
+  //     .then((res) => setSoldVehicles(res.data.data.soldVehicles))
+  //     .catch((error) => console.error("Error fetching sold vehicles:", error))
+  //     .finally(() => setLoading(false));
+  // }, [user]);
+
+  useEffect(() => {
+    if (!user?._id) return;
+
+    const fetchVehicles = async () => {
+      setLoading(true);
+      try {
+        const listedRes = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/v1/users/${user._id}/vehicles`,
+          { withCredentials: true }
+        );
+
+        const soldRes = await axios.get(
+          `${process.env.REACT_APP_API_URL}/api/v1/users/sold-vehicles`,
+          { withCredentials: true }
+        );
+
+        setListedVehicles(listedRes.data.data.vehicles);
+        setSoldVehicles(soldRes.data.data.soldVehicles);
+      } catch (error) {
+        console.error("Error fetching vehicles:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchVehicles();
+  }, [user]);
 
   const handleDelete = async () => {
     setShowConfirm(false);
@@ -94,20 +105,15 @@ function MyVehicles() {
         {},
         { withCredentials: true }
       );
-
-      // setListedVehicles((prev) =>
-      //   prev.filter((vehicle) => vehicle._id !== vehicleId)
-      // );
-
-      // const soldVehicle = listedVehicles.find((v) => v._id === vehicleId);
-      // if (soldVehicle) {
-      //   setSoldVehicles((prev) => [...prev, soldVehicle]);
-      // }
       window.location.reload();
     } catch (error) {
       console.error("Error marking vehicle as sold:", error);
     }
   };
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
 
   if (!authLoading && !user) {
     return <Restricted />;

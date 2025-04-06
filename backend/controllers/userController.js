@@ -1,6 +1,7 @@
 const crypto = require("crypto");
 const Vehicle = require("../models/vehicleModel");
 const PendingVehicle = require("../models/pendingVehicleModel");
+const SoldVehicle = require("../models/soldVehicleModel");
 const User = require("../models/userModel");
 const Like = require("../models/likeModel");
 const catchAsyncError = require("../utils/catchAsyncError");
@@ -204,6 +205,12 @@ exports.deleteMe = catchAsyncError(async (req, res, next) => {
   const pendingVehicles = await PendingVehicle.find({ listedBy: req.user._id });
   for (const pendingVehicle of pendingVehicles) {
     await PendingVehicle.findByIdAndDelete(pendingVehicle._id); // Delete pending vehicles listed by the user
+  }
+
+  //delete any solsVehicles
+  const soldVehicles = await SoldVehicle.find({ listedBy: req.user._id });
+  for (const soldVehicle of soldVehicles) {
+    await SoldVehicle.findByIdAndDelete(soldVehicle._id);
   }
 
   //check for any likes and delete them
