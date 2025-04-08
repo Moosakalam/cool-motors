@@ -27,9 +27,11 @@ const app = express();
 // );
 const allowedOrigins = [
   "http://localhost:3000", // Local frontend
+  "http://192.168.0.109:3000", // Local frontend
   "https://cool-motors-frontend.onrender.com",
   "https://aceblue.ae",
   "https://autofinds.in",
+  // "https://autofinds.in",
 ];
 app.use(
   cors({

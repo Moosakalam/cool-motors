@@ -22,6 +22,23 @@ function PendingVehicle() {
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   const [isMobileScreen, setIsMobileScreen] = useState(window.innerWidth < 768);
+  const [touchStartX, setTouchStartX] = useState(0);
+  const [touchEndX, setTouchEndX] = useState(0);
+
+  const handleTouchStart = (e) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e) => {
+    setTouchEndX(e.changedTouches[0].clientX);
+    const deltaX = e.changedTouches[0].clientX - touchStartX;
+    const threshold = 50; // Minimum swipe distance
+    if (deltaX > threshold) {
+      prevImage(); // Swipe right → show previous image
+    } else if (deltaX < -threshold) {
+      nextImage(); // Swipe left → show next image
+    }
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -218,7 +235,11 @@ function PendingVehicle() {
           backgroundColor: "#a9f2b9",
         }}
       >
-        <div className="image-container">
+        <div
+          className="image-container"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           <img
             src={
               vehicle.images && vehicle.images.length > 0
@@ -491,7 +512,11 @@ function PendingVehicle() {
       </div>
       {/* Modal */}
       {isModalOpen && (
-        <div className="modal">
+        <div
+          className="modal"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           <span className="close" onClick={closeModal}>
             &times;
           </span>

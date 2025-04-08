@@ -22,6 +22,23 @@ function VehicleDetails() {
   const { user } = useAuth();
   const location = useLocation();
   const [isMobileScreen, setIsMobileScreen] = useState(window.innerWidth < 768);
+  const [touchStartX, setTouchStartX] = useState(0);
+  const [touchEndX, setTouchEndX] = useState(0);
+
+  const handleTouchStart = (e) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e) => {
+    setTouchEndX(e.changedTouches[0].clientX);
+    const deltaX = e.changedTouches[0].clientX - touchStartX;
+    const threshold = 50; // Minimum swipe distance
+    if (deltaX > threshold) {
+      prevImage(); // Swipe right → show previous image
+    } else if (deltaX < -threshold) {
+      nextImage(); // Swipe left → show next image
+    }
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -168,7 +185,11 @@ function VehicleDetails() {
       <div
         className={`vehicle-details ${isModalOpen ? "blur-background" : ""}`}
       >
-        <div className="image-container">
+        <div
+          className="image-container"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           <img
             src={
               vehicle.images && vehicle.images.length > 0
@@ -437,23 +458,6 @@ function VehicleDetails() {
                     ) : (
                       "Loading seller details..."
                     )}
-                    {/* {seller && seller.phoneNumber && (
-                      <a
-                        href={
-                          isMobile()
-                            ? `whatsapp://send?phone=${seller.phoneNumber}&text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`
-                            : `https://wa.me/${seller.phoneNumber}?text=I'm%20interested%20in%20your%20car%20for%20sale%20(${vehicle.make}%20${vehicle.model})`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        <img
-                          src={whatsApp}
-                          alt="WhatsApp Chat"
-                          className="whatsapp-icon"
-                        />
-                      </a>
-                    )} */}
                     {seller && seller.phoneNumber && (
                       <a
                         href={
@@ -495,7 +499,11 @@ function VehicleDetails() {
       </div>
       {/* Modal */}
       {isModalOpen && (
-        <div className="modal">
+        <div
+          className="modal"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           <span className="close" onClick={closeModal}>
             &times;
           </span>
