@@ -1,7 +1,8 @@
 .footer {
-  background-color: #222;
-  color: #fff;
-  padding: 20px 0;
+  background-color: #99bc85;
+  /* color: #fff; */
+  color: #2e3d27;
+  padding: 10px 0;
   text-align: center;
   margin-top: 40px;
 }
@@ -16,15 +17,16 @@
 .footer-section {
   flex: 1;
   min-width: 250px;
-  margin: 10px;
+  /* margin: 10px; */
 }
 
 .footer-section h3 {
-  color: #f4f4f4;
+  /* color: #f4f4f4; */
 }
 
 .footer-link {
-  color: #aaa;
+  /* color: #aaa; */
+  color: #2e3d27;
   text-decoration: none;
   display: block;
   margin: 5px 0;
@@ -36,7 +38,7 @@
 }
 
 .footer-bottom {
-  border-top: 1px solid #444;
+  border-top: 1px solid #faf1e6;
   margin-top: 10px;
   padding-top: 10px;
 }

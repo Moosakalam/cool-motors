@@ -4,6 +4,8 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import userIcon from "./images/user.png";
 import plusIcon from "./images/plus.png"; // Add a plus icon
+import AFSmall from "./images/af_small_logo.png";
+import AFLogoSBS from "./images/af_logo_sbs.png";
 
 const Navbar = () => {
   const { user } = useAuth();
@@ -30,117 +32,55 @@ const Navbar = () => {
 
   return (
     <header className="header">
-      <div className="nav-links">
-        <Link to="/" className="nav-link">
-          HOME
+      {/* <div className="nav-links"> */}
+      <div className="nav-left nav-links">
+        <Link to="/" className="home-link">
+          <img src={AFLogoSBS} className="logo-large" alt="Logo Large" />
+          <img src={AFSmall} className="logo-small" alt="Logo Small" />
         </Link>
         <Link to="/search" className="nav-link">
           Search
         </Link>
       </div>
 
-      {user && (
-        <Link to="/list" className="list-vehicle-btn">
-          <img src={plusIcon} alt="List Vehicle" className="plus-icon" />
-          List Vehicle
-        </Link>
-      )}
+      <div className="nav-center">
+        {user && (
+          <Link to="/list" className="list-vehicle-btn">
+            <img src={plusIcon} alt="List Vehicle" className="plus-icon" />
+            <span>List Vehicle</span>
+          </Link>
+        )}
+      </div>
 
-      {user ? (
-        <div className="user-menu" ref={dropdownRef}>
-          <div className="user-menu-title" onClick={toggleDropdown}>
-            <img src={userIcon} alt="User Icon" className="user-icon" />
-            {user.name || "User Menu"}
-          </div>
-          {isDropdownOpen && (
-            <div className="dropdown-menu">
-              <Link to="/my-vehicles" className="dropdown-link">
-                My Vehicles
-              </Link>
-              <Link to="/liked-vehicles" className="dropdown-link">
-                Liked Vehicles
-              </Link>
-              <Link to="/settings" className="dropdown-link">
-                Settings
-              </Link>
+      <div className="nav-right">
+        {user ? (
+          <div className="user-menu" ref={dropdownRef}>
+            <div className="user-menu-title" onClick={toggleDropdown}>
+              <img src={userIcon} alt="User Icon" className="user-icon" />
+              {user.name || "User Menu"}
             </div>
-          )}
-        </div>
-      ) : (
-        <Link to="/login" className="nav-link">
-          Login
-        </Link>
-      )}
+            {isDropdownOpen && (
+              <div className="dropdown-menu">
+                <Link to="/my-vehicles" className="dropdown-link">
+                  My Vehicles
+                </Link>
+                <Link to="/liked-vehicles" className="dropdown-link">
+                  Liked Vehicles
+                </Link>
+                <Link to="/settings" className="dropdown-link">
+                  Settings
+                </Link>
+              </div>
+            )}
+          </div>
+        ) : (
+          <Link to="/login" className="nav-link">
+            Login
+          </Link>
+        )}
+      </div>
     </header>
   );
 };
 
 export default Navbar;
-
-// import React, { useState } from "react";
-// import {
-//   CButton,
-//   CCollapse,
-//   CContainer,
-//   CDropdown,
-//   CDropdownDivider,
-//   CDropdownItem,
-//   CDropdownMenu,
-//   CDropdownToggle,
-//   CForm,
-//   CFormInput,
-//   CNavbar,
-//   CNavbarBrand,
-//   CNavbarNav,
-//   CNavbarToggler,
-//   CNavItem,
-//   CNavLink,
-// } from "@coreui/react";
-
-// const Navbar = () => {
-//   const [visible, setVisible] = useState(false);
-//   return (
-//     <CNavbar expand="lg" className="bg-body-tertiary">
-//       <CContainer fluid>
-//         <CNavbarBrand href="#">Navbar</CNavbarBrand>
-//         <CNavbarToggler onClick={() => setVisible(!visible)} />
-//         <CCollapse className="navbar-collapse" visible={visible}>
-//           <CNavbarNav className="me-auto">
-//             <CNavItem>
-//               <CNavLink href="#" active>
-//                 Home
-//               </CNavLink>
-//             </CNavItem>
-//             <CNavItem>
-//               <CNavLink href="#">Link</CNavLink>
-//             </CNavItem>
-//             <CDropdown variant="nav-item" popper={false}>
-//               <CDropdownToggle color="secondary">
-//                 Dropdown button
-//               </CDropdownToggle>
-//               <CDropdownMenu>
-//                 <CDropdownItem href="#">Action</CDropdownItem>
-//                 <CDropdownItem href="#">Another action</CDropdownItem>
-//                 <CDropdownDivider />
-//                 <CDropdownItem href="#">Something else here</CDropdownItem>
-//               </CDropdownMenu>
-//             </CDropdown>
-//             <CNavItem>
-//               <CNavLink href="#" disabled>
-//                 Disabled
-//               </CNavLink>
-//             </CNavItem>
-//           </CNavbarNav>
-//           <CForm className="d-flex">
-//             <CFormInput type="search" className="me-2" placeholder="Search" />
-//             <CButton type="submit" color="success" variant="outline">
-//               Search
-//             </CButton>
-//           </CForm>
-//         </CCollapse>
-//       </CContainer>
-//     </CNavbar>
-//   );
-// };
-
-// export default Navbar;

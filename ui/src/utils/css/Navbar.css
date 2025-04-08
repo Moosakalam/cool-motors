@@ -2,16 +2,79 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #333;
+  background-color: #99bc85;
   padding: 20px 20px;
   color: white;
   margin-bottom: 10px;
 }
 
-.nav-link {
+.nav-left,
+.nav-center,
+.nav-right {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.nav-left {
+  justify-content: flex-start;
+  gap: 10px;
+}
+
+.nav-center {
+  justify-content: center;
+}
+
+.nav-right {
+  justify-content: flex-end;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center; /* vertically center items like logo + search */
+  gap: 20px; /* spacing between logo and search */
+}
+
+.home-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   text-decoration: none;
   color: white;
+  font-size: 18px;
+  font-weight: bold;
+  transition: opacity 0.3s;
+}
+
+.home-link img {
+  height: 40px;
+  width: auto;
+  display: block;
+}
+
+.logo-large {
+  display: inline-block !important;
+}
+
+.logo-small {
+  display: none !important;
+}
+
+@media (max-width: 600px) {
+  .logo-large {
+    display: none !important;
+  }
+
+  .logo-small {
+    display: inline-block !important;
+  }
+}
+
+.nav-link {
+  text-decoration: none;
+  color: #2e3d27;
   font-size: 16px;
+  /* font-weight: bold; */
   transition: color 0.3s;
   display: inline-block;
   padding: 10px 15px;
@@ -19,7 +82,8 @@
 }
 
 .nav-link:hover {
-  color: #007bff;
+  /* color: #007bff; */
+  /* color: #b08d57; */
 }
 
 .list-vehicle-btn {
@@ -27,17 +91,23 @@
   align-items: center;
   gap: 8px;
   text-decoration: none;
-  color: white;
+  /* color: white; */
   font-size: 16px;
   font-weight: bold;
   padding: 8px 12px;
-  background-color: #2fb94d;
+  background-color: #faf1e6;
   border-radius: 5px;
 }
 
 .list-vehicle-btn:hover {
-  background-color: #41a356;
+  background-color: #faf1e6;
 }
+
+/* @media (max-width: 600px) {
+  .list-vehicle-btn span {
+    display: none;
+  }
+} */
 
 .plus-icon {
   width: 16px;
@@ -57,6 +127,7 @@
   padding: 10px;
   border-radius: 5px;
   cursor: pointer;
+  color: #2e3d27;
 }
 
 .user-menu-title:hover {
@@ -73,8 +144,8 @@
   position: absolute;
   right: 0;
   top: 100%;
-  background-color: white;
-  color: black;
+  background-color: #fffaf3;
+  color: #333;
   border-radius: 5px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   overflow: hidden;
@@ -86,10 +157,10 @@
   display: block;
   padding: 10px;
   text-decoration: none;
-  color: black;
+  color: #333;
   transition: background 0.3s;
 }
 
 .dropdown-link:hover {
-  background-color: #f0f0f0;
+  background-color: #f0e6d2;
 }

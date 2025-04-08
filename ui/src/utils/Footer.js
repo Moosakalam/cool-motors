@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./css/Footer.css"; // Create this CSS file for styling
 import { isMobile } from "./tools";
-import whatsApp from "./images/WhatsAppButtonWhiteLarge.png";
+import whatsApp from "./images/WhatsAppButton.png";
 
 const Footer = () => {
   return (
