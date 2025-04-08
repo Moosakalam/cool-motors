@@ -81,10 +81,10 @@
   border-radius: 5px;
 }
 
-.nav-link:hover {
-  /* color: #007bff; */
-  /* color: #b08d57; */
-}
+/* .nav-link:hover {
+  color: #007bff;
+  color: #b08d57;
+} */
 
 .list-vehicle-btn {
   display: flex;
@@ -107,11 +107,11 @@
   color: #2e3d27;
 }
 
-/* @media (max-width: 600px) {
+@media (max-width: 600px) {
   .list-vehicle-btn span {
     display: none;
   }
-} */
+}
 
 .plus-icon {
   width: 16px;
