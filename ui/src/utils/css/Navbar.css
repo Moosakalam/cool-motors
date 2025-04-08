@@ -103,6 +103,10 @@
   background-color: #faf1e6;
 }
 
+.list-vehicle-btn span {
+  color: #2e3d27;
+}
+
 /* @media (max-width: 600px) {
   .list-vehicle-btn span {
     display: none;
