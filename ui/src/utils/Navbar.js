@@ -33,7 +33,7 @@ const Navbar = () => {
   return (
     <header className="header">
       {/* <div className="nav-links"> */}
-      <div className="nav-left nav-links">
+      <div className="nav-left">
         <Link to="/" className="home-link">
           <img src={AFLogoSBS} className="logo-large" alt="Logo Large" />
           <img src={AFSmall} className="logo-small" alt="Logo Small" />

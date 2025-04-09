@@ -59,6 +59,7 @@ exports.listVehicle = catchAsyncError(async (req, res, next) => {
 
     // Compress and convert image to JPEG
     const resizedBuffer = await sharp(file.buffer)
+      .rotate()
       // .resize({ width: 1200 }) // resize to 1200px width (optional)
       .jpeg({ quality: 80 }) // compress to 80% quality
       .toBuffer();

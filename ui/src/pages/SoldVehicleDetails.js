@@ -17,6 +17,23 @@ function SoldVehicleDetails() {
   //   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
   //   const location = useLocation();
+  const [touchStartX, setTouchStartX] = useState(0);
+  const [touchEndX, setTouchEndX] = useState(0);
+
+  const handleTouchStart = (e) => {
+    setTouchStartX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = (e) => {
+    setTouchEndX(e.changedTouches[0].clientX);
+    const deltaX = e.changedTouches[0].clientX - touchStartX;
+    const threshold = 50; // Minimum swipe distance
+    if (deltaX > threshold) {
+      prevImage(); // Swipe right → show previous image
+    } else if (deltaX < -threshold) {
+      nextImage(); // Swipe left → show next image
+    }
+  };
 
   useEffect(() => {
     const fetchVehicleDetails = async () => {
@@ -114,7 +131,11 @@ function SoldVehicleDetails() {
         className={`vehicle-details ${isModalOpen ? "blur-background" : ""}`}
         style={{ opacity: "0.6", filter: "grayscale(50%)" }}
       >
-        <div className="image-container">
+        <div
+          className="image-container"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           <img
             src={
               vehicle.images && vehicle.images.length > 0
@@ -230,7 +251,11 @@ function SoldVehicleDetails() {
       </div>
       {/* Modal */}
       {isModalOpen && (
-        <div className="modal">
+        <div
+          className="modal"
+          onTouchStart={handleTouchStart}
+          onTouchEnd={handleTouchEnd}
+        >
           <span className="close" onClick={closeModal}>
             &times;
           </span>

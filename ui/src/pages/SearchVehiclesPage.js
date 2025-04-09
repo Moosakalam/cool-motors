@@ -9,19 +9,19 @@ import Alert from "../utils/Alert";
 const fuelTypes = ["petrol", "diesel", "hybrid", "electric", "lpg", "cng"];
 const transmissions = ["automatic", "manual"];
 const engineTypes = [
-  "I3",
-  "I4",
-  "I5",
-  "I6",
+  "Inline 3",
+  "Inline 4",
+  "Inline 5",
+  "Inline 6",
   "V6",
   "V8",
   "V10",
   "V12",
   "V16",
   "W12",
-  "W16",
-  "H4",
-  "H6",
+  "w16",
+  "Flat 4", //boxer 4
+  "Flat 6", //boxer 6
   "rotary",
 ];
 const sorts = ["priceAsc", "priceDesc", "mileageAsc", "mileageDesc"];

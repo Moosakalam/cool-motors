@@ -7,8 +7,6 @@ const upload = multer({ storage }).array("images", 20);
 
 const handleMulterErrors = (req, res, next) => {
   upload(req, res, function (err) {
-    console.log("hioowerfwrf");
-
     if (err instanceof multer.MulterError) {
       // A Multer error occurred when uploading
       if (err.code === "LIMIT_UNEXPECTED_FILE") {

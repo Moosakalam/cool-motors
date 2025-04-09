@@ -38,20 +38,20 @@ const EditVehicle = () => {
   const fuelTypes = ["petrol", "diesel", "electric", "hybrid", "CNG", "LPG"];
   const transmissions = ["manual", "automatic"];
   const engineTypes = [
-    "I3",
-    "I4",
-    "I5",
-    "I6",
+    "Inline 3",
+    "Inline 4",
+    "Inline 5",
+    "Inline 6",
     "V6",
     "V8",
     "V10",
     "V12",
     "V16",
     "W12",
-    "W16",
-    "H4",
-    "H6",
-    "Rotary",
+    "w16",
+    "Flat 4", //boxer 4
+    "Flat 6", //boxer 6
+    "rotary",
   ];
   const ownerships = Array.from({ length: 10 }, (_, i) => i + 1);
 

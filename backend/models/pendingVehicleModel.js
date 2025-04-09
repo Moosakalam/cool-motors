@@ -82,10 +82,10 @@ const pendingVehicleSchema = mongoose.Schema(
       type: String,
       enum: {
         values: [
-          "I3",
-          "I4",
-          "I5",
-          "I6",
+          "Inline 3",
+          "Inline 4",
+          "Inline 5",
+          "Inline 6",
           "V6",
           "V8",
           "V10",
@@ -93,8 +93,8 @@ const pendingVehicleSchema = mongoose.Schema(
           "V16",
           "W12",
           "w16",
-          "H4", //boxer 4
-          "H6", //boxer 6
+          "Flat 4", //boxer 4
+          "Flat 6", //boxer 6
           "rotary",
         ],
         message: "{VALUE} is not a valid engine type",

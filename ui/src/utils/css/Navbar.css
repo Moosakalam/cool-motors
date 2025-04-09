@@ -19,6 +19,8 @@
 .nav-left {
   justify-content: flex-start;
   gap: 10px;
+  display: flex;
+  align-items: center; /* vertically center items like logo + search */
 }
 
 .nav-center {
@@ -29,16 +31,10 @@
   justify-content: flex-end;
 }
 
-.nav-links {
-  display: flex;
-  align-items: center; /* vertically center items like logo + search */
-  gap: 20px; /* spacing between logo and search */
-}
-
 .home-link {
   display: flex;
   align-items: center;
-  gap: 10px;
+  /* gap: 10px; */
   text-decoration: none;
   color: white;
   font-size: 18px;
