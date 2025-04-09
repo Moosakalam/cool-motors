@@ -47,7 +47,7 @@ const Navbar = () => {
         {user && (
           <Link to="/list" className="list-vehicle-btn">
             <img src={plusIcon} alt="List Vehicle" className="plus-icon" />
-            <span>List Vehicle</span>
+            <span>Sell</span>
           </Link>
         )}
       </div>

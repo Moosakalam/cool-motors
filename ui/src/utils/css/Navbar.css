@@ -107,11 +107,11 @@
   color: #2e3d27;
 }
 
-@media (max-width: 600px) {
+/* @media (max-width: 600px) {
   .list-vehicle-btn span {
     display: none;
   }
-}
+} */
 
 .plus-icon {
   width: 16px;
