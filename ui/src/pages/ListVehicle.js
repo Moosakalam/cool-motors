@@ -6,6 +6,7 @@ import axios from "axios";
 import { locations, states } from "../utils/data";
 import Restricted from "../utils/Restricted";
 import Alert from "../utils/Alert";
+import LoadingModal from "../utils/LoadingModal";
 
 function ListVehicle() {
   const [formData, setFormData] = useState({
@@ -127,15 +128,15 @@ function ListVehicle() {
     }
   };
 
-  // useEffect(() => {
   if (!authLoading && !user) {
-    // navigate("/restricted");
     return <Restricted />;
   }
-  // }, [user, authLoading, navigate]);
 
   return (
     <div className="vehicle-list-container">
+      {loading && (
+        <LoadingModal message="Uploading images. This might take a while..." />
+      )}
       <h2 className="form-title">List Vehicle</h2>
       {/* <form className="vehicle-form" onSubmit={handleSubmit}> */}
       <form
@@ -318,23 +319,6 @@ function ListVehicle() {
             }}
           />
         </div>
-
-        {/* <div className="form-group">
-          <label htmlFor="state">State*</label>
-          <input
-            type="text"
-            name="state"
-            list="states"
-            value={formData.state}
-            onChange={handleChange}
-            required
-          />
-          <datalist id="states">
-            {states.map((num) => (
-              <option key={num} value={num} />
-            ))}
-          </datalist>
-        </div> */}
         <div className="form-group">
           <label htmlFor="state">State*</label>
           <select
@@ -385,9 +369,6 @@ function ListVehicle() {
           </small>
         </div>
         {/*------------------------------------------------------------ */}
-        {/* <button type="submit" className="submit-button">
-          Add Vehicle
-        </button> */}
         <button type="submit" className="submit-button" disabled={loading}>
           {loading ? "Adding..." : "Add Vehicle"}
         </button>
