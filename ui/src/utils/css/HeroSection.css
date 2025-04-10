@@ -1,0 +1,20 @@
+.hero-section {
+  text-align: center;
+  color: #2e2e2e;
+}
+
+.hero-title {
+  font-size: 36px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  color: #99bc85;
+}
+
+.hero-subtitle {
+  font-size: 18px;
+  line-height: 1.6;
+  /* max-width: 600px; */
+  /* margin: 0 auto 30px; */
+  color: #4a4a4a;
+  margin-top: 0px;
+}
