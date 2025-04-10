@@ -59,7 +59,7 @@ function Signup() {
       // navigate("/"); // Redirect to home page after login
       // window.location.reload(); // Refresh the page after login
     } catch (err) {
-      setError(err.message || "Signup failed");
+      setError(err.response?.data?.message || "Signup failed");
       setPassword("");
       setPasswordConfirm("");
       setSuccess("");

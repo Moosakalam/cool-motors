@@ -81,6 +81,11 @@ const createAndSendToken = (user, statusCode, res) => {
 // });
 
 exports.signup = catchAsyncError(async (req, res, next) => {
+  const existingUser = await User.findOne({ email: req.body.email });
+  if (existingUser) {
+    return next(new AppError("Email already in use", 400));
+  }
+
   const newUser = await User.create({
     name: req.body.name,
     email: req.body.email,
