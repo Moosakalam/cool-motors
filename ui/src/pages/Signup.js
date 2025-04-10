@@ -76,11 +76,11 @@ function Signup() {
   }, [user, authLoading, navigate]);
 
   return (
-    <div className="container">
-      <h2>Signup</h2>
-      <br></br>
+    <div className="signup-wrapper">
+      <h2 className="signup-title">Create Account</h2>
       <form
         onSubmit={handleSubmit}
+        className="signup-form"
         style={{
           pointerEvents: loading ? "none" : "auto",
           opacity: loading ? 0.6 : 1,
@@ -91,18 +91,20 @@ function Signup() {
           name="name"
           value={formData.name}
           onChange={handleChange}
-          placeholder="Name"
+          placeholder="Full Name"
           required
+          className="signup-input"
         />
         <input
           type="email"
           name="email"
           value={formData.email}
           onChange={handleChange}
-          placeholder="Email"
+          placeholder="Email Address"
           required
+          className="signup-input"
         />
-        <div className="password-input-wrapper">
+        <div className="signup-password-wrapper">
           <input
             type={showPassword ? "text" : "password"}
             name="password"
@@ -110,17 +112,14 @@ function Signup() {
             onChange={handleChange}
             placeholder="Password"
             required
+            className="signup-input"
           />
           <button
             type="button"
-            className="password-toggle"
+            className="signup-password-toggle"
             onClick={() => setShowPassword(!showPassword)}
           >
-            {showPassword ? (
-              <img src={eye} alt="" />
-            ) : (
-              <img src={eyeOff} alt="" />
-            )}
+            <img src={showPassword ? eye : eyeOff} alt="Toggle Password" />
           </button>
         </div>
         <input
@@ -130,9 +129,10 @@ function Signup() {
           onChange={handleChange}
           placeholder="Confirm Password"
           required
+          className="signup-input"
         />
-        <div className="phone-number-container">
-          <span className="phone-code">+91</span> {/* Hardcoded +91 */}
+        <div className="signup-phone-wrapper">
+          <span className="signup-phone-code">+91</span>
           <input
             type="text"
             name="phoneNumber"
@@ -141,20 +141,23 @@ function Signup() {
             placeholder="Phone Number"
             required
             maxLength="10"
-            className="phone-input" // Add a class for styling
+            className="signup-phone-input"
           />
         </div>
-        <button type="submit" disabled={loading} className="submit-btn">
-          {loading ? "Loading..." : "Signup"}
+        <button type="submit" disabled={loading} className="signup-submit-btn">
+          {loading ? "Signing up..." : "Signup"}
         </button>
       </form>
-      {error && <p className="error">{error}</p>}
-      {success && <p className="success">{success}</p>}
-      <div style={{ marginTop: "20px" }}>
+
+      {error && <p className="signup-error">{error}</p>}
+      {success && <p className="signup-success">{success}</p>}
+
+      <div className="signup-footer">
         <p>
           Already have an account? <Link to="/login">Login</Link>
         </p>
       </div>
+
       {showAlert && (
         <Alert
           message="A verification link has been sent to you. Please visit it to verify your email."

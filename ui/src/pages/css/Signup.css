@@ -1,48 +1,49 @@
-.container {
-  max-width: 300px; /* Slightly narrower for a better vertical layout */
-  margin: 50px auto; /* Center it with spacing */
-  padding: 20px;
-  border-radius: 8px;
-  background: white;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+.signup-wrapper {
+  max-width: 400px;
+  margin: 60px auto;
+  padding: 25px;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.container h2 {
-  margin-bottom: 15px;
-  font-size: 22px;
+.signup-title {
+  margin-bottom: 20px;
+  font-size: 24px;
   font-weight: 600;
+  text-align: center;
 }
 
-.container form {
+.signup-form {
   width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 15px; /* Even spacing between fields */
+  gap: 16px;
 }
 
-.form-group {
-  position: relative;
+.signup-input {
   width: 100%;
-}
-
-.container input {
-  width: 100%;
-  padding: 10px;
-  padding-right: 35px; /* Space for eye icon */
+  padding: 12px;
+  padding-right: 40px;
   border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
+  border-radius: 6px;
+  font-size: 15px;
   box-sizing: border-box;
 }
 
-/* Password toggle inside the first password field */
-.password-toggle {
+.signup-password-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.signup-password-toggle {
   position: absolute;
   right: 10px;
-  top: 70%;
+  top: 50%;
   transform: translateY(-50%);
   background: none;
   border: none;
@@ -50,81 +51,96 @@
   padding: 0;
 }
 
-.password-toggle img {
-  width: 16px;
-  height: 16px;
-  opacity: 0.6; /* Make it subtle */
+.signup-password-toggle img {
+  width: 18px;
+  height: 18px;
+  opacity: 0.6;
 }
 
-/* Styling for the submit button */
-.submit-btn {
+.signup-phone-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.signup-phone-code {
+  font-weight: bold;
+  padding-left: 10px;
+  padding-right: 5px;
+  white-space: nowrap;
+}
+
+.signup-phone-input {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+}
+
+.signup-submit-btn {
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   background-color: #007bff;
   color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
-  font-size: 14px;
+  font-size: 15px;
   transition: background-color 0.3s;
 }
 
-.submit-btn:hover {
+.signup-submit-btn:hover {
   background-color: #0056b3;
 }
 
-.phone-number-container {
-  display: flex;
-  align-items: center;
-}
-
-.phone-code {
-  font-weight: bold;
-  padding: 0 10px;
-}
-
-.phone-input {
-  flex: 1;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 14px;
-}
-
-.error {
+.signup-error {
   color: red;
-  font-size: 13px;
+  font-size: 14px;
+  margin-top: 10px;
   text-align: center;
 }
 
-.success {
+.signup-success {
   color: green;
-  font-size: 13px;
+  font-size: 14px;
+  margin-top: 10px;
   text-align: center;
 }
 
-.container p {
-  font-size: 13px;
+.signup-footer {
+  margin-top: 25px;
+  font-size: 14px;
   text-align: center;
 }
 
-.container a {
+.signup-footer a {
   color: #007bff;
   text-decoration: none;
 }
 
-.container a:hover {
+.signup-footer a:hover {
   text-decoration: underline;
 }
 
-.password-input-wrapper {
-  display: flex;
-  align-items: center;
-  position: relative;
-}
+/* Responsive Design */
+@media (max-width: 480px) {
+  .signup-wrapper {
+    margin: 30px 20px;
+    padding: 20px;
+  }
 
-.password-input-wrapper input {
-  flex: 1;
-  padding-right: 40px;
+  .signup-title {
+    font-size: 20px;
+  }
+
+  .signup-input,
+  .signup-phone-input {
+    font-size: 14px;
+  }
+
+  .signup-submit-btn {
+    font-size: 14px;
+  }
 }
