@@ -93,6 +93,7 @@
   padding: 8px 12px;
   background-color: #faf1e6;
   border-radius: 5px;
+  border: none;
 }
 
 .list-vehicle-btn:hover {

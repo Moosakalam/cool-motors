@@ -148,7 +148,7 @@ function ListVehicle() {
         }}
       >
         <div className="form-group">
-          <label htmlFor="make">Make*</label>
+          <label htmlFor="make">Brand*</label>
           <input
             type="text"
             name="make"
@@ -156,6 +156,7 @@ function ListVehicle() {
             value={formData.make}
             onChange={handleChange}
             required
+            placeholder="e.g., Skoda"
           />
           <datalist id="carMakes">
             {carMakes.map((make) => (
@@ -172,6 +173,7 @@ function ListVehicle() {
             value={formData.model}
             onChange={handleChange}
             required
+            placeholder="e.g., Octavia"
           />
         </div>
 
@@ -183,6 +185,7 @@ function ListVehicle() {
             value={formData.variant}
             onChange={handleChange}
             // required
+            placeholder="e.g., RS 245"
           />
         </div>
 
@@ -195,6 +198,7 @@ function ListVehicle() {
             value={formData.year}
             onChange={handleChange}
             required
+            placeholder="e.g., 2020"
           />
           <datalist id="years">
             {years.map((year) => (
@@ -211,6 +215,7 @@ function ListVehicle() {
             value={formData.price}
             onChange={handleChange}
             required
+            placeholder="e.g., 2700000"
           />
         </div>
 
@@ -249,13 +254,16 @@ function ListVehicle() {
         </div>
 
         <div className="form-group">
-          <label htmlFor="engineDisplacement">Engine Displacement</label>
+          <label htmlFor="engineDisplacement">
+            Engine Displacement (in liters)
+          </label>
           <input
             type="number"
             step="0.1"
             name="engineDisplacement"
             value={formData.engineDisplacement}
             onChange={handleChange}
+            placeholder="e.g., 2.0"
           />
         </div>
 
@@ -283,6 +291,7 @@ function ListVehicle() {
             value={formData.odometer}
             onChange={handleChange}
             required
+            placeholder="e.g., 32000"
           />
         </div>
 
@@ -295,6 +304,7 @@ function ListVehicle() {
             value={formData.ownership}
             onChange={handleChange}
             required
+            placeholder="e.g., 1"
           />
           <datalist id="ownerships">
             {ownerships.map((num) => (

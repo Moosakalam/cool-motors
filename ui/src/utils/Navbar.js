@@ -1,5 +1,6 @@
 import "./css/Navbar.css";
 import React, { useState, useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useAuth } from "../AuthContext";
 import userIcon from "./images/user.png";
@@ -11,6 +12,7 @@ const Navbar = () => {
   const { user } = useAuth();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const navigate = useNavigate();
 
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
@@ -30,6 +32,18 @@ const Navbar = () => {
     };
   }, []);
 
+  const handleSellClick = (e) => {
+    e.preventDefault();
+
+    if (!user) {
+      if (window.confirm("Do you want to Login to list your vehicle?")) {
+        navigate(`/login?redirect=/list`);
+      }
+    } else {
+      navigate("/list");
+    }
+  };
+
   return (
     <header className="header">
       {/* <div className="nav-links"> */}
@@ -43,13 +57,29 @@ const Navbar = () => {
         </Link>
       </div>
 
-      <div className="nav-center">
+      {/* <div className="nav-center">
         {user && (
           <Link to="/list" className="list-vehicle-btn">
             <img src={plusIcon} alt="List Vehicle" className="plus-icon" />
             <span>Sell</span>
           </Link>
         )}
+      </div> */}
+      <div className="nav-center">
+        <button
+          className="list-vehicle-btn"
+          onClick={handleSellClick}
+          // style={{
+          //   all: "unset",
+          //   cursor: "pointer",
+          //   display: "flex",
+          //   alignItems: "center",
+          //   gap: "4px",
+          // }}
+        >
+          <img src={plusIcon} alt="List Vehicle" className="plus-icon" />
+          <span>Sell</span>
+        </button>
       </div>
 
       <div className="nav-right">
@@ -84,3 +114,8 @@ const Navbar = () => {
 };
 
 export default Navbar;
+
+<button className="list-vehicle-btn">
+  <img src={plusIcon} alt="List Vehicle" className="plus-icon" />
+  <span>Sell</span>
+</button>;
