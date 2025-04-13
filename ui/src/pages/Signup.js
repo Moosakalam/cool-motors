@@ -142,8 +142,20 @@ function Signup() {
             required
             maxLength="10"
             className="signup-phone-input"
+            style={{ marginBottom: "0px" }}
           />
         </div>
+        <small
+          style={{
+            marginTop: "0px",
+            display: "block",
+            color: "#666",
+            // marginTop: "0px",
+          }}
+        >
+          Please enter a phone number that's available on WhatsApp.
+        </small>
+
         <button type="submit" disabled={loading} className="signup-submit-btn">
           {loading ? "Signing up..." : "Signup"}
         </button>
