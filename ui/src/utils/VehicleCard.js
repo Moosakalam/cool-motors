@@ -5,11 +5,9 @@ import axios from "axios";
 import heart from "./images/heart.png";
 import fullHeart from "./images/full-heart.png";
 import moreIcon from "./images/more.png";
-import "./css/VehicleCard.css";
 
 function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  // const [isHovered, setIsHovered] = useState(false);
   const [liked, setLiked] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -37,7 +35,6 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
         setMenuOpen(false);
       }
     };
-
     document.addEventListener("click", handleClickOutside);
     return () => {
       document.removeEventListener("click", handleClickOutside);
@@ -85,15 +82,10 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
         style={{
           border: "1px solid #ccc",
           cursor: "pointer",
-          // textAlign: "center",
           borderRadius: "10px",
           overflow: "hidden",
           transition: "background-color 0.3s ease",
-          // backgroundColor: isHovered ? "rgba(0, 0, 0, 0.1)" : "white",
-          // marginBottom: "20px",
         }}
-        // onMouseEnter={() => setIsHovered(true)}
-        // onMouseLeave={() => setIsHovered(false)}
       >
         <div className="vehicle-card-image">
           <img
@@ -104,16 +96,11 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
             }
             alt={`${vehicle.make} ${vehicle.model}`}
             style={{
+              width: "300px",
+              height: "200px",
+              objectFit: "cover",
               transition: "opacity 0.3s ease",
-              // opacity: isHovered ? 0.7 : 1,
             }}
-          />
-          <img
-            src={liked ? fullHeart : heart}
-            alt="Like"
-            className="like-button"
-            onClick={handleLikeToggle}
-            style={{ width: "20px", height: "20px" }}
           />
           {showOptions && (
             <div
@@ -203,7 +190,6 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
         </div>
 
         <div style={{ padding: "10px", position: "relative" }}>
-          {/* Car Title */}
           <h2
             style={{
               margin: "10px 0 0 0",
@@ -215,7 +201,6 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
             {vehicle.year} {vehicle.make} {vehicle.model}
           </h2>
 
-          {/* Price (Bigger than name) */}
           <h1
             style={{
               margin: "5px 0",
@@ -227,7 +212,6 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
             ₹{vehicle.price.toLocaleString("en-IN")}
           </h1>
 
-          {/* Odometer Reading (Small Font) */}
           <p
             style={{
               margin: "2px 0",
@@ -239,7 +223,6 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
             {vehicle.odometer.toLocaleString("en-IN")} km
           </p>
 
-          {/* Location & State (Grayish) */}
           <p
             style={{
               margin: "2px 0 10px",
@@ -251,27 +234,30 @@ function VehicleCard({ vehicle, showOptions, onEdit, onDelete, onMarkAsSold }) {
             {vehicle.location}, {vehicle.state}
           </p>
 
-          {showOptions && (
-            <div
+          <div
+            style={{
+              position: "absolute",
+              bottom: "10px",
+              right: "10px",
+              display: "flex",
+              alignItems: "center",
+              gap: "4px",
+            }}
+          >
+            <img
+              src={liked ? fullHeart : heart}
+              alt="Like"
+              onClick={handleLikeToggle}
               style={{
-                position: "absolute",
-                bottom: "10px",
-                right: "10px",
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
+                width: "14px",
+                height: "14px",
+                cursor: "pointer",
               }}
-            >
-              <img
-                src={fullHeart}
-                alt="Likes"
-                style={{ width: "14px", height: "14px" }} // Smaller heart icon
-              />
-              <span style={{ fontSize: "12px", color: "#777" }}>
-                {vehicle.numberOfLikes}
-              </span>
-            </div>
-          )}
+            />
+            <span style={{ fontSize: "12px", color: "#777" }}>
+              {vehicle.numberOfLikes || 0}
+            </span>
+          </div>
         </div>
       </div>
     </a>

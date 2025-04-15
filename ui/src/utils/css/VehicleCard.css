@@ -5,29 +5,69 @@
   overflow: hidden;
   position: relative;
   aspect-ratio: 16 / 9;
+  border-radius: 10px; /* Rounded corners for a modern look */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions */
 }
 
 .vehicle-card-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, transform 0.3s ease; /* Smooth transitions for image */
 }
 
+/* Hover effects for the image container */
+.vehicle-card-image:hover {
+  transform: scale(1.05); /* Slight zoom on hover */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+}
+
+.vehicle-card-image:hover img {
+  opacity: 0.9; /* Slight fade for depth */
+  transform: scale(1.1); /* Zoom in the image slightly */
+}
+
+/* Overlay for interactive elements (e.g., like button) */
+.vehicle-card-image::after {
+   /* Placeholder for a like icon, can be replaced with an image or SVG */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+  font-size: 24px;
+  opacity: 0;
+  background: rgba(0, 0, 0, 0.5); /* Semi-transparent black overlay */
+  padding: 10px;
+  border-radius: 50%;
+  transition: opacity 0.3s ease;
+  pointer-events: none; /* Prevents overlay from interfering with clicks */
+}
+
+.vehicle-card-image:hover::after {
+  opacity: 1; /* Show overlay on hover */
+}
+
+/* Responsive adjustments */
 @media (max-width: 1024px) {
   .vehicle-card-image {
     min-height: 180px;
+    max-height: 200px; /* Prevent overflow on medium screens */
+    
   }
 }
 
 @media (max-width: 768px) {
   .vehicle-card-image {
     min-height: 160px;
+    max-height: 180px;
   }
 }
 
 @media (max-width: 480px) {
   .vehicle-card-image {
     min-height: 140px;
+    max-height: 160px;
   }
 }

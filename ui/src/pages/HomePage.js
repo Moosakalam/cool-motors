@@ -3,9 +3,11 @@ import axios from "axios";
 import VehicleCard from "../utils/VehicleCard";
 import "./css/HomePage.css";
 import HeroSection from "../utils/HeroSection";
+import VehicleCarousel from "../utils/VehicleCarousel";
 
 const HomePage = () => {
   const [vehicles, setVehicles] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     const fetchRandomVehicles = async () => {
@@ -17,6 +19,7 @@ const HomePage = () => {
         setVehicles(response.data.data.vehicles);
       } catch (error) {
         console.error("Error fetching vehicles:", error);
+        setError("Failed to load vehicles. Please try again later.");
       }
     };
 
@@ -24,21 +27,23 @@ const HomePage = () => {
   }, []);
 
   return (
-    <>
+    <div className="home-container">
       <HeroSection />
-      <div className="home-container">
-        {/* <h1 className="home-title">Home Page</h1> */}
-        {vehicles.length === 0 ? (
-          <p>Loading vehicles...</p>
-        ) : (
+      {error ? (
+        <p>{error}</p>
+      ) : vehicles.length === 0 ? (
+        <p>Loading vehicles...</p>
+      ) : (
+        <>
+          <VehicleCarousel vehicles={vehicles} />
           <div className="vehicle-grid">
             {vehicles.map((vehicle) => (
               <VehicleCard key={vehicle._id} vehicle={vehicle} />
             ))}
           </div>
-        )}
-      </div>
-    </>
+        </>
+      )}
+    </div>
   );
 };
 

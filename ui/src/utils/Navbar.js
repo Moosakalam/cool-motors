@@ -46,7 +46,6 @@ const Navbar = () => {
 
   return (
     <header className="header">
-      {/* <div className="nav-links"> */}
       <div className="nav-left">
         <Link to="/" className="home-link">
           <img src={AFLogoSBS} className="logo-large" alt="Logo Large" />
@@ -57,28 +56,13 @@ const Navbar = () => {
         </Link>
       </div>
 
-      {/* <div className="nav-center">
-        {user && (
-          <Link to="/list" className="list-vehicle-btn">
-            <img src={plusIcon} alt="List Vehicle" className="plus-icon" />
-            <span>Sell</span>
-          </Link>
-        )}
-      </div> */}
       <div className="nav-center">
         <button
           className="list-vehicle-btn"
           onClick={handleSellClick}
-          // style={{
-          //   all: "unset",
-          //   cursor: "pointer",
-          //   display: "flex",
-          //   alignItems: "center",
-          //   gap: "4px",
-          // }}
         >
           <img src={plusIcon} alt="List Vehicle" className="plus-icon" />
-          <span>Sell</span>
+          <span >Sell</span>
         </button>
       </div>
 
@@ -104,9 +88,14 @@ const Navbar = () => {
             )}
           </div>
         ) : (
-          <Link to="/login" className="nav-link">
-            Login
-          </Link>
+          <>
+            <Link to="/signup" className="nav-link">
+              Sign Up
+            </Link>
+            <Link to="/login" className="nav-link">
+              Login
+            </Link>
+          </>
         )}
       </div>
     </header>
@@ -114,8 +103,3 @@ const Navbar = () => {
 };
 
 export default Navbar;
-
-<button className="list-vehicle-btn">
-  <img src={plusIcon} alt="List Vehicle" className="plus-icon" />
-  <span>Sell</span>
-</button>;

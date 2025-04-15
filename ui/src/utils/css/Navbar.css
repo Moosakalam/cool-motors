@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #99bc85;
+  background-color: white;
   padding: 20px 20px;
   color: white;
   margin-bottom: 10px;
@@ -70,17 +70,16 @@
   text-decoration: none;
   color: #2e3d27;
   font-size: 16px;
-  /* font-weight: bold; */
+  font-weight: bold;
   transition: color 0.3s;
   display: inline-block;
   padding: 10px 15px;
   border-radius: 5px;
 }
 
-/* .nav-link:hover {
-  color: #007bff;
-  color: #b08d57;
-} */
+.nav-link:hover {
+  color: #183b56;
+}
 
 .list-vehicle-btn {
   display: flex;
@@ -91,14 +90,19 @@
   font-size: 16px;
   font-weight: bold;
   padding: 8px 12px;
-  background-color: #faf1e6;
-  border-radius: 5px;
+  background-color: white;
+  border-radius: 12px;
   border: none;
   cursor: pointer;
+  border-color: #183b56;
 }
 
 .list-vehicle-btn:hover {
-  background-color: #faf1e6;
+  background-color: #183b56;
+}
+
+.list-vehicle-btn:hover span {
+  color: white; /* Change text color to white on hover */
 }
 
 .list-vehicle-btn span {
@@ -114,6 +118,9 @@
 .plus-icon {
   width: 16px;
   height: 16px;
+}
+.plus-icon:hover {
+  color: white;
 }
 
 .user-menu {

@@ -1,5 +1,5 @@
 .footer {
-  background-color: #99bc85;
+  background-color: white;
   /* color: #fff; */
   color: #2e3d27;
   padding: 10px 0;
@@ -34,7 +34,7 @@
 }
 
 .footer-link:hover {
-  color: #fff;
+  color:#183b56 ;
 }
 
 .footer-bottom {

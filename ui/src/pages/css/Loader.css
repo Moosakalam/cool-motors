@@ -1,0 +1,22 @@
+.loader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1001;
+  animation: fadeOut 1s forwards 2s; /* Animation starts after 2s, lasts 1s */
+}
+
+.loader img {
+  width: auto;
+  height: auto;
+}
+
+@keyframes fadeOut {
+  to { opacity: 0; visibility: hidden; }
+}
