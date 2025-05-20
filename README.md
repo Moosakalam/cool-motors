@@ -1,6 +1,6 @@
-# 🚗 LuxeDrive — Luxury Car Marketplace
+# 🚗 autofinds.io — Luxury Car Marketplace
 
-LuxeDrive is a modern, responsive luxury car marketplace website built using **React**, **JavaScript**, **HTML**, and **CSS**. It features dynamic content, animations, and seamless integration with external APIs to provide users with a smooth, elegant experience for exploring and purchasing luxury vehicles.
+AutoFinds is a modern, responsive luxury car marketplace website built using **React**, **JavaScript**, **HTML**, and **CSS**. It features dynamic content, animations, and seamless integration with external APIs to provide users with a smooth, elegant experience for exploring and purchasing luxury vehicles.
 
 ---
 
