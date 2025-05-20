@@ -71,8 +71,3 @@ LuxeDrive is designed to showcase luxury vehicles with rich visuals, intuitive s
 
 ---
 
-## 🌐 API Integration
-
-Cars are fetched using external APIs based on brand/model queries. You can configure your API usage in:
-```js
-/src/api/carApi.js
